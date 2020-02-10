@@ -1,7 +1,7 @@
 const { Component } = React
 
 class App extends Component {
-    state = { view: 'main', query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], player: [] }
+    state = { view: 'main', query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], players: [], player: [] }
 
 
 
@@ -131,14 +131,13 @@ class App extends Component {
 
     handleGoToDetail = (team) => {
         try{
-            retrievePlayers(team.strTeam, (error, player) => {
+            retrievePlayers(team.strTeam, (error, players) => {
                 if (error instanceof Error) {
                     this.__handleError__(error.message)
                     return
                 }
     
-                this.setState({player, view: "main", mainView: "players"})
-                console.log(player)
+                this.setState({players, view: "main", mainView: "players"})
             })
 
         } catch (error){
@@ -146,11 +145,27 @@ class App extends Component {
         } 
     }
 
-    // handlePlayer = 
+    handleGoPlayerDetail = (nameTeam, namePlayer) => {
+        try{
+            retrievePlayerDetails(nameTeam, namePlayer, (error, player) =>{
+                if(error instanceof Error) {
+                    this.__handleError__(error.message)
+                    return
+                }
+                this.setState({view: "main", mainView: "playerDetail", player})
+            })
+        }catch(error){
+            this.__handleError__(error.message)
+        }
+    }
 
-    // handleGoPlayerDetail = () => {
-    //     this.setState({view: "main", mainView: "playerDetail"})
-    // }
+    handleGoPlayers = () => {
+        this.setState({view: "main", mainView: "players"})
+    }
+
+    handleGoResults = () => {
+        this.setState({view: "main", mainView: "searchResults"})
+    }
 
     /* REACT LIFECYCLES */
 
@@ -159,7 +174,7 @@ class App extends Component {
     }
 
     render() {
-        const { state: { view, mainView, user, teams, query, player }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleGoPlayerDetail } = this
+        const { state: { view, mainView, user, teams, query, players, player }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleGoPlayerDetail, handleGoPlayers, handleGoResults } = this
 
         return <div>
             <Header
@@ -181,7 +196,8 @@ class App extends Component {
                         <div>
                             {mainView === 'teamDetail' && <TeamDetail />}
                         {mainView === 'searchResults' && <Results teams={teams} goToDetail={handleGoToDetail} query={query} onGoToPlayerDetail={handleGoPlayerDetail} />}
-                        {mainView === "players" && <Resultplayers player={player} onGoToPlayerDetail={handleGoPlayerDetail} />}
+                        {mainView === "players" && <Resultplayers players={players} onClickPlayer={handleGoPlayerDetail} onToResults={handleGoResults} />}
+                        {mainView === "playerDetail" && player && <PlayerDetail player={player} onGoToPlayers={handleGoPlayers} />}
                         </div>
                     </div>
                 }

@@ -16,7 +16,7 @@ function registerUser(name, surname, age, city, username, password, callback) {
     call(`https://skylabcoders.herokuapp.com/api/v2/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, surname, age, city, username, password })
+        body: JSON.stringify({ name, surname, age, city, username, password, flag: 'football-mania-app' })
     }, (error, response) => {
         if (error) return callback(error)
 

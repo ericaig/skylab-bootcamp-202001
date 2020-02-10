@@ -8,6 +8,8 @@ class App extends Component {
     __handleError__(error, messageType = 'error') {
         this.setState({ error: error })
 
+        console.log(error)
+
         setTimeout(() => {
             this.setState({ error: undefined })
         }, 3000)

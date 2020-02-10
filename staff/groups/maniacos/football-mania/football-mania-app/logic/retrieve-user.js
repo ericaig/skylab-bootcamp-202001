@@ -20,7 +20,9 @@ function retrieveUser(token, callback) {
 
         if (_error) return callback(new Error(_error))
 
-        const { name, surname, age, city, username } = data
+        const { name, surname, age, city, username, flag } = data
+        
+        if (!flag || flag !== 'football-mania-app') return callback(new Error("Access denied!"))
 
         callback(undefined, { name, surname, age, city, username })
     })

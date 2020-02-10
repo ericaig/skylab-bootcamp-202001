@@ -1,0 +1,1 @@
+ReactDOM.render(<App title="Football Mania" />, document.querySelector('#root'))

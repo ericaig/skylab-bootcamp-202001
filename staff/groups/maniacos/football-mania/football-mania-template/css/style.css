@@ -371,5 +371,13 @@ body {
     flex-grow: 1;
   }
 }
+.players {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.players-photo {
+  width: 400px;
+}
 
 /*# sourceMappingURL=style.css.map */

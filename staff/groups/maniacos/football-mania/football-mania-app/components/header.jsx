@@ -1,4 +1,4 @@
-function Header({onGoToRegister, onGoToLogin, onGoToProfile}){
+function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit }) {
     return <div>
         <header className="header header-xs">
             <div className="header__logo">logo</div>
@@ -16,64 +16,60 @@ function Header({onGoToRegister, onGoToLogin, onGoToProfile}){
         </header>
         <header className="header header-lg">
             <section className="header__primary">
-                <nav className="header__brands">
-                    {/*<div className="header__brand">
-                        NikePlus
-                    </div>
-                    <div className="header__brand">
-                        <i className="fab fa-staylinked"></i>
-                    </div>*/}
-                    <div className="header__brand" onClick={(event)=>{
+                {user && <nav className="header__brands">                    
+                    <div className="header__brand" onClick={(event) => {
                         event.preventDefault()
                         onGoToProfile()
                     }}>
-                        <i className="fas fa-user"></i>&nbsp;
-                        {/* Pepito Pellejo */}
-
+                        <span>{`${user.name} ${user.surname}`}</span>&nbsp;
+                        <i className="fas fa-user"></i>
                     </div>
+                    
                     <div className="header__brand">
-                        <i className="fas fa-sign-out-alt"></i>&nbsp;
-                        Logout
+                        Logout&nbsp;
+                        <i className="fas fa-sign-out-alt"></i>
                     </div>
-                </nav>
+                </nav>}
+                
+                {!user && 
                 <nav className="header__accountNavs">
-                    <div className="header__accountNav" onClick={(event =>{
+                    <div className="header__accountNav" onClick={(event => {
                         event.preventDefault()
                         onGoToRegister()
                     })}>
-                        Regístrate 
+                        Regístrate
                     </div>
-                    <div className="header__accountNav" onClick={(event =>{
+                    <div className="header__accountNav" onClick={(event => {
                         event.preventDefault()
                         onGoToLogin()
                     })}>
                         Inicia sessión
                     </div>
-                    {/*<div className="header__accountNav">
-                        <i className="fas fa-shopping-cart"></i>
-                    </div>
-                    <div className="header__accountNav">
-                        <i className="fas fa-map-pin"></i>&nbsp;España
-                    </div>*/}
-                </nav>
+                </nav>}
             </section>
             <section className="header__secondary">
                 <section className="header__secondaryLogo"></section>
-                <section className="header__secondaryNavs">
+                {user && <section className="header__secondaryNavs">
                     <div className="header__secondaryNav">Details</div>
                     <div className="header__secondaryNav active">Players</div>
                     <div className="header__secondaryNav">Next Events</div>
                     {/*<div className="header__secondaryNav">Niño/a</div>
                     <div className="header__secondaryNav">Personalitzar</div>
                     <div className="header__secondaryNav">Colecciones</div>*/}
-                </section>
+                </section>}
                 <section className="header__secondarySearch searchbar">
                     <div className="searchbar__group">
                         <div className="searchbar__iconContainer">
                             <i className="fas fa-search"></i>
                         </div>
                         <div className="searchbar__inputContainer">
-                            <input type="text" placeholder="Buscar" className="searchbar__input" />
+                            <form onSubmit={event=>{
+                                event.preventDefault()
+                                const query = event.target.query.value
+                                onSearchSubmit(query)
+                            }}>
+                                <input type="text" name="query" placeholder="Buscar" className="searchbar__input" />
+                            </form>
                         </div>
                     </div>
                 </section>

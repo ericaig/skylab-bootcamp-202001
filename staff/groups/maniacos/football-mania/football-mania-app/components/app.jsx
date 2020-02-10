@@ -1,12 +1,12 @@
-const { Component, Fragment } = React
+const { Component } = React
 
 class App extends Component {
-    state = { view: 'main', mainView: 'searchResults', error: undefined, user: undefined }
+    state = { view: 'main', query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [] }
 
 
 
     __handleError__(error, messageType = 'error') {
-        this.setState({ error: error.message })
+        this.setState({ error: error })
 
         setTimeout(() => {
             this.setState({ error: undefined })
@@ -22,7 +22,7 @@ class App extends Component {
                     return
                 }
 
-                console.log(teams)
+                this.setState({ teams, view: 'main', mainView: 'searchResults' })
             })
         } catch (error) {
             this.handleFeedback(error.message)
@@ -42,13 +42,13 @@ class App extends Component {
         try {
             registerUser(name, surname, age, city, username, password, (error) => {
                 if (error) {
-                    this.__handleError__(error)
+                    this.__handleError__(error.message)
                 } else {
                     this.setState({ view: "login" })
                 }
             })
         } catch (error) {
-            this.__handleError__(error)
+            this.__handleError__(error.message)
         }
     }
 
@@ -57,17 +57,16 @@ class App extends Component {
     }
 
     handleLogin = (username, password) => {
-        debugger
         try {
             authenticateUser(username, password, (error, response) => {
                 if (error) {
-                    this.__handleError__(error)
+                    this.__handleError__(error.message)
                 } else {
                     const token = response
                     this.handleSetToken(token)
                     retrieveUser(token, (error, user) => {
                         if (error) {
-                            this.__handleError__(error)
+                            this.__handleError__(error.message)
                         } else {
                             this.setState({ view: "main", user })
                         }
@@ -79,7 +78,7 @@ class App extends Component {
             })
 
         } catch (error) {
-            this.__handleError__(error)
+            this.__handleError__(error.message)
         }
     }
 
@@ -92,18 +91,44 @@ class App extends Component {
             const token = this.handleRetrieveToken()
             updateUser(token, newUser, (error) => {
                 if (error) {
-                    this.__handleError__(error)
+                    this.__handleError__(error.message)
                 } else {
                     this.setState({ view: "main", user: Object.assign(this.state.user, newUser) })
                 }
             })
         } catch (error) {
-            this.__handleError__(error)
+            this.__handleError__(error.message)
         }
     }
 
     handleGoToProfile = () => {
         this.setState({ view: "profile" })
+    }
+
+    handleSearchTeams = query => {
+        if(!query) {
+            this.handleRetrieveTeams()
+            return
+        }
+
+        this.setState({ query })
+
+        try {
+            searchTeams(query, (error, teams) => {
+                if (error instanceof Error) {
+                    this.__handleError__(error.message)
+                    return
+                }
+
+                this.setState({ teams, view: 'main', mainView: 'searchResults' })
+            })
+        } catch (error) {
+            this.__handleError__(error.message)
+        }
+    }
+
+    handleGoToDetail = id => {
+        console.log(id)
     }
 
     /* REACT LIFECYCLES */
@@ -113,23 +138,28 @@ class App extends Component {
     }
 
     render() {
-        const { state: { view, mainView, user }, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile } = this
+        const { state: { view, mainView, user, teams, query }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile } = this
 
         return <div>
-            <Header onGoToRegister={handleGoToRegister} onGoToLogin={handleGoToLogin} onGoToProfile={handleGoToProfile} />
-            {user && <h2>Welcome {user.name} {user.surname}</h2>}
+            <Header
+                onGoToRegister={handleGoToRegister}
+                onGoToLogin={handleGoToLogin}
+                onGoToProfile={handleGoToProfile}
+                user={user}
+                onSearchSubmit={handleSearchTeams}
+            />
             <main>
                 {view === 'register' && <Register onToSubmit={handleRegister} />}
                 {view === 'login' && <Login onLogin={handleLogin} />}
                 {view === "profile" && <Profile onSubmit={handleProfile} user={user} />}
                 {view === 'main' &&
                     <div className="main">
-                        <div className="sidemenu">
+                        {user && <div className="sidemenu">
                             <Favorites />
-                        </div>
+                        </div>}
                         <div>
                             {mainView === 'teamDetail' && <TeamDetail />}
-                            {mainView === 'searchResults' && <SearchResults />}
+                        {mainView === 'searchResults' && <Results teams={teams} goToDetail={handleGoToDetail} query={query} />}
                         </div>
                     </div>
                 }

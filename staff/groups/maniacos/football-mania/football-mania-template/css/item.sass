@@ -3,16 +3,18 @@
     font-size: 14px
     font-family: Arial, Helvetica, sans-serif
     font-weight: 100
+    min-width: 200px
 
     .item__media
-        background-image: url('../images/fake-img_smiley.png')
+        // background-image: url('../images/fake-img_smiley.png')
         background-repeat: no-repeat
-        background-size: cover
+        background-size: contain
         background-position: center
         height: 200px
     
     .item__details
         padding: 5px
+        text-align: center
 
         & *:not(:first-child)
             margin-top: 5px
@@ -49,7 +51,7 @@
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px)
     .item
-        width: 32.5%
+        width: 30%
 
         &:not(:nth-child(3))
             margin-right: 1.25%

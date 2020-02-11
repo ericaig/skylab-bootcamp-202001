@@ -1,5 +1,6 @@
 function Item({ team, goToDetail }) {
     const { idTeam, strStadium, strAlternate, strTeamBadge } = team    
+
     const itemMedia = {
         backgroundImage: 'url(' + strTeamBadge + ')',
     };

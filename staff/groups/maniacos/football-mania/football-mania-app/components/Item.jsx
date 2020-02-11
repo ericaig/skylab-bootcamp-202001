@@ -1,10 +1,11 @@
-function Item({ team: { idTeam, strStadium, strAlternate, strTeamBadge }, goToDetail }) {
+function Item({ team, goToDetail }) {
+    const { idTeam, strStadium, strAlternate, strTeamBadge } = team    
     const itemMedia = {
         backgroundImage: 'url(' + strTeamBadge + ')',
     };
 
     return <article className="search__item item" onClick={()=>{
-        goToDetail(idTeam)
+        goToDetail(team)
     }}>
         <div className="item__media" style={itemMedia}></div>
         <div className="item__details">

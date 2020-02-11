@@ -1,6 +1,9 @@
 @import colors
 @import search-bar
 
+.header
+    background-color: #ffffff
+
 .header.header-xs
     height: 50px
     border-bottom: 1px solid #cccccc
@@ -34,6 +37,7 @@
     align-items: stretch
     padding-left: 10px
     padding-right: 10px
+    background-color: #3b3b3b
 
     .header__brands,
     .header__accountNavs
@@ -56,6 +60,7 @@
             padding-left: 20px
             padding-right: 20px
             box-sizing: content-box
+            color: #ffffff
     
     .header__accountNavs
         .header__accountNav
@@ -70,6 +75,10 @@
     border-bottom: 1px solid #cccccc
     display: flex
     justify-content: space-between
+    box-shadow: 0px 2px 5px #ccc
+    background-color: $header-color
+    background: rgb(251,63,63)
+    background: linear-gradient(135deg, rgba(251,63,63,0.7245273109243697) 20%, rgba(255,0,0,1) 21%, rgba(246,246,246,1) 23%)
 
     .header__secondaryNavs
         display: flex

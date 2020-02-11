@@ -12,6 +12,12 @@ body hr.faded-sides {
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
 }
 
+.sticky__header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 .searchbar__group {
   border: 1px solid #cccccc;
   display: flex;
@@ -31,9 +37,14 @@ body hr.faded-sides {
   font-size: 16px;
   padding: 5px;
   box-sizing: content-box;
+  background-color: #f6f6f6cc;
 }
 .searchbar__group .searchbar__inputContainer input:focus {
   outline: 0;
+}
+
+.header {
+  background-color: #ffffff;
 }
 
 .header.header-xs {
@@ -72,6 +83,7 @@ body hr.faded-sides {
   align-items: stretch;
   padding-left: 10px;
   padding-right: 10px;
+  background-color: #3b3b3b;
 }
 .header__primary .header__brands,
 .header__primary .header__accountNavs {
@@ -95,6 +107,7 @@ body hr.faded-sides {
   padding-left: 20px;
   padding-right: 20px;
   box-sizing: content-box;
+  color: #ffffff;
 }
 .header__primary .header__accountNavs .header__accountNav {
   display: flex;
@@ -109,6 +122,10 @@ body hr.faded-sides {
   border-bottom: 1px solid #cccccc;
   display: flex;
   justify-content: space-between;
+  box-shadow: 0px 2px 5px #ccc;
+  background-color: #f6f6f6cc;
+  background: #fb3f3f;
+  background: linear-gradient(135deg, rgba(251, 63, 63, 0.7245273109) 20%, red 21%, #f6f6f6 23%);
 }
 .header__secondary .header__secondaryNavs {
   display: flex;
@@ -163,6 +180,7 @@ body hr.faded-sides {
   width: 40vw;
   border-right: 1px solid #cccccc;
   margin-right: 10px;
+  background-color: #ffffff;
 }
 
 .item {
@@ -174,6 +192,7 @@ body hr.faded-sides {
   position: relative;
   border: 1px solid #cccccc;
   padding: 10px;
+  background-color: #ffffff;
 }
 .item__favBtn {
   height: 40px;
@@ -274,6 +293,7 @@ body hr.faded-sides {
   position: relative;
   border: 1px solid #cccccc;
   padding: 10px;
+  background-color: #ffffff;
 }
 .item__favBtn {
   height: 40px;

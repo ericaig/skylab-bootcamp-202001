@@ -30,7 +30,7 @@ function retrieveFavTeams(token, callback) {
         if (response.status !== 200) {
             callback(new Error(content.error))
         } else {
-            const { footballFavs: favs } = content
+            let { footballFavs: favs } = content
             if (!favs) favs = []
 
             call('https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=Soccer&c=Spain', undefined, (error, response) => {

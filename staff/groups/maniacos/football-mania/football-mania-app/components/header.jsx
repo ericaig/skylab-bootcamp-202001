@@ -1,5 +1,5 @@
 function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit, detail, navButtonsClick, mainView, onLogoutClick }) {
-    return <div>
+    return <div className="sticky__header">
         <header className="header header-xs">
             <div className="header__logo">logo</div>
             <div className="header__userInteractions">

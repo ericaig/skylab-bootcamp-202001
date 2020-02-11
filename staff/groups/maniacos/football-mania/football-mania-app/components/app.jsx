@@ -146,20 +146,18 @@ class App extends Component {
         }
     }
     handleGoToResults = () => {
-        this.setState({ mainView: "searchResults" })
+        this.setState({ view: "main", mainView: "searchResults" })
     }
     handleGoPlayers = () => {
         this.setState({ view: "main", mainView: "players" })
     }
-    handleGoResults = () => {
-        this.setState({ view: "main", mainView: "searchResults" })
-    }
+
     /* REACT LIFECYCLES */
     componentDidMount() {
         this.handleRetrieveTeams()
     }
     render() {
-        const { state: { view, mainView, user, teams, query, detail, events, players, player }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleGoResults } = this
+        const { state: { view, mainView, user, teams, query, detail, events, players, player }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers } = this
         return <div>
             <Header
                 onGoToRegister={handleGoToRegister}
@@ -181,7 +179,7 @@ class App extends Component {
                         {mainView === 'teamDetail' && <TeamDetail detail={detail} goToResults={() => handleNavigation('searchResults')} />}
                         {mainView === "teamEvents" && <ResultsEvents events={events} onToResults={handleGoToResults} />}
                         {mainView === 'searchResults' && <Results teams={teams} goToDetail={handleGoToDetail} query={query} onGoToPlayerDetail={handleGoPlayerDetail} />}
-                        {mainView === "players" && <Resultplayers players={players} onClickPlayer={handleGoPlayerDetail} onToResults={handleGoResults} />}
+                        {mainView === "players" && <Resultplayers players={players} onClickPlayer={handleGoPlayerDetail} onToResults={handleGoToResults} />}
                         {mainView === "playerDetail" && player && <PlayerDetail player={player} onGoToPlayers={handleGoPlayers} />}
                     </div>
                 }

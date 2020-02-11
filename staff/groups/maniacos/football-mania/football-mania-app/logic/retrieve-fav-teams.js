@@ -31,6 +31,7 @@ function retrieveFavTeams(token, callback) {
             callback(new Error(content.error))
         } else {
             const { footballFavs: favs } = content
+            if (!favs) favs = []
 
             call('https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=Soccer&c=Spain', undefined, (error, response) => {
                 const content = JSON.parse(response.content)
@@ -46,9 +47,9 @@ function retrieveFavTeams(token, callback) {
                     // }
 
                     // filtrar equips de primera divisió
-                    if (team.idLeague == 4335){
+                    if (team.idLeague == 4335) {
                         teams.push(team)
-                        
+
                         team.isFavorited = favs.indexOf(team.idTeam) !== -1
                         if (team.isFavorited === true) favoriteTeams.push(team)
 

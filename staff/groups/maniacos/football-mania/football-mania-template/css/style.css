@@ -3,6 +3,14 @@ body {
   margin: 0;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
 }
+body .text-center {
+  text-align: center;
+}
+body hr.faded-sides {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
 
 .searchbar__group {
   border: 1px solid #cccccc;
@@ -295,6 +303,76 @@ body {
   }
   .item:not(:first-child), .item:not(:nth-child(2)), .item:not(:nth-child(3)) {
     margin-top: 50px;
+  }
+}
+.teamDetail {
+  width: 80vw;
+  margin: auto;
+}
+.teamDetail .light--big-text {
+  font-weight: 100;
+  color: #666666;
+}
+.teamDetail__header {
+  height: 200px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+.teamDetail__header .teamDetail__title {
+  background-color: #ffffff;
+  font-size: 32px;
+  padding: 10px;
+  border-bottom: 5px solid #f8f8f8;
+  transition: border 500ms;
+}
+.teamDetail__header .teamDetail__title:hover {
+  border-bottom-color: #d1d1d1;
+}
+.teamDetail__header .teamDetail__title a {
+  text-decoration: none;
+  color: #141414;
+}
+.teamDetail__description {
+  text-align: justify;
+  margin-top: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.teamDetail__galleries {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 10px;
+  margin-top: 20px;
+}
+.teamDetail__galleries .teamDetail__gallery:not(.teamDetail__gallery-bg) {
+  border: 1px solid #cccccc;
+  padding: 5px;
+}
+.teamDetail__galleries .teamDetail__media {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  height: 200px;
+}
+.teamDetail__galleries .teamDetail__media-bg {
+  background-color: #5d5d5d;
+}
+
+/* MEDIA QUERIES */
+/* Small devices (landscape phones, 576px and up)*/
+@media (max-width: 991.98px) {
+  .teamDetail__galleries {
+    grid-template-columns: auto auto;
+  }
+}
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .teamDetail__galleries {
+    grid-template-columns: auto auto auto;
   }
 }
 .footer {

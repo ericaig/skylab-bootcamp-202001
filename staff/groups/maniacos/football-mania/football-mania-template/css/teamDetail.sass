@@ -1,0 +1,66 @@
+$componentName: '.teamDetail'
+
+#{$componentName}
+    width: 80vw
+    margin: auto
+
+    .light--big-text
+        font-weight: 100
+        color: #666666
+
+    &__header
+        height: 200px
+        background-repeat: no-repeat
+        background-size: cover
+        background-position: center
+        opacity: 1
+        display: flex
+        justify-content: center
+        align-items: flex-end
+
+        & #{$componentName}__title
+            background-color: #ffffff
+            font-size: 32px
+            padding: 10px
+            border-bottom: 5px solid #f8f8f8
+            transition: border 500ms
+            &:hover
+                border-bottom-color: #d1d1d1
+            a
+                text-decoration: none
+                color: #141414
+    
+    &__description
+        text-align: justify
+        margin-top: 20px
+        font-family: Arial, Helvetica, sans-serif
+
+    &__galleries
+        display: grid
+        grid-template-columns: auto auto
+        grid-gap: 10px
+        margin-top: 20px
+
+        #{$componentName}__gallery:not(#{$componentName}__gallery-bg)
+            border: 1px solid #cccccc
+            padding: 5px
+
+        #{$componentName}__media
+            background-repeat: no-repeat
+            background-size: contain
+            background-position: center
+            height: 200px
+
+            &-bg
+                background-color: #5d5d5d
+
+/* MEDIA QUERIES */
+/* Small devices (landscape phones, 576px and up)*/
+@media (max-width: 991.98px)
+    #{$componentName}__galleries
+        grid-template-columns: auto auto
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px)
+    #{$componentName}__galleries
+        grid-template-columns: auto auto auto

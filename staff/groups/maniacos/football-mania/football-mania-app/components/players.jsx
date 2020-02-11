@@ -1,4 +1,4 @@
-function Players({team, onClickPlayer, onToResults}){
+function Players({team, onClickPlayer}){
     const {strPlayer, strThumb, strTeam} = team
     
     return <article>
@@ -7,9 +7,6 @@ function Players({team, onClickPlayer, onToResults}){
             onClickPlayer(strTeam, strPlayer)
         }}/>
         <div className="players-name">{strPlayer}</div>
-        <button onClick={event=>{
-            event.preventDefault()
-            onToResults()
-        }}>RESULTS</button>
+        
     </article>
 }

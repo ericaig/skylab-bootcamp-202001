@@ -1,6 +1,7 @@
 const { Component } = React
 class App extends Component {
-    state = { view: 'main', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], events: {}, players: [], player: [] }
+    state = { view: 'main', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [] }
+
     __handleError__(error, messageType = 'error') {
         this.setState({ error: error })
         console.log(error)
@@ -15,17 +16,22 @@ class App extends Component {
     }
     handleRetrieveTeams = (callback) => {
         try {
-            retrieveTeams((error, teams) => {
+            const token = this.handleRetrieveToken()
+            if(!token) return
+
+            retrieveTeams(token, (error, teams) => {
                 if (error instanceof Error) {
-                    this.handleFeedback(error.message)
+                    this.__handleError__(error.message)
+                    this.handleLogout()
                     return
                 }
+                console.log(teams)
                 this.setState({ teams, view: 'main', mainView: 'searchResults' }, () => {
                     if (typeof callback === 'function') callback()
                 })
             })
         } catch (error) {
-            this.handleFeedback(error.message)
+            this.__handleError__(error.message)
         }
     }
     handleSetToken = (token) => {
@@ -76,7 +82,8 @@ class App extends Component {
                         if (error) {
                             this.__handleError__(error.message)
                         } else {
-                            this.setState({ view: "main", user }, ()=>{
+                            this.setState({ view: "main", user }, () => {
+                                this.handleRetrieveFavoriteTeams()
                                 this.handleRetrieveTeams()
                             })
                         }
@@ -179,19 +186,72 @@ class App extends Component {
         this.setState({ view: 'main', mainView })
     }
 
-    handleLogout = () =>{
+    handleLogout = () => {
         sessionStorage.clear()
-        this.setState({user: undefined, view: 'login', mainView: ''})
+        this.setState({ user: undefined, view: 'login', mainView: '' })
+    }
+
+    handleRetrieveFavoriteTeams = (callback) =>{
+        try {
+            const token = this.handleRetrieveToken()
+
+            retrieveFavTeams(token, (error, response) => {
+                if (error instanceof Error) {
+                    this.__handleError__(error.message)
+                    return
+                }
+
+                const { favoriteTeams, teams } = response
+
+                this.setState({ favoriteTeams, teams })
+                
+                if (typeof callback === 'function') callback(favoriteTeams)
+            })
+        } catch (error) {
+            this.__handleError__(error.message)
+        }
+    }
+
+    handleFavClick = teamId => {
+        if (!this.state.user) {
+            this.__handleError__('Not logged in')
+            return
+        }
+
+        try {
+            const token = this.handleRetrieveToken()
+            if (!token) {
+                this.__handleError__('Invalid token')
+                return
+            }
+
+            toggleTeamFav(teamId, token, (error) => {
+                if (error instanceof Error) {
+                    this.__handleError__(error.message)
+                    return
+                }
+
+                this.handleRetrieveFavoriteTeams()
+            })
+        } catch (error) {
+            this.__handleError__(error.message)
+        }
     }
 
     /* REACT LIFECYCLES */
+    componentWillMount(){
+        
+    }
+
     componentDidMount() {
+        this.handleRetrieveFavoriteTeams()
+
         this.handleRetrieveTeams(() => {
             this.handleRetrieveUser()
         })
     }
     render() {
-        const { state: { view, mainView, user, teams, query, detail, events, players, player }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout } = this
+        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick } = this
         return <div>
             <Header
                 onGoToRegister={handleGoToRegister}
@@ -211,12 +271,12 @@ class App extends Component {
                 {view === 'main' &&
                     <div className="main">
                         {user && <div className="sidemenu">
-                            <Favorites />
+                            <Favorites favoriteTeams={favoriteTeams} goToDetail={handleGoToDetail} />
                         </div>}
                         {/*<div></div>*/}
                         {mainView === 'teamDetail' && <TeamDetail detail={detail} goToResults={() => handleNavigation('searchResults')} />}
                         {mainView === "teamEvents" && <ResultsEvents events={events} onToResults={handleGoToResults} />}
-                        {mainView === 'searchResults' && <Results teams={teams} goToDetail={handleGoToDetail} query={query} onGoToPlayerDetail={handleGoPlayerDetail} />}
+                        {mainView === 'searchResults' && <Results teams={teams} goToDetail={handleGoToDetail} query={query} onGoToPlayerDetail={handleGoPlayerDetail} onFavClick={handleFavClick} />}
                         {mainView === "players" && <Resultplayers players={players} onClickPlayer={handleGoPlayerDetail} onToResults={handleGoToResults} />}
                         {mainView === "playerDetail" && player && <PlayerDetail player={player} onGoToPlayers={handleGoPlayers} />}
                     </div>

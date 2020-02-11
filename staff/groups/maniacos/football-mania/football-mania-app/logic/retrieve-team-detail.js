@@ -11,6 +11,7 @@ function retrieveTeamDetail(teamId, callback) {
         if (content.teams) {
             for (let i = 0; i < content.teams.length; i++) {
                 const team = content.teams[i]
+                // team.isFavorited = false
 
                 // filtrar equips de primera divisió
                 if (team.idLeague == 4335) teams.push(team)

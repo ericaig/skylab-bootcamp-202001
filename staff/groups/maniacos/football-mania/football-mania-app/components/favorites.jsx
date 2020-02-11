@@ -1,5 +1,5 @@
-function Favorites() {
-    return <div>
-        Favorite
-    </div>
+function Favorites({ favoriteTeams, goToDetail }) {
+    return <ul className="favorites"> 
+        {favoriteTeams && favoriteTeams.map((team, index) => <FavoriteItem key={index} team={team} goToDetail={goToDetail} /> ) }
+    </ul>
 }

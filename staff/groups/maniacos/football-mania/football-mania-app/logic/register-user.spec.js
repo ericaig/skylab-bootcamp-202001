@@ -25,7 +25,7 @@ describe('registerUser', () => {
             call(`https://skylabcoders.herokuapp.com/api/v2/users`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, surname, username, password })
+                body: JSON.stringify({ name, surname, username, password, flag: 'football-mania-app' })
             }, error => {
                 if (error) return done(error)
 
@@ -34,7 +34,7 @@ describe('registerUser', () => {
         })
 
         it('should fail on already existing user', done => {
-            registerUser(name, surname, username, password, error => {
+            registerUser(name, surname, age, city, username, password, error => {
                 expect(error).toBeDefined()
                 expect(error.message).toBe(`user with username "${username}" already exists`)
 

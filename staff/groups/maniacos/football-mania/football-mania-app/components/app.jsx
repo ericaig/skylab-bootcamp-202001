@@ -76,7 +76,9 @@ class App extends Component {
                         if (error) {
                             this.__handleError__(error.message)
                         } else {
-                            this.setState({ view: "main", user })
+                            this.setState({ view: "main", user }, ()=>{
+                                this.handleRetrieveTeams()
+                            })
                         }
                     })
                 }

@@ -53,7 +53,7 @@ function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubm
                     <div className={`header__secondaryNav ${mainView === 'teamDetail' ? ' active' : ''}`} onClick={(event)=>{
                         navButtonsClick('teamDetail')
                     }}>Details</div>
-                    <div className={`header__secondaryNav ${mainView === 'players' ? ' active' : ''}`} onClick={(event) => {
+                    <div className={`header__secondaryNav ${mainView === 'players' || mainView === 'playerDetail' ? ' active' : ''}`} onClick={(event) => {
                         navButtonsClick('players')
                     }}>Players</div>
                     <div className={`header__secondaryNav ${mainView === 'teamEvents' ? ' active' : ''}`} onClick={(event) => {

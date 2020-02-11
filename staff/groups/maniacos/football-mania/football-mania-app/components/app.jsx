@@ -13,14 +13,16 @@ class App extends Component {
             if (typeof callback === 'function') callback()
         })
     }
-    handleRetrieveTeams = () => {
+    handleRetrieveTeams = (callback) => {
         try {
             retrieveTeams((error, teams) => {
                 if (error instanceof Error) {
                     this.handleFeedback(error.message)
                     return
                 }
-                this.setState({ teams, view: 'main', mainView: 'searchResults' })
+                this.setState({ teams, view: 'main', mainView: 'searchResults' }, () => {
+                    if (typeof callback === 'function') callback()
+                })
             })
         } catch (error) {
             this.handleFeedback(error.message)
@@ -48,6 +50,20 @@ class App extends Component {
     handleGoToRegister = () => {
         this.setState({ view: "register" })
     }
+
+    handleRetrieveUser = () => {
+        const token = this.handleRetrieveToken()
+        if (!token) return
+
+        retrieveUser(token, (error, user) => {
+            if (error) {
+                this.__handleError__(error.message)
+            } else {
+                this.setState({ view: "main", mainView: 'searchResults', user })
+            }
+        })
+    }
+
     handleLogin = (username, password) => {
         try {
             authenticateUser(username, password, (error, response) => {
@@ -108,6 +124,11 @@ class App extends Component {
         }
     }
     handleGoToDetail = (team) => {
+        if (!this.state.user) {
+            this.__handleError__("You have to be logged in to view team details")
+            return
+        }
+
         try {
             retrieveTeamDetail(team.idTeam, (error, detail) => {
                 if (error instanceof Error) {
@@ -152,18 +173,33 @@ class App extends Component {
         this.setState({ view: "main", mainView: "players" })
     }
 
+    handleNavButtonsClick = mainView => {
+        this.setState({ view: 'main', mainView })
+    }
+
+    handleLogout = () =>{
+        sessionStorage.clear()
+        this.setState({user: undefined, view: 'login', mainView: ''})
+    }
+
     /* REACT LIFECYCLES */
     componentDidMount() {
-        this.handleRetrieveTeams()
+        this.handleRetrieveTeams(() => {
+            this.handleRetrieveUser()
+        })
     }
     render() {
-        const { state: { view, mainView, user, teams, query, detail, events, players, player }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers } = this
+        const { state: { view, mainView, user, teams, query, detail, events, players, player }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout } = this
         return <div>
             <Header
                 onGoToRegister={handleGoToRegister}
                 onGoToLogin={handleGoToLogin}
                 onGoToProfile={handleGoToProfile}
                 user={user}
+                detail={detail}
+                mainView={mainView}
+                onLogoutClick={handleLogout}
+                navButtonsClick={handleNavButtonsClick}
                 onSearchSubmit={handleSearchTeams}
             />
             <main>

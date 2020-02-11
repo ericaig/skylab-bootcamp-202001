@@ -1,4 +1,4 @@
-function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit }) {
+function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit, detail, navButtonsClick, mainView, onLogoutClick }) {
     return <div>
         <header className="header header-xs">
             <div className="header__logo">logo</div>
@@ -25,7 +25,7 @@ function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubm
                         <i className="fas fa-user"></i>
                     </div>
                     
-                    <div className="header__brand">
+                    <div className="header__brand" onClick={() => onLogoutClick() }>
                         Logout&nbsp;
                         <i className="fas fa-sign-out-alt"></i>
                     </div>
@@ -49,13 +49,16 @@ function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubm
             </section>
             <section className="header__secondary">
                 <section className="header__secondaryLogo"></section>
-                {user && <section className="header__secondaryNavs">
-                    <div className="header__secondaryNav">Details</div>
-                    <div className="header__secondaryNav active">Players</div>
-                    <div className="header__secondaryNav">Next Events</div>
-                    {/*<div className="header__secondaryNav">Niño/a</div>
-                    <div className="header__secondaryNav">Personalitzar</div>
-                    <div className="header__secondaryNav">Colecciones</div>*/}
+                {user && detail && <section className="header__secondaryNavs">
+                    <div className={`header__secondaryNav ${mainView === 'teamDetail' ? ' active' : ''}`} onClick={(event)=>{
+                        navButtonsClick('teamDetail')
+                    }}>Details</div>
+                    <div className={`header__secondaryNav ${mainView === 'players' ? ' active' : ''}`} onClick={(event) => {
+                        navButtonsClick('players')
+                    }}>Players</div>
+                    <div className={`header__secondaryNav ${mainView === 'teamEvents' ? ' active' : ''}`} onClick={(event) => {
+                        navButtonsClick('teamEvents')
+                    }}>Next Events</div>
                 </section>}
                 <section className="header__secondarySearch searchbar">
                     <div className="searchbar__group">

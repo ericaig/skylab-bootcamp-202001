@@ -3,7 +3,7 @@ describe('toggleTeamFav', () => {
     let ids = ["134221", "134232", "134699", "133817", "133727", "133729", "135456", "133739", "134487"]
 
     beforeEach(() => {
-        
+
         name = 'name-' + Math.random()
         surname = 'surname-' + Math.random()
         username = 'username-' + Math.random()
@@ -45,7 +45,7 @@ describe('toggleTeamFav', () => {
             })
         )
 
-        it('should add a team id when it was not previously there', done =>
+        it('should add a vehicle id when it was not previously there', done =>
             toggleTeamFav(id, token, error => {
                 expect(error).toBeUndefined()
 
@@ -63,7 +63,7 @@ describe('toggleTeamFav', () => {
 
                     if (_error) return done(new Error(_error))
 
-                    const { favs } = user
+                    const { footballFavs: favs } = user
 
                     expect(favs).toContain(id)
 
@@ -115,6 +115,19 @@ describe('toggleTeamFav', () => {
                         if (_error) return done(new Error(_error))
 
                         const { favs } = user
+
+                        if (favs) {
+                            const existIndex = favs.findIndex(item => item === id)
+                            if (existIndex !== -1) {
+                                favs.splice(existIndex, 1)
+                                favourites = favs
+                            } else {
+                                favourites = favs
+                                favourites.push(id)
+                            }
+                        } else {
+                            favourites.push(id)
+                        }
 
                         expect(favs).not.toContain(id)
 

@@ -1,6 +1,6 @@
 const { Component } = React
 class App extends Component {
-    state = { view: 'main', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined }
+    state = { view: 'login', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined }
 
     __handleError__(feedbackMessage, feedbackType = 'error') {
         this.setState({ feedbackMessage, feedbackType })
@@ -19,7 +19,7 @@ class App extends Component {
     handleRetrieveTeams = (callback) => {
         try {
             const token = this.handleRetrieveToken()
-            if (!token || !this.state.user) return this.__handleError__("You have to be logged in")
+            if (!token) return
 
             retrieveTeams(token, (error, teams) => {
                 if (error instanceof Error) {
@@ -98,7 +98,7 @@ class App extends Component {
                         if (error) {
                             this.__handleError__(error.message)
                         } else {
-                            this.setState({ view: "main", user }, () => {
+                            this.setState({ view: "login", user }, () => {
                                 this.handleRetrieveFavoriteTeams()
                                 this.handleRetrieveTeams()
                             })
@@ -332,6 +332,7 @@ class App extends Component {
                 onLogoutClick={handleLogout}
                 navButtonsClick={handleNavButtonsClick}
                 onSearchSubmit={handleSearchTeams}
+                view={view}
             />
             <main>
                 {view === 'register' && <Register onToSubmit={handleRegister} />}

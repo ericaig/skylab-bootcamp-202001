@@ -1,9 +1,9 @@
 function Resultplayers({players, onClickPlayer, onToResults}) {
     return <div>
-        <button onClick={event=>{
+        <a href="" onClick={event=>{
             event.preventDefault()
             onToResults()
-        }}>RESULTS</button>
+        }}>Go back to Results</a>
         <section className="players">
             {players.map((team, index) => <Players key={index} team={team} onClickPlayer={onClickPlayer}/>)}
         </section>

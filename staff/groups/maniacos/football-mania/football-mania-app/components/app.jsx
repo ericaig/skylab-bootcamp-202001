@@ -66,18 +66,23 @@ class App extends Component {
     handleRetrieveUser = (callback) => {
         try {
             const token = this.handleRetrieveToken()
-            if (!token) return
+            if (!token) {
+                this.handleLogout()
+                return
+            }
 
             retrieveUser(token, (error, user) => {
                 if (error) {
                     this.__handleError__(error.message)
+                    this.handleLogout()
                 } else {
                     this.setState({ view: "main", mainView: 'searchResults', user })
-                    if(typeof callback === 'function') callback()
+                    if (typeof callback === 'function') callback()
                 }
-            })   
+            })
         } catch (error) {
             this.__handleError__(error.message)
+            this.handleLogout()
         }
     }
 
@@ -150,30 +155,37 @@ class App extends Component {
         }
     }
 
-    handleGoToDetail = (team) => {
+    handleGoToDetail = (team, detailView = 'teamDetail') => {
         if (!this.state.user) {
             this.__handleError__("You have to be logged in to view team details")
             return
         }
 
+        const { idTeam } = team
+
         try {
-            retrieveTeamDetail(team.idTeam, (error, detail) => {
+            retrieveTeamDetail(idTeam, (error, detail) => {
+                // debugger
                 if (error instanceof Error) {
                     this.__handleError__(error.message)
                     return
                 }
-                retrievePlayers(team.strTeam, (error, players) => {
+
+                retrievePlayers(detail.strTeam, (error, players) => {
                     if (error instanceof Error) {
                         this.__handleError__(error.message)
                         return
                     }
-                    retrieveEvents(team.idTeam, (error, events) => {
+
+                    retrieveEvents(detail.idTeam, (error, events) => {
                         if (error instanceof Error) {
                             this.__handleError__(error.message)
                             return
                         }
-                        
-                        this.setState({ detail, players, events, view: "main", mainView: 'teamDetail' })
+
+                        this.setState({ detail, players, events, view: "main", mainView: detailView }, ()=>{
+                            address.hash = `detail/${idTeam}/${detailView}`
+                        })
                     })
                 })
             })
@@ -197,7 +209,8 @@ class App extends Component {
     }
 
     handleGoToResults = () => {
-        this.setState({ view: "main", mainView: "searchResults",detail: undefined })
+        address.clear()
+        this.setState({ view: "main", mainView: "searchResults", detail: undefined })
     }
 
     handleGoPlayers = () => {
@@ -205,18 +218,21 @@ class App extends Component {
     }
 
     handleNavButtonsClick = mainView => {
-        this.setState({ view: 'main', mainView })
+        this.setState({ view: 'main', mainView }, ()=>{
+            address.hash = `detail/${this.state.detail.idTeam}/${mainView}`
+        })
     }
 
     handleLogout = () => {
         sessionStorage.clear()
+        address.clear()
         this.setState({ user: undefined, view: 'login', mainView: '' })
     }
 
     handleRetrieveFavoriteTeams = (callback) => {
         try {
             const token = this.handleRetrieveToken()
-            if(!token) return 
+            if (!token) return
 
             retrieveFavTeams(token, (error, response) => {
                 if (error instanceof Error) {
@@ -257,36 +273,53 @@ class App extends Component {
                     return
                 }
 
-                this.handleRetrieveFavoriteTeams((favoriteTeams, teams)=>{
-
+                this.handleRetrieveFavoriteTeams((favoriteTeams, teams) => {
                     if (this.state.query) {
                         this.handleSearchTeams(this.state.query)
                     } else {
-                        this.setState({teams})
+                        this.setState({ teams })
                     }
-                    
-                    })
+                })
             })
         } catch (error) {
             this.__handleError__(error.message)
         }
     }
 
-    /* REACT LIFECYCLES */
-    componentWillMount() {
+    handleHashAddress = () => {
+        if (address.hash) {
+            const [link, id, section] = address.hash.split('/')
+            if (link === 'detail') {
+                // let view = 'teamDetail'
+                // if (section === 'events') view = 'teamEvents'
+                // else if (section === 'players') view = 'players'
 
+                let view = ''
+                const viewIsValid = ['teamDetail', 'players', 'teamEvents'].indexOf(section) !== -1
+                if (!viewIsValid) view = 'teamDetail'
+                else view = section
+
+                this.handleGoToDetail({ idTeam: id }, view)
+            }
+        }
     }
+
+    /* REACT LIFECYCLES */
 
     componentDidMount() {
         this.handleRetrieveFavoriteTeams()
 
         this.handleRetrieveUser(() => {
-            this.handleRetrieveTeams()
+            if (address.hash) {
+                this.handleHashAddress()
+            } else {
+                this.handleRetrieveTeams()
+            }
         })
     }
 
     render() {
-        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams , feedbackMessage, feedbackType}, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick } = this
+        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams, feedbackMessage, feedbackType }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick } = this
         return <div>
             {feedbackMessage && <Feedback message={feedbackMessage} type={feedbackType} />}
             <Header

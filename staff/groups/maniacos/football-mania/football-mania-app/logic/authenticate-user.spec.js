@@ -144,23 +144,23 @@ describe('authenticateUser', () => {
     it ("should fail in non-function callback", ()=>{
         callback = 1
         expect(()=> 
-        authenticateUser(username, password , callback)
-        ).toThrowError(TypeError, `${callback} is not a function`)
+            authenticateUser(username, password , callback)
+            ).toThrowError(TypeError, `${callback} is not a function`)
 
         callback = true
         expect(()=>
-        authenticateUser(username, password, callback)
-        ).toThrowError(TypeError, `${callback} is not a function`)
+            authenticateUser(username, password, callback)
+            ).toThrowError(TypeError, `${callback} is not a function`)
 
         callback = undefined
         expect(()=>
-        authenticateUser(username, password, callback)
-        ).toThrowError(TypeError, `${callback} is  not a function`)
+            authenticateUser(username, password, callback)
+            ).toThrowError(TypeError, `${callback} is not a function`)
 
         callback = {}
         expect(()=>
-        athenticateUser(username, password, callback)
-        ).toThrowError(TypeError, `${callback} is not a function`)
+            authenticateUser(username, password, callback)
+            ).toThrowError(TypeError, `${callback} is not a function`)
     })
 
   

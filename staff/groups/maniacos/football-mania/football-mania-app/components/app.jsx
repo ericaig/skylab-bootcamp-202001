@@ -1,6 +1,6 @@
 const { Component } = React
 class App extends Component {
-    state = { view: 'login', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined }
+    state = { view: 'login', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined, table: [] }
 
     __handleError__(feedbackMessage, feedbackType = 'error') {
         this.setState({ feedbackMessage, feedbackType })
@@ -368,6 +368,16 @@ class App extends Component {
         }
     }
 
+    handleTable = () => {
+        retrieveTable (table => {
+            // if (error instanceof Error) {
+            //     this.__handleError__(error.message)
+            //     return
+            // }
+            this.setState({table, view:"main", mainView:"table"})
+        })
+    }
+
     /* REACT LIFECYCLES */
 
     componentDidMount() {
@@ -383,7 +393,7 @@ class App extends Component {
     }
 
     render() {
-        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams, feedbackMessage, feedbackType }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick } = this
+        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams, feedbackMessage, feedbackType, table }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick, handleTable } = this
         return <div>
             {feedbackMessage && <Feedback message={feedbackMessage} type={feedbackType} />}
             <Header
@@ -398,6 +408,7 @@ class App extends Component {
                 navButtonsClick={handleNavButtonsClick}
                 onSearchSubmit={handleSearchTeams}
                 view={view}
+                onTable={handleTable}
             />
             <main>
                 {view === 'register' && <Register onToSubmit={handleRegister} onGoToLogin={handleGoToLogin}/>}
@@ -414,6 +425,7 @@ class App extends Component {
                         {mainView === 'searchResults' && <Results teams={teams} goToDetail={handleGoToDetail} query={query} onGoToPlayerDetail={handleGoPlayerDetail} onFavClick={handleFavClick} />}
                         {mainView === "players" && <Resultplayers players={players} onClickPlayer={handleGoPlayerDetail} onToResults={handleGoToResults} />}
                         {mainView === "playerDetail" && player && <PlayerDetail player={player} onGoToPlayers={handleGoPlayers} />}
+                        {mainView === "table" && <ResultTable table={table} onToResults={handleGoToResults} />}
                     </div>
                 }
                 {/*<Footer/>*/}

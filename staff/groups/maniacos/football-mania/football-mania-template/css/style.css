@@ -837,4 +837,28 @@ body hr.faded-sides {
   flex-direction: row;
 }
 
+.table {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.table__container {
+  width: 100%;
+}
+.table__name {
+  border-bottom: 2px solid black;
+}
+.table__numbers {
+  width: 80vh;
+  display: flex;
+  justify-content: space-between;
+  margin-right: 350px;
+}
+.table__total {
+  color: red;
+  border-bottom: 2px solid red;
+}
+
 /*# sourceMappingURL=style.css.map */

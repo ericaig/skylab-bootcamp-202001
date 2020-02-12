@@ -1,4 +1,4 @@
-function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit, detail, navButtonsClick, mainView, onLogoutClick, view, onGoToResult }) {
+function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit, detail, navButtonsClick, mainView, onLogoutClick, view, onGoToResult, onTable }) {
     return <div className="sticky__header">
         {view !== "login" && view !== "register" && <header className="header header-xs">
             <div className="header__logo">logo</div>
@@ -62,6 +62,10 @@ function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubm
                     <div className={`header__secondaryNav ${mainView === 'teamEvents' ? ' active' : ''}`} onClick={(event) => {
                         navButtonsClick('teamEvents')
                     }}>Next Events</div>
+                    <div className={`header__secondaryNav ${mainView === 'table' ? ' active' : ''}`} onClick={(event) => {
+                        onTable()
+                        navButtonsClick('table')
+                    }}>Table</div>
                 </section>}
                 <section className="header__secondarySearch searchbar">
                     <div className="searchbar__group">

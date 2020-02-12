@@ -1,12 +1,12 @@
 const { Component } = React
 class App extends Component {
-    state = { view: 'main', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [] }
+    state = { view: 'main', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined }
 
-    __handleError__(error, messageType = 'error') {
-        this.setState({ error: error })
-        console.log(error)
+    __handleError__(feedbackMessage, feedbackType = 'error') {
+        this.setState({ feedbackMessage, feedbackType })
+        console.log(feedbackMessage)
         setTimeout(() => {
-            this.setState({ error: undefined })
+            this.setState({ feedbackMessage: undefined, feedbackType: undefined })
         }, 3000)
     }
 
@@ -19,7 +19,7 @@ class App extends Component {
     handleRetrieveTeams = (callback) => {
         try {
             const token = this.handleRetrieveToken()
-            if (!token) return
+            if (!token || !this.state.user) return this.__handleError__("You have to be logged in")
 
             retrieveTeams(token, (error, teams) => {
                 if (error instanceof Error) {
@@ -113,6 +113,7 @@ class App extends Component {
                     this.__handleError__(error.message)
                 } else {
                     this.setState({ view: "main", user: Object.assign(this.state.user, newUser) })
+                    this.__handleError__("Update successfully!", "success")
                 }
             })
         } catch (error) {
@@ -209,6 +210,7 @@ class App extends Component {
     handleRetrieveFavoriteTeams = (callback) => {
         try {
             const token = this.handleRetrieveToken()
+            if(!token) return 
 
             retrieveFavTeams(token, (error, response) => {
                 if (error instanceof Error) {
@@ -278,8 +280,9 @@ class App extends Component {
     }
 
     render() {
-        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick } = this
+        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams , feedbackMessage, feedbackType}, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick } = this
         return <div>
+            {feedbackMessage && <Feedback message={feedbackMessage} type={feedbackType} />}
             <Header
                 onGoToRegister={handleGoToRegister}
                 onGoToLogin={handleGoToLogin}

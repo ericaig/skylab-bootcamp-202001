@@ -1,0 +1,59 @@
+.event__item
+    background-color: #f9f9f9
+    padding: 10px
+    box-shadow: 0px 2px 2px #ccc
+    border-radius: 5px
+    width: 95%
+    margin: auto
+    margin-bottom: 30px
+
+    .event__date
+        font-size: 10px
+        text-align: right
+        padding: 5px
+        margin-bottom: 10px
+
+        span
+            background-color: #fff
+            padding: 5px
+            border-radius: 10px
+            // box-shadow: 1px -2px 2px inset #cccccc
+            padding-right: 8px
+            padding-left: 8px
+
+    .event__info
+        display: grid
+        grid-template-columns: auto 5% auto
+        grid-gap: 30px
+        line-height: 30px
+        
+        .event__home, .event__away
+            display: grid
+            grid-template-columns: auto auto
+            grid-gap: 10px
+            
+            .event__badge
+                width: 30px
+                height: 30px
+                background-repeat: no-repeat
+                background-position: center
+                background-size: contain
+    
+    .event__scores
+        display: grid
+        grid-template-columns: auto auto
+        .event__score
+            text-align: center
+            &.loser
+                color: #cccccc
+
+/* MEDIA QUERIES */
+/* Small devices (landscape phones, 576px and up)*/
+// media (max-width: 991.98px)
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px)
+    .event__item
+        width: 45%
+        margin: auto
+        margin-bottom: 30px

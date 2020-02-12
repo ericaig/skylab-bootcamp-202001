@@ -1,9 +1,9 @@
 function toggleTeamFav(teamId, token, callback){
     if (typeof teamId !== 'string') throw new TypeError(`${teamId} is not a string`)
     if (!teamId.trim()) throw new Error('teamId is empty')
-    if (typeof token !== 'string') throw new TypeError(`${token} is not a string`)
+    if (typeof token !== 'string') throw new TypeError(`token ${token} is not a string`)
     if (!token.trim()) throw new Error('token is empty')
-    if (typeof callback !== 'function') throw new TypeError(`${callback} is not a function`)
+    if (typeof callback !== 'function') throw new TypeError(`callback ${callback} is not a function`)
 
     const tokenParts = token.split('.')
     if (tokenParts.length !== 3) throw new Error('token is invalid')

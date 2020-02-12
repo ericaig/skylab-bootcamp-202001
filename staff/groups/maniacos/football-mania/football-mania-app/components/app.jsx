@@ -63,17 +63,22 @@ class App extends Component {
         this.setState({ view: "register" })
     }
 
-    handleRetrieveUser = () => {
-        const token = this.handleRetrieveToken()
-        if (!token) return
+    handleRetrieveUser = (callback) => {
+        try {
+            const token = this.handleRetrieveToken()
+            if (!token) return
 
-        retrieveUser(token, (error, user) => {
-            if (error) {
-                this.__handleError__(error.message)
-            } else {
-                this.setState({ view: "main", mainView: 'searchResults', user })
-            }
-        })
+            retrieveUser(token, (error, user) => {
+                if (error) {
+                    this.__handleError__(error.message)
+                } else {
+                    this.setState({ view: "main", mainView: 'searchResults', user })
+                    if(typeof callback === 'function') callback()
+                }
+            })   
+        } catch (error) {
+            this.__handleError__(error.message)
+        }
     }
 
     handleLogin = (username, password) => {
@@ -167,6 +172,7 @@ class App extends Component {
                             this.__handleError__(error.message)
                             return
                         }
+                        
                         this.setState({ detail, players, events, view: "main", mainView: 'teamDetail' })
                     })
                 })
@@ -274,8 +280,8 @@ class App extends Component {
     componentDidMount() {
         this.handleRetrieveFavoriteTeams()
 
-        this.handleRetrieveTeams(() => {
-            this.handleRetrieveUser()
+        this.handleRetrieveUser(() => {
+            this.handleRetrieveTeams()
         })
     }
 

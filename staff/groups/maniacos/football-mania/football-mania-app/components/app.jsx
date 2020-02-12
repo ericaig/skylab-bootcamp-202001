@@ -9,15 +9,17 @@ class App extends Component {
             this.setState({ error: undefined })
         }, 3000)
     }
+
     handleNavigation = (view, callback) => {
         this.setState({ mainView: view }, () => {
             if (typeof callback === 'function') callback()
         })
     }
+
     handleRetrieveTeams = (callback) => {
         try {
             const token = this.handleRetrieveToken()
-            if(!token) return
+            if (!token) return
 
             retrieveTeams(token, (error, teams) => {
                 if (error instanceof Error) {
@@ -26,7 +28,7 @@ class App extends Component {
                     return
                 }
                 console.log(teams)
-                this.setState({ teams, view: 'main', mainView: 'searchResults' }, () => {
+                this.setState({ teams, view: 'main', mainView: 'searchResults', detail: undefined }, () => {
                     if (typeof callback === 'function') callback()
                 })
             })
@@ -34,12 +36,15 @@ class App extends Component {
             this.__handleError__(error.message)
         }
     }
+
     handleSetToken = (token) => {
         sessionStorage.token = token
     }
+
     handleRetrieveToken = () => {
         return sessionStorage.token
     }
+
     handleRegister = (name, surname, age, city, username, password) => {
         try {
             registerUser(name, surname, age, city, username, password, (error) => {
@@ -53,6 +58,7 @@ class App extends Component {
             this.__handleError__(error.message)
         }
     }
+
     handleGoToRegister = () => {
         this.setState({ view: "register" })
     }
@@ -94,9 +100,11 @@ class App extends Component {
             this.__handleError__(error.message)
         }
     }
+
     handleGoToLogin = () => {
         this.setState({ view: "login" })
     }
+
     handleProfile = (newUser) => {
         try {
             const token = this.handleRetrieveToken()
@@ -111,27 +119,31 @@ class App extends Component {
             this.__handleError__(error.message)
         }
     }
+
     handleGoToProfile = () => {
         this.setState({ view: "profile" })
     }
+
     handleSearchTeams = query => {
+        this.setState({ query })
         if (!query) {
             this.handleRetrieveTeams()
             return
         }
-        this.setState({ query })
         try {
-            searchTeams(query, (error, teams) => {
+            const token = this.handleRetrieveToken()
+            searchTeams(query, token, (error, teams) => {
                 if (error instanceof Error) {
                     this.__handleError__(error.message)
                     return
                 }
-                this.setState({ teams, view: 'main', mainView: 'searchResults' })
+                this.setState({ teams, view: 'main', mainView: 'searchResults', detail: undefined })
             })
         } catch (error) {
             this.__handleError__(error.message)
         }
     }
+
     handleGoToDetail = (team) => {
         if (!this.state.user) {
             this.__handleError__("You have to be logged in to view team details")
@@ -162,6 +174,7 @@ class App extends Component {
             this.__handleError__(error.message)
         }
     }
+
     handleGoPlayerDetail = (nameTeam, namePlayer) => {
         try {
             retrievePlayerDetails(nameTeam, namePlayer, (error, player) => {
@@ -175,9 +188,11 @@ class App extends Component {
             this.__handleError__(error.message)
         }
     }
+
     handleGoToResults = () => {
-        this.setState({ view: "main", mainView: "searchResults" })
+        this.setState({ view: "main", mainView: "searchResults",detail: undefined })
     }
+
     handleGoPlayers = () => {
         this.setState({ view: "main", mainView: "players" })
     }
@@ -191,7 +206,7 @@ class App extends Component {
         this.setState({ user: undefined, view: 'login', mainView: '' })
     }
 
-    handleRetrieveFavoriteTeams = (callback) =>{
+    handleRetrieveFavoriteTeams = (callback) => {
         try {
             const token = this.handleRetrieveToken()
 
@@ -203,9 +218,12 @@ class App extends Component {
 
                 const { favoriteTeams, teams } = response
 
-                this.setState({ favoriteTeams, teams })
-                
-                if (typeof callback === 'function') callback(favoriteTeams)
+                if (typeof callback === 'function') {
+                    this.setState({ favoriteTeams })
+                    callback(favoriteTeams, teams)
+                } else {
+                    this.setState({ favoriteTeams, teams })
+                }
             })
         } catch (error) {
             this.__handleError__(error.message)
@@ -231,7 +249,15 @@ class App extends Component {
                     return
                 }
 
-                this.handleRetrieveFavoriteTeams()
+                this.handleRetrieveFavoriteTeams((favoriteTeams, teams)=>{
+
+                    if (this.state.query) {
+                        this.handleSearchTeams(this.state.query)
+                    } else {
+                        this.setState({teams})
+                    }
+                    
+                    })
             })
         } catch (error) {
             this.__handleError__(error.message)
@@ -239,8 +265,8 @@ class App extends Component {
     }
 
     /* REACT LIFECYCLES */
-    componentWillMount(){
-        
+    componentWillMount() {
+
     }
 
     componentDidMount() {
@@ -250,6 +276,7 @@ class App extends Component {
             this.handleRetrieveUser()
         })
     }
+
     render() {
         const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick } = this
         return <div>
@@ -274,7 +301,7 @@ class App extends Component {
                             <Favorites favoriteTeams={favoriteTeams} goToDetail={handleGoToDetail} />
                         </div>}
                         {/*<div></div>*/}
-                        {mainView === 'teamDetail' && <TeamDetail detail={detail} goToResults={() => handleNavigation('searchResults')} />}
+                        {mainView === 'teamDetail' && <TeamDetail detail={detail} goToResults={handleGoToResults} />}
                         {mainView === "teamEvents" && <ResultsEvents events={events} onToResults={handleGoToResults} />}
                         {mainView === 'searchResults' && <Results teams={teams} goToDetail={handleGoToDetail} query={query} onGoToPlayerDetail={handleGoPlayerDetail} onFavClick={handleFavClick} />}
                         {mainView === "players" && <Resultplayers players={players} onClickPlayer={handleGoPlayerDetail} onToResults={handleGoToResults} />}

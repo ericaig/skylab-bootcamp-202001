@@ -30,8 +30,8 @@ describe('authenticateUser', () => {
         it('should succeed on correct credentials', done =>
             authenticateUser(username, password, (error, token) => {
                 expect(error).toBeUndefined()
-
-                expect(token).toBeA('string')
+                expect(token).toBeDefined()
+                expect(typeof token).toBe('string')
 
                 const [header, payload, signature] = token.split('.')
                 expect(header.length).toBeGreaterThan(0)
@@ -141,5 +141,27 @@ describe('authenticateUser', () => {
         ).toThrowError(TypeError, `password ${password} is not a string`)
     })
 
-    // TODO should fail on non-function callback
+    it ("should fail in non-function callback", ()=>{
+        callback = 1
+        expect(()=> 
+        authenticateUser(username, password , callback)
+        ).toThrowError(TypeError, `${callback} is not a function`)
+
+        callback = true
+        expect(()=>
+        authenticateUser(username, password, callback)
+        ).toThrowError(TypeError, `${callback} is not a function`)
+
+        callback = undefined
+        expect(()=>
+        authenticateUser(username, password, callback)
+        ).toThrowError(TypeError, `${callback} is  not a function`)
+
+        callback = {}
+        expect(()=>
+        athenticateUser(username, password, callback)
+        ).toThrowError(TypeError, `${callback} is not a function`)
+    })
+
+  
 })

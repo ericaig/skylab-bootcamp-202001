@@ -1,5 +1,5 @@
 function retrieveEvents(teamId, callback) {
-    if (typeof teamId !== "string") throw new TypeError(`${teamId} in not a string`)
+    if (typeof teamId !== "string") throw new TypeError(`${teamId} is not a string`)
     if (!teamId.trim()) throw new Error(`teamId ${teamId} is empty`)
     if (typeof callback !== "function") throw new TypeError(`${callback} is not a function`)
 

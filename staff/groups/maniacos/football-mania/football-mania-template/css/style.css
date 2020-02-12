@@ -138,6 +138,7 @@ body hr.faded-sides {
   background-size: contain;
   height: 50px;
   width: 200px;
+  cursor: pointer;
 }
 .header__secondary .header__secondaryNavs {
   display: flex;
@@ -585,9 +586,14 @@ body hr.faded-sides {
   background-repeat: no-repeat;
   background-size: cover;
 }
+.login__anchor {
+  color: white;
+  margin-bottom: 5px;
+}
 .login__container {
   background-color: #00000091;
   width: 20%;
+  height: 350px;
   border-radius: 7px;
   align-self: flex-end;
   margin-right: 185px;
@@ -721,6 +727,114 @@ body hr.faded-sides {
 .feedback__error {
   color: white;
   background-color: #ff6666;
+}
+
+.register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../images/landing-photo.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.register__anchor {
+  color: white;
+  margin-bottom: 5px;
+}
+.register__container {
+  background-color: #00000091;
+  width: 610px;
+  height: 420px;
+  border-radius: 7px;
+  align-self: flex-end;
+  margin-right: 80px;
+}
+.register__container-three {
+  margin-right: 10px;
+}
+.register__logo {
+  background-image: url("../images/logo.png");
+  background-position: right;
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin-left: 850px;
+  height: 250px;
+  width: 500px;
+}
+.register__title {
+  font-size: 45px;
+  align-self: flex-end;
+  color: white;
+}
+.register__name {
+  _width: 20%;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  font-size: 20px;
+  text-align: center;
+  align-self: flex-end;
+}
+.register__surname {
+  _width: 20%;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  font-size: 20px;
+  text-align: center;
+  align-self: flex-end;
+}
+.register__username {
+  _width: 20%;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  font-size: 20px;
+  text-align: center;
+  align-self: flex-end;
+}
+.register__password {
+  _width: 20%;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  font-size: 20px;
+  text-align: center;
+  align-self: flex-end;
+}
+.register__age {
+  _width: 20%;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  font-size: 20px;
+  text-align: center;
+  align-self: flex-end;
+}
+.register__city {
+  _width: 20%;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  font-size: 20px;
+  text-align: center;
+  align-self: flex-end;
+}
+.register__button {
+  _width: 10%;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 10px;
+  font-size: 20px;
+  align-self: flex-end;
+  background-color: white;
+}
+.register__container-global {
+  display: flex;
+  flex-direction: row;
 }
 
 /*# sourceMappingURL=style.css.map */

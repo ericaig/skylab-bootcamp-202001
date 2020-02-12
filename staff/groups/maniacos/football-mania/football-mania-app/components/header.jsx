@@ -1,6 +1,6 @@
-function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit, detail, navButtonsClick, mainView, onLogoutClick, view }) {
+function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit, detail, navButtonsClick, mainView, onLogoutClick, view, onGoToResult }) {
     return <div className="sticky__header">
-        {view !== "login" && <header className="header header-xs">
+        {view !== "login" && view !== "register" && <header className="header header-xs">
             <div className="header__logo">logo</div>
             <div className="header__userInteractions">
                 <div className="header__userInteractionIcon">
@@ -14,7 +14,7 @@ function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubm
                 </div>
             </div>
         </header>}
-        {view !== "login" && <header className="header header-lg">
+        {view !== "login" && view !== "register" && <header className="header header-lg">
             <section className="header__primary">
                 {user && <nav className="header__brands">                    
                     <div className="header__brand" onClick={(event) => {
@@ -48,7 +48,10 @@ function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubm
                 </nav>}
             </section>
             <section className="header__secondary">
-                <section className="header__secondaryLogo"></section>
+                <section className="header__secondaryLogo" onClick={event=>{
+                    event.preventDefault()
+                    onGoToResult()
+                }}></section>
                 {user && detail && <section className="header__secondaryNavs">
                     <div className={`header__secondaryNav ${mainView === 'teamDetail' ? ' active' : ''}`} onClick={(event)=>{
                         navButtonsClick('teamDetail')

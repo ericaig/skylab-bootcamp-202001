@@ -390,6 +390,7 @@ class App extends Component {
                 onGoToRegister={handleGoToRegister}
                 onGoToLogin={handleGoToLogin}
                 onGoToProfile={handleGoToProfile}
+                onGoToResult={handleGoToResults}
                 user={user}
                 detail={detail}
                 mainView={mainView}
@@ -399,8 +400,8 @@ class App extends Component {
                 view={view}
             />
             <main>
-                {view === 'register' && <Register onToSubmit={handleRegister} />}
-                {view === 'login' && <Login onLogin={handleLogin} />}
+                {view === 'register' && <Register onToSubmit={handleRegister} onGoToLogin={handleGoToLogin}/>}
+                {view === 'login' && <Login onLogin={handleLogin} onGoToRegister={handleGoToRegister} />}
                 {view === "profile" && <Profile onSubmit={handleProfile} user={user} />}
                 {view === 'main' &&
                     <div className="main">

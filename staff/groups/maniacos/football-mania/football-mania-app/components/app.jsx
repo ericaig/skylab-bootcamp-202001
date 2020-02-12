@@ -165,7 +165,6 @@ class App extends Component {
 
         try {
             retrieveTeamDetail(idTeam, (error, detail) => {
-                // debugger
                 if (error instanceof Error) {
                     this.__handleError__(error.message)
                     return
@@ -183,8 +182,73 @@ class App extends Component {
                             return
                         }
 
-                        this.setState({ detail, players, events, view: "main", mainView: detailView }, ()=>{
-                            address.hash = `detail/${idTeam}/${detailView}`
+                        const assignCurrentTeamDetail = (teamEvents, callback) => {
+                            // let's assign @param detail to where idTeam coincides with future/past[inHomeTeam/intAwayTeam].idTeam
+                            for (let i = 0; i < teamEvents.length; i++) {
+                                const event = teamEvents[i]
+                                if (event.idHomeTeam === idTeam) event.homeTeamDetail = detail
+                                else event.awayTeamDetail = detail
+
+                                if (typeof callback === 'function' && (i + 1) === teamEvents.length) callback()
+                            }
+                        }
+
+                        const { future, past } = events
+
+                        assignCurrentTeamDetail(future, () => {
+                            assignCurrentTeamDetail(past, () => {
+                                //let's get other teams details
+
+                                this.__handleError__('Please wait, loading events', 'success')
+                                this.setState({ detail, players, view: "main", mainView: detailView }, () => {
+                                    address.hash = `detail/${idTeam}/${detailView}`
+                                })
+
+                                const assignOtherTeamsDetail = (teamEvents, callback) => {
+                                    if (results.length !== teamEvents.length) {
+                                        // this.handleRetrieveVehicleDetails(teamEvents[position], (vehicle, style, maker, collection) => {
+                                        let teamId = ''
+                                        let teamToUpdate = ''
+                                        let currentEvent = teamEvents[position]
+
+                                        if (currentEvent.idHomeTeam === idTeam) {
+                                            teamId = currentEvent.idAwayTeam
+                                            teamToUpdate = 'away'
+                                        } else {
+                                            teamId = currentEvent.idHomeTeam
+                                            teamToUpdate = 'home'
+                                        }
+
+                                        retrieveTeamDetail(teamId, (error, otherTeamDetail) => {
+                                            results.push(otherTeamDetail)
+
+                                            if (teamToUpdate === 'away')
+                                                currentEvent.awayTeamDetail = otherTeamDetail
+                                            else
+                                                currentEvent.homeTeamDetail = otherTeamDetail
+
+                                            position++
+                                            
+                                            if (results.length !== teamEvents.length) {
+                                                assignOtherTeamsDetail(teamEvents, callback)
+                                            } else {
+                                                console.log('ARRIVED AT THE END OF RECURSIVITY.... YAYYYY')
+                                                if (typeof callback === 'function') callback()
+                                            }
+                                        })
+                                    }
+                                }
+
+                                let results = [], position = 0
+                                assignOtherTeamsDetail(past, () => {
+                                    results = []
+                                    position = 0
+                                    assignOtherTeamsDetail(future, () => {
+                                        console.log(events)
+                                        this.setState({ events })
+                                    })
+                                })
+                            })
                         })
                     })
                 })
@@ -218,7 +282,7 @@ class App extends Component {
     }
 
     handleNavButtonsClick = mainView => {
-        this.setState({ view: 'main', mainView }, ()=>{
+        this.setState({ view: 'main', mainView }, () => {
             address.hash = `detail/${this.state.detail.idTeam}/${mainView}`
         })
     }

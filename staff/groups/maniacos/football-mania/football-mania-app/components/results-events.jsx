@@ -7,8 +7,13 @@ function ResultsEvents({events,onToResults} ){
         }}>Go back to Results</a>
 
         <h2>Past Events</h2>
-        {past && past.map((item, index)=> <ItemEvents key={index} item={item} />)}
+        {past && <div className="events">
+            {past.map((item, index)=> <ItemEvents key={index} item={item} />)}
+        </div>}
+
         <h2>Next Events</h2>
-        {future && future.map((item, index)=> <ItemEvents key={index} item={item}/>)}
+        {future && <div className="events">
+            {future.map((item, index) => <ItemEvents key={index} item={item} />)}
+        </div>}
     </div>
 }

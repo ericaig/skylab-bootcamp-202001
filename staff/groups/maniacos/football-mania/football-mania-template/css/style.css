@@ -177,7 +177,8 @@ body hr.faded-sides {
 }
 
 .sidemenu {
-  width: 40vw;
+  min-width: 300px;
+  width: 300px;
   border-right: 1px solid #cccccc;
   margin-right: 10px;
   background-color: #ffffff;
@@ -573,25 +574,6 @@ body hr.faded-sides {
     flex-grow: 1;
   }
 }
-.feedback {
-  position: absolute;
-  width: 300px;
-  padding: 10px;
-  right: 50px;
-  top: 50px;
-  z-index: 100;
-}
-
-.feedback__success {
-  background-color: green;
-  color: white;
-}
-
-.feedback__error {
-  color: white;
-  background-color: #ff6666;
-}
-
 .login {
   display: flex;
   flex-direction: column;
@@ -650,6 +632,95 @@ body hr.faded-sides {
   font-size: 20px;
   align-self: flex-end;
   background-color: white;
+}
+
+.events {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* MEDIA QUERIES */
+/* Small devices (landscape phones, 576px and up)*/
+/* Large devices (desktops, 992px and up) */
+.event__item {
+  background-color: #f9f9f9;
+  padding: 10px;
+  box-shadow: 0px 2px 2px #ccc;
+  border-radius: 5px;
+  width: 95%;
+  margin: auto;
+  margin-bottom: 30px;
+}
+.event__item .event__date {
+  font-size: 10px;
+  text-align: right;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+.event__item .event__date span {
+  background-color: #fff;
+  padding: 5px;
+  border-radius: 10px;
+  padding-right: 8px;
+  padding-left: 8px;
+}
+.event__item .event__info {
+  display: grid;
+  grid-template-columns: auto 5% auto;
+  grid-gap: 30px;
+  line-height: 30px;
+}
+.event__item .event__info .event__home, .event__item .event__info .event__away {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 10px;
+}
+.event__item .event__info .event__home .event__badge, .event__item .event__info .event__away .event__badge {
+  width: 30px;
+  height: 30px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.event__item .event__scores {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+.event__item .event__scores .event__score {
+  text-align: center;
+}
+.event__item .event__scores .event__score.loser {
+  color: #cccccc;
+}
+
+/* MEDIA QUERIES */
+/* Small devices (landscape phones, 576px and up)*/
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .event__item {
+    width: 45%;
+    margin: auto;
+    margin-bottom: 30px;
+  }
+}
+.feedback {
+  position: absolute;
+  width: 300px;
+  padding: 10px;
+  right: 50px;
+  top: 50px;
+  z-index: 100;
+}
+
+.feedback__success {
+  background-color: green;
+  color: white;
+}
+
+.feedback__error {
+  color: white;
+  background-color: #ff6666;
 }
 
 /*# sourceMappingURL=style.css.map */

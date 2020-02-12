@@ -249,7 +249,7 @@ class App extends Component {
                 }
 
                 this.handleRetrieveFavoriteTeams(()=>{
-                    
+                    console.log('teting...')
                 })
 
                 if (this.state.query) {

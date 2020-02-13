@@ -924,6 +924,9 @@ body hr.faded-sides {
 .table__name {
   _border-bottom: 2px solid black;
 }
+.table__name.chosen {
+  background-color: #5fc003;
+}
 .table__numbers {
   width: 80vh;
   display: flex;

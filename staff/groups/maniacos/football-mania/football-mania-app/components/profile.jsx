@@ -13,15 +13,16 @@ function Profile({ onSubmit, user }) {
         onSubmit(newUser)
     }}>
 
-        < h3 > Profile</h3 >
-        <input type="text" name="name" defaultValue={user.name} />
-        <input type="text" name="surname" defaultValue={user.surname} />
-        <input type="text" name="age" defaultValue={user.age} />
-        <input type="text" name="city" defaultValue={user.city} />
-        <input type="text" name="username" defaultValue={user.username} />
-        <input type="password" name="oldPassword" placeholder="Enter your old password" />
-        <input type="password" name="password" placeholder="Enter your new password" />
-        <button>Update your Profile</button>
-
+        <section className="profile__container">
+            < h3 className="profile__title" > Profile</h3 >
+            <input className="profile__name" type="text" name="name" defaultValue={user.name} />
+            <input className="profile__surname" type="text" name="surname" defaultValue={user.surname} />
+            <input className="profile__age" type="text" name="age" defaultValue={user.age} />
+            <input className="profile__city" type="text" name="city" defaultValue={user.city} />
+            <input className="profile__username" type="text" name="username" defaultValue={user.username} />
+            <input className="profile__old-password" type="password" name="oldPassword" placeholder="Enter your old password" />
+            <input className="profile__password" type="password" name="password" placeholder="Enter your new password" />
+            <button className="profile__button">Update your Profile</button>
+        </section>
     </form>
 }

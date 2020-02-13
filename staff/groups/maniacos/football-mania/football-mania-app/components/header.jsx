@@ -51,7 +51,7 @@ function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubm
                     event.preventDefault()
                     onGoToResult()
                 }}></section>
-                {user && detail && <section className="header__secondaryNavs">
+                {user && detail && view !== "profile" && <section className="header__secondaryNavs">
                     <div className={`header__secondaryNav ${mainView === 'teamDetail' ? ' active' : ''}`} onClick={(event)=>{
                         navButtonsClick('teamDetail')
                     }}>Details</div>

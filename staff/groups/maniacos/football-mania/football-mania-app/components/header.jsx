@@ -1,11 +1,28 @@
 function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit, detail, navButtonsClick, mainView, onLogoutClick, view, onGoToResult, toggleSideMenu, query }) {
     return <div className="sticky__header">
         {view !== "login" && view !== "register" && <header className="header header-xs">
-            <div className="header__logo">logo</div>
-            <div className="header__userInteractions">
-                <div className="header__userInteractionIcon">
-                    <i className="fas fa-search"></i>
+            <section className="header__logo" onClick={event => {
+                event.preventDefault()
+                onGoToResult()
+            }}></section>
+
+            <section className="header__secondarySearch searchbar">
+                <div className="searchbar__group">
+                    <div className="searchbar__iconContainer">
+                        <i className="fas fa-search"></i>
+                    </div>
+                    <div className="searchbar__inputContainer">
+                        <form onSubmit={event => {
+                            event.preventDefault()
+                            const query = event.target.query.value
+                            onSearchSubmit(query)
+                        }}>
+                            <input type="text" name="query" defaultValue={query ? query : ''} placeholder="Buscar" className="searchbar__input" />
+                        </form>
+                    </div>
                 </div>
+            </section>
+            <div className="header__userInteractions">
                 <div className="header__userInteractionIcon" onClick={()=>{
                     toggleSideMenu()
                 }}>

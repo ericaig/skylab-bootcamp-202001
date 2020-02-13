@@ -4,6 +4,15 @@
 .header
     background-color: #ffffff
 
+    .header__logo
+        background-image: url('../images/logo.png')
+        background-position: center
+        background-repeat: no-repeat
+        background-size: contain
+        height: 50px
+        width: 100px
+        cursor: pointer
+
 .header.header-xs
     height: 50px
     border-bottom: 1px solid #cccccc
@@ -77,8 +86,8 @@
     justify-content: space-between
     box-shadow: 0px 2px 5px #ccc
     background-color: $header-color
-    background: rgb(251,63,63)
-    background: linear-gradient(135deg, rgba(251,63,63,0.7245273109243697) 20%, rgba(255,0,0,1) 21%, rgba(246,246,246,1) 23%)
+    // background: rgb(251,63,63)
+    // background: linear-gradient(135deg, rgba(251,63,63,0.7245273109243697) 20%, rgba(255,0,0,1) 21%, rgba(246,246,246,1) 23%)
 
     .header__secondaryNavs
         display: flex
@@ -116,11 +125,21 @@
 /* MEDIA QUERIES */
 /* Small devices (landscape phones, 576px and up)*/
 @media (max-width: 991.98px)
-    .header.header-lg
+    .header__primary, .header__secondaryLogo
         display: none
+    .header__secondary
+        justify-content: space-around
+        .header__secondarySearch
+            display: none
+    // .header.header-lg
+        // display: none
     
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px)
     .header.header-xs
         display: none
+
+    .header__secondary
+        background: rgb(251,63,63)
+        background: linear-gradient(135deg, rgba(251,63,63,0.7245273109243697) 20%, rgba(255,0,0,1) 21%, rgba(246,246,246,1) 23%)

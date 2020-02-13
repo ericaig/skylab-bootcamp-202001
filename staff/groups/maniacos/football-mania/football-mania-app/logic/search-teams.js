@@ -1,4 +1,4 @@
-function searchTeams(token, query, callback) {
+function searchTeams(query, token, callback) {
     if (typeof token !== 'string') throw new TypeError(`${token} is not a string`)
     if (!token.trim()) throw new Error('token is empty')
     if (typeof query !== 'string') throw new TypeError(`${query} is not a string`)

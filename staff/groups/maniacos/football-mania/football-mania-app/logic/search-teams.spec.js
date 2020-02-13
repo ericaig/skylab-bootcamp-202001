@@ -55,7 +55,7 @@ fdescribe('searchTeams', () => {
 
         it('should get results on matching ids but no favorites if not previously added', done => {
             
-            searchTeams(token, query, (error, teams) => {
+            searchTeams(query, token, (error, teams) => {
                 expect(error).toBeUndefined()
                 
                 expect(teams).toBeDefined()
@@ -76,7 +76,7 @@ fdescribe('searchTeams', () => {
 
         it('should succeed on non-matching query returning an empty array', done => {
             debugger
-            searchTeams(token, 'asdasdfñlajsfklasldñkfjañlsjflasjflasjfñladjs', (error, results) => {
+            searchTeams('asdasdfñlajsfklasldñkfjañlsjflasjflasjfñladjs', token, (error, results) => {
                 expect(error).toBeUndefined()
 
                 expect(results).toBeDefined()
@@ -113,7 +113,7 @@ fdescribe('searchTeams', () => {
 //             })
 
 //             it('should get results on matching query with favs as previously added', done => {
-//                 searchTeams(token, query, (error, teams) => {
+//                 searchTeams(query, token, (error, teams) => {
 //                     expect(error).toBeUndefined()
 
 //                     expect(teams).toBeDefined()
@@ -155,7 +155,7 @@ fdescribe('searchTeams', () => {
 //         })
 
 //         it('should fail on invalid token', done => {
-//             searchTeams(`${token}-wrong`, query, error => {
+//             searchTeams(query,`${token}-wrong`, error => {
 //                 expect(error).toBeInstanceOf(Error)
 //                 expect(error.message).toBe('invalid token')
 
@@ -189,19 +189,19 @@ fdescribe('searchTeams', () => {
 //         token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTNiZDhmZDE3YjgwOTFiYWFjMTIxMzgiLCJpYXQiOjE1ODA5ODA3NjEsImV4cCI6MTU4MDk4NDM2MX0.t8g49qXznSCYiK040NvOWHPXWqnj9riJ_6MD2vwIv3M'
 
 //         expect(() =>
-//             searchTeams(token, undefined, () => { })
+//             searchTeams(undefined, token,() => { })
 //         ).toThrowError(TypeError, 'undefined is not a string')
 
 //         expect(() =>
-//             searchTeams(token, 1, () => { })
+//             searchTeams(1,token, () => { })
 //         ).toThrowError(TypeError, '1 is not a string')
 
 //         expect(() =>
-//             searchTeams(token, true, () => { })
+//             searchTeams(true, token, () => { })
 //         ).toThrowError(TypeError, 'true is not a string')
 
 //         expect(() =>
-//             searchTeams(token, {}, () => { })
+//             searchTeams({}, token () => { })
 //         ).toThrowError(TypeError, '[object Object] is not a string')
 //     })
 
@@ -209,19 +209,19 @@ fdescribe('searchTeams', () => {
 //         token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTNiZDhmZDE3YjgwOTFiYWFjMTIxMzgiLCJpYXQiOjE1ODA5ODA3NjEsImV4cCI6MTU4MDk4NDM2MX0.t8g49qXznSCYiK040NvOWHPXWqnj9riJ_6MD2vwIv3M'
 
 //         expect(() =>
-//             searchTeams(token, query, undefined)
+//             searchTeams(query, token, undefined)
 //         ).toThrowError(TypeError, 'undefined is not a function')
 
 //         expect(() =>
-//             searchTeams(token, query, 1)
+//             searchTeams(query, token, 1)
 //         ).toThrowError(TypeError, '1 is not a function')
 
 //         expect(() =>
-//             searchTeams(token, query, true)
+//             searchTeams(query, token, true)
 //         ).toThrowError(TypeError, 'true is not a function')
 
 //         expect(() =>
-//             searchTeams(token, query, {})
+//             searchTeams(query, token, {})
 //         ).toThrowError(TypeError, '[object Object] is not a function')
 //     })
 // })

@@ -5,6 +5,5 @@ function ResultTable({table, onToResults, detail, teams}){
             onToResults()
         }}>Go back to Results</a>
         {table.map((team, index) => <TablePosition key={index} table={team} detail={detail} teams={teams}/>)}
-        {teams.map((team, index) => <TablePosition key={index} table={team} detail={detail} teams={teams}/>)}
     </ul>
 }

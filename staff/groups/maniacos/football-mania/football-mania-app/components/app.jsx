@@ -464,7 +464,7 @@ class App extends Component {
                     <div className="main">
                         <div className={`backdrop ${sideMenuState}`} onClick={handleToggleSideMenu}></div>
                         {user && <div className={`sidemenu ${sideMenuState}`}>
-                            <Favorites favoriteTeams={favoriteTeams} goToDetail={handleGoToDetail} />
+                            <Favorites favoriteTeams={favoriteTeams} goToDetail={handleGoToDetail} user={user} onLogoutClick={handleLogout} />
                         </div>}
                         {/*<div></div>*/}
                         {mainView === 'teamDetail' && <TeamDetail detail={detail} goToResults={handleGoToResults} />}

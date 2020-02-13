@@ -12,10 +12,19 @@ body
         height: 1px
         background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0))
 
-.sticky__header
-    position: sticky
-    top: 0
-    z-index: 1
+    .sticky__header
+        position: sticky
+        top: 0
+        z-index: 1
+    
+    .no-margin
+        margin: 0
+    
+    .no-padding
+        padding: 0
+    
+    .text-danger
+        color: #ff6666
 
 @import header
 @import main
@@ -33,3 +42,8 @@ body
 @import register
 @import table
 @import profile
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px)
+    .hide-lg
+        display: none !important

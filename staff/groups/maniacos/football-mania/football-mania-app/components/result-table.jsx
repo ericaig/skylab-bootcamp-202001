@@ -1,5 +1,4 @@
 function ResultTable({table, onToResults}){
-    //debugger
     return <ul className="table__container">
         <a href="" onClick={event=>{
             event.preventDefault()

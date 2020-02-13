@@ -1,13 +1,13 @@
 const { Component } = React
 class App extends Component {
-    state = { view: 'login', sideMenuState: 'closed', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined, table: [] }
+    state = { view: undefined, sideMenuState: 'closed', detail: undefined, query: undefined, mainView: undefined, error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined, table: [] }
 
-    __handleError__(feedbackMessage, feedbackType = 'error') {
+    __handleError__(feedbackMessage, feedbackType = 'error', timeout = 5000) {
         this.setState({ feedbackMessage, feedbackType })
-        // console.log(feedbackMessage)
+        console.log(feedbackMessage)
         setTimeout(() => {
             this.setState({ feedbackMessage: undefined, feedbackType: undefined })
-        }, 3000)
+        }, timeout)
     }
 
     handleNavigation = (view, callback) => {
@@ -17,6 +17,8 @@ class App extends Component {
     }
 
     handleRetrieveTeams = (callback) => {
+        address.search = {}
+
         try {
             const token = this.handleRetrieveToken()
             if (!token) return
@@ -27,7 +29,7 @@ class App extends Component {
                     this.handleLogout()
                     return
                 }
-                console.log(teams)
+
                 this.setState({ teams, view: 'main', mainView: 'searchResults', detail: undefined }, () => {
                     if (typeof callback === 'function') callback()
                 })
@@ -60,6 +62,7 @@ class App extends Component {
     }
 
     handleGoToRegister = () => {
+        address.hash = 'register'
         this.setState({ view: "register" })
     }
 
@@ -112,6 +115,7 @@ class App extends Component {
     }
 
     handleGoToLogin = () => {
+        address.hash = 'login'
         this.setState({ view: "login" })
     }
 
@@ -132,6 +136,7 @@ class App extends Component {
     }
 
     handleGoToProfile = () => {
+        address.hash = 'profile'
         this.setState({ view: "profile" })
     }
 
@@ -141,15 +146,18 @@ class App extends Component {
             this.handleRetrieveTeams()
             return
         }
+
         try {
             const token = this.handleRetrieveToken()
-            searchTeams(token, query, (error, teams) => {
-                
+
+            address.search = { query }
+
+            searchTeams(query, token, (error, teams) => {
                 if (error instanceof Error) {
                     this.__handleError__("not results")
                     return
                 }
-                this.setState({ teams, view: 'main', mainView: 'searchResults', detail: undefined })
+                this.setState({ teams, query, view: 'main', mainView: 'searchResults', detail: undefined })
             })
         } catch (error) {
             this.__handleError__(error.message)
@@ -158,7 +166,7 @@ class App extends Component {
 
     handleGoToDetail = (team, detailView = 'teamDetail') => {
         this.setState({ sideMenuState: 'closed' })
-        
+
         if (!this.state.user) {
             this.__handleError__("You have to be logged in to view team details")
             return
@@ -170,6 +178,12 @@ class App extends Component {
             retrieveTeamDetail(idTeam, (error, detail) => {
                 if (error instanceof Error) {
                     this.__handleError__(error.message)
+                    return
+                }
+
+                if (!detail){
+                    this.__handleError__(`Team with id ${idTeam} doesn't exists`, 'info', 10000)
+                    address.clear()
                     return
                 }
 
@@ -207,11 +221,18 @@ class App extends Component {
                                 assignCurrentTeamDetail(past, () => {
                                     //let's get other teams details
 
-                                    if (detailView === 'teamEvents') {
-                                        this.__handleError__('Please wait, loading events', 'success')
+                                    const [, , section] = address.hash.split('/')
+                                    if (section){
+                                        const detailNavs = this.getDetailNavs()
+                                        const viewIsValid = detailNavs.indexOf(section) !== -1
+                                        if (viewIsValid) detailView = section
                                     }
 
-                                    this.setState({ detail, table, players, view: "main", mainView: detailView }, () => {
+                                    if (detailView === 'teamEvents') {
+                                        this.__handleError__('Please wait, loading events', 'info')
+                                    }
+
+                                    this.setState({ detail, table, players, view: "main", mainView: detailView, query: undefined }, () => {
                                         address.hash = `detail/${idTeam}/${detailView}`
                                     })
 
@@ -296,10 +317,10 @@ class App extends Component {
         })
     }
 
-    handleLogout = () => {
+    handleLogout = (callback) => {
         sessionStorage.clear()
-        address.clear()
-        this.setState({ user: undefined, view: 'login', mainView: '' })
+        // address.clear()
+        this.setState({ user: undefined, view: 'login', mainView: '' }, callback)
     }
 
     handleRetrieveFavoriteTeams = (callback) => {
@@ -359,21 +380,39 @@ class App extends Component {
         }
     }
 
+    getDetailNavs = () => ['teamDetail', 'players', 'teamEvents', 'table']
+
     handleHashAddress = () => {
         if (address.hash) {
             const [link, id, section] = address.hash.split('/')
             if (link === 'detail') {
-                // let view = 'teamDetail'
-                // if (section === 'events') view = 'teamEvents'
-                // else if (section === 'players') view = 'players'
-
-                let view = ''
-                const viewIsValid = ['teamDetail', 'players', 'teamEvents', 'table'].indexOf(section) !== -1
-                if (!viewIsValid) view = 'teamDetail'
-                else view = section
+                let view = 'teamDetail'
+                const detailNavs = this.getDetailNavs()
+                const viewIsValid = detailNavs.indexOf(section) !== -1
+                if (viewIsValid) view = section
 
                 this.handleGoToDetail({ idTeam: id }, view)
+            } else if (link === 'login' || link === 'register') {
+                if (!this.handleRetrieveToken()) {
+                    this.setState({ view: link, mainView: undefined })
+                } else {
+                    address.clear()
+                    this.handleRetrieveUser(() => this.handleRetrieveFavoriteTeams())
+                }
+            } else if (link === 'profile') {
+                if (this.state.user) {
+                    this.setState({ view: link, mainView: undefined })
+                }
+            }else{
+                address.clear()
             }
+        } else if (address.search && Object.keys(address.search).length > 0) {
+            const { search: { query } } = address
+
+            if (query) this.handleSearchTeams(query)
+        } else {
+            // this.__handleError__('Nothing to handle', 'warning')
+            // this.handleLogout()
         }
     }
 
@@ -384,23 +423,25 @@ class App extends Component {
 
     /* REACT LIFECYCLES */
 
-    componentDidMount() {
-        this.handleRetrieveFavoriteTeams()
-
-        this.handleRetrieveUser(() => {
-            if (address.hash) {
+    componentWillMount() {
+        if (this.handleRetrieveToken()) {
+            // user is logged in
+            this.handleRetrieveUser(() => {
+                this.handleRetrieveFavoriteTeams()
                 this.handleHashAddress()
-            } else {
-                this.handleRetrieveTeams()
-            }
-        })
+            })
+        } else {
+            this.handleLogout(() => {
+                this.handleHashAddress()
+            })
+        }
     }
 
     render() {
         const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams, feedbackMessage, feedbackType, table, sideMenuState }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick, handleToggleSideMenu } = this
         return <div>
             {feedbackMessage && <Feedback message={feedbackMessage} type={feedbackType} />}
-            <Header
+            {user && <Header
                 onGoToRegister={handleGoToRegister}
                 onGoToLogin={handleGoToLogin}
                 onGoToProfile={handleGoToProfile}
@@ -412,8 +453,9 @@ class App extends Component {
                 navButtonsClick={handleNavButtonsClick}
                 onSearchSubmit={handleSearchTeams}
                 toggleSideMenu={handleToggleSideMenu}
+                query={query}
                 view={view}
-            />
+            />}
             <main>
                 {view === 'register' && <Register onToSubmit={handleRegister} onGoToLogin={handleGoToLogin} />}
                 {view === 'login' && <Login onLogin={handleLogin} onGoToRegister={handleGoToRegister} />}

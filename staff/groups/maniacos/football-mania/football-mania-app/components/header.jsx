@@ -1,4 +1,4 @@
-function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit, detail, navButtonsClick, mainView, onLogoutClick, view, onGoToResult, toggleSideMenu }) {
+function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubmit, detail, navButtonsClick, mainView, onLogoutClick, view, onGoToResult, toggleSideMenu, query }) {
     return <div className="sticky__header">
         {view !== "login" && view !== "register" && <header className="header header-xs">
             <div className="header__logo">logo</div>
@@ -76,7 +76,7 @@ function Header({ onGoToRegister, onGoToLogin, onGoToProfile, user, onSearchSubm
                                 const query = event.target.query.value
                                 onSearchSubmit(query)
                             }}>
-                                <input type="text" name="query" placeholder="Buscar" className="searchbar__input" />
+                                <input type="text" name="query" defaultValue={query ? query : ''} placeholder="Buscar" className="searchbar__input" />
                             </form>
                         </div>
                     </div>

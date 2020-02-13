@@ -1,2 +1,18 @@
 .main
     display: flex
+
+/* MEDIA QUERIES */
+/* Small devices (landscape phones, 576px and up)*/
+@media (max-width: 991.98px)
+    .main
+        & .backdrop
+            height: 100vh
+            width: 100vw
+            position: fixed
+            transition: background-color 250ms, opacity 250ms
+            &.open
+                background-color: #000000
+                opacity: .7
+            &.closed
+                background-color: transparent
+                opacity: 0

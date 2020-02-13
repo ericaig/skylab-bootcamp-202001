@@ -178,14 +178,49 @@ body hr.faded-sides {
   display: flex;
 }
 
+/* MEDIA QUERIES */
+/* Small devices (landscape phones, 576px and up)*/
+@media (max-width: 991.98px) {
+  .main .backdrop {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    transition: background-color 250ms, opacity 250ms;
+  }
+  .main .backdrop.open {
+    background-color: #000000;
+    opacity: 0.7;
+  }
+  .main .backdrop.closed {
+    background-color: transparent;
+    opacity: 0;
+  }
+}
 .sidemenu {
   min-width: 300px;
   width: 300px;
   border-right: 1px solid #cccccc;
   margin-right: 10px;
   background-color: #ffffff;
+  transition: left 500ms;
 }
 
+/* MEDIA QUERIES */
+/* Small devices (landscape phones, 576px and up)*/
+@media (max-width: 991.98px) {
+  .sidemenu {
+    position: fixed;
+    height: 100vh;
+    z-index: 1;
+  }
+  .sidemenu.open {
+    left: 0px;
+  }
+  .sidemenu.closed {
+    left: -300px;
+  }
+}
+/* Large devices (desktops, 992px and up) */
 .item {
   width: 45%;
   font-size: 14px;

@@ -1,6 +1,6 @@
 const { Component } = React
 class App extends Component {
-    state = { view: 'login', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined, table: [] }
+    state = { view: 'login', sideMenuState: 'closed', detail: undefined, query: undefined, mainView: 'searchResults', error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined, table: [] }
 
     __handleError__(feedbackMessage, feedbackType = 'error') {
         this.setState({ feedbackMessage, feedbackType })
@@ -156,6 +156,8 @@ class App extends Component {
     }
 
     handleGoToDetail = (team, detailView = 'teamDetail') => {
+        this.setState({ sideMenuState: 'closed' })
+        
         if (!this.state.user) {
             this.__handleError__("You have to be logged in to view team details")
             return
@@ -176,76 +178,78 @@ class App extends Component {
                         return
                     }
 
-                    retrieveEvents(detail.idTeam, (error, events) => {
-                        if (error instanceof Error) {
-                            this.__handleError__(error.message)
-                            return
-                        }
-
-                        const assignCurrentTeamDetail = (teamEvents, callback) => {
-                            // let's assign @param detail to where idTeam coincides with future/past[inHomeTeam/intAwayTeam].idTeam
-                            for (let i = 0; i < teamEvents.length; i++) {
-                                const event = teamEvents[i]
-                                if (event.idHomeTeam === idTeam) event.homeTeamDetail = detail
-                                else event.awayTeamDetail = detail
-
-                                if (typeof callback === 'function' && (i + 1) === teamEvents.length) callback()
+                    retrieveTable(table => {
+                        retrieveEvents(detail.idTeam, (error, events) => {
+                            if (error instanceof Error) {
+                                this.__handleError__(error.message)
+                                return
                             }
-                        }
 
-                        const { future, past } = events
+                            const assignCurrentTeamDetail = (teamEvents, callback) => {
+                                // let's assign @param detail to where idTeam coincides with future/past[inHomeTeam/intAwayTeam].idTeam
+                                for (let i = 0; i < teamEvents.length; i++) {
+                                    const event = teamEvents[i]
+                                    if (event.idHomeTeam === idTeam) event.homeTeamDetail = detail
+                                    else event.awayTeamDetail = detail
 
-                        assignCurrentTeamDetail(future, () => {
-                            assignCurrentTeamDetail(past, () => {
-                                //let's get other teams details
-
-                                if (detailView === 'teamEvents') {
-                                    this.__handleError__('Please wait, loading events', 'success')
+                                    if (typeof callback === 'function' && (i + 1) === teamEvents.length) callback()
                                 }
-                                
-                                this.setState({ detail, players, view: "main", mainView: detailView }, () => {
-                                    address.hash = `detail/${idTeam}/${detailView}`
-                                })
+                            }
 
-                                const assignOtherTeamsDetail = (teamEvents, callback) => {
-                                    if (results.length !== teamEvents.length) {
-                                        let teamId = ''
-                                        let teamToUpdate = ''
-                                        let currentEvent = teamEvents[position]
+                            const { future, past } = events
 
-                                        if (currentEvent.idHomeTeam === idTeam) {
-                                            teamId = currentEvent.idAwayTeam
-                                            teamToUpdate = 'away'
-                                        } else {
-                                            teamId = currentEvent.idHomeTeam
-                                            teamToUpdate = 'home'
-                                        }
+                            assignCurrentTeamDetail(future, () => {
+                                assignCurrentTeamDetail(past, () => {
+                                    //let's get other teams details
 
-                                        retrieveTeamDetail(teamId, (error, otherTeamDetail) => {
-                                            results.push(otherTeamDetail)
-
-                                            if (teamToUpdate === 'away')
-                                                currentEvent.awayTeamDetail = otherTeamDetail
-                                            else
-                                                currentEvent.homeTeamDetail = otherTeamDetail
-
-                                            position++
-                                            
-                                            if (results.length !== teamEvents.length) {
-                                                assignOtherTeamsDetail(teamEvents, callback)
-                                            } else {
-                                                if (typeof callback === 'function') callback()
-                                            }
-                                        })
+                                    if (detailView === 'teamEvents') {
+                                        this.__handleError__('Please wait, loading events', 'success')
                                     }
-                                }
 
-                                let results = [], position = 0
-                                assignOtherTeamsDetail(past, () => {
-                                    results = []
-                                    position = 0
-                                    assignOtherTeamsDetail(future, () => {
-                                        this.setState({ events })
+                                    this.setState({ detail, table, players, view: "main", mainView: detailView }, () => {
+                                        address.hash = `detail/${idTeam}/${detailView}`
+                                    })
+
+                                    const assignOtherTeamsDetail = (teamEvents, callback) => {
+                                        if (results.length !== teamEvents.length) {
+                                            let teamId = ''
+                                            let teamToUpdate = ''
+                                            let currentEvent = teamEvents[position]
+
+                                            if (currentEvent.idHomeTeam === idTeam) {
+                                                teamId = currentEvent.idAwayTeam
+                                                teamToUpdate = 'away'
+                                            } else {
+                                                teamId = currentEvent.idHomeTeam
+                                                teamToUpdate = 'home'
+                                            }
+
+                                            retrieveTeamDetail(teamId, (error, otherTeamDetail) => {
+                                                results.push(otherTeamDetail)
+
+                                                if (teamToUpdate === 'away')
+                                                    currentEvent.awayTeamDetail = otherTeamDetail
+                                                else
+                                                    currentEvent.homeTeamDetail = otherTeamDetail
+
+                                                position++
+
+                                                if (results.length !== teamEvents.length) {
+                                                    assignOtherTeamsDetail(teamEvents, callback)
+                                                } else {
+                                                    if (typeof callback === 'function') callback()
+                                                }
+                                            })
+                                        }
+                                    }
+
+                                    let results = [], position = 0
+                                    assignOtherTeamsDetail(past, () => {
+                                        results = []
+                                        position = 0
+                                        assignOtherTeamsDetail(future, () => {
+                                            this.setState({ events })
+                                        })
                                     })
                                 })
                             })
@@ -368,14 +372,9 @@ class App extends Component {
         }
     }
 
-    handleTable = () => {
-        retrieveTable (table => {
-            // if (error instanceof Error) {
-            //     this.__handleError__(error.message)
-            //     return
-            // }
-            this.setState({table, view:"main", mainView:"table"})
-        })
+    handleToggleSideMenu = () => {
+        const sideMenuState = this.state.sideMenuState === 'open' ? 'closed' : 'open'
+        this.setState({ sideMenuState })
     }
 
     /* REACT LIFECYCLES */
@@ -393,7 +392,7 @@ class App extends Component {
     }
 
     render() {
-        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams, feedbackMessage, feedbackType, table }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick, handleTable } = this
+        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams, feedbackMessage, feedbackType, table, sideMenuState }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick, handleToggleSideMenu } = this
         return <div>
             {feedbackMessage && <Feedback message={feedbackMessage} type={feedbackType} />}
             <Header
@@ -407,16 +406,17 @@ class App extends Component {
                 onLogoutClick={handleLogout}
                 navButtonsClick={handleNavButtonsClick}
                 onSearchSubmit={handleSearchTeams}
+                toggleSideMenu={handleToggleSideMenu}
                 view={view}
-                onTable={handleTable}
             />
             <main>
-                {view === 'register' && <Register onToSubmit={handleRegister} onGoToLogin={handleGoToLogin}/>}
+                {view === 'register' && <Register onToSubmit={handleRegister} onGoToLogin={handleGoToLogin} />}
                 {view === 'login' && <Login onLogin={handleLogin} onGoToRegister={handleGoToRegister} />}
                 {view === "profile" && <Profile onSubmit={handleProfile} user={user} />}
                 {view === 'main' &&
                     <div className="main">
-                        {user && <div className="sidemenu">
+                        <div className={`backdrop ${sideMenuState}`}></div>
+                        {user && <div className={`sidemenu ${sideMenuState}`}>
                             <Favorites favoriteTeams={favoriteTeams} goToDetail={handleGoToDetail} />
                         </div>}
                         {/*<div></div>*/}

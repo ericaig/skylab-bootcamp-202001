@@ -4,3 +4,19 @@
     border-right: 1px solid #cccccc
     margin-right: 10px
     background-color: #ffffff
+    transition: left 500ms
+
+/* MEDIA QUERIES */
+/* Small devices (landscape phones, 576px and up)*/
+@media (max-width: 991.98px)
+    .sidemenu
+        position: fixed
+        height: 100vh
+        z-index: 1
+        &.open
+            left: 0px
+        &.closed
+            left: -300px
+
+/* Large devices (desktops, 992px and up) */
+// media (min-width: 992px)

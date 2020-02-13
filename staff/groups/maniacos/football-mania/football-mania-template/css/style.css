@@ -204,6 +204,7 @@ body hr.faded-sides {
   margin-right: 10px;
   background-color: #ffffff;
   transition: left 500ms;
+  min-height: 85vh;
 }
 
 /* MEDIA QUERIES */

@@ -62,7 +62,7 @@ function retrieveFavTeams(token, callback) {
                     }
                 }
 
-                callback(error, { teams, favoriteTeams })
+                callback(undefined, { teams, favoriteTeams })
             })
         }
     })

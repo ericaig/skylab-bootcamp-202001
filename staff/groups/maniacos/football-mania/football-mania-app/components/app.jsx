@@ -415,7 +415,7 @@ class App extends Component {
                 {view === "profile" && <Profile onSubmit={handleProfile} user={user} />}
                 {view === 'main' &&
                     <div className="main">
-                        <div className={`backdrop ${sideMenuState}`}></div>
+                        <div className={`backdrop ${sideMenuState}`} onClick={handleToggleSideMenu}></div>
                         {user && <div className={`sidemenu ${sideMenuState}`}>
                             <Favorites favoriteTeams={favoriteTeams} goToDetail={handleGoToDetail} />
                         </div>}

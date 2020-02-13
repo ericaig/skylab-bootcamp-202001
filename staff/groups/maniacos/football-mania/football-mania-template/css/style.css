@@ -73,6 +73,7 @@ body .text-danger {
   align-items: center;
   padding-left: 10px;
   padding-right: 10px;
+  background: linear-gradient(135deg, rgba(251, 63, 63, 0.7245273109) 20%, red 21%, #f6f6f6 23%);
 }
 .header.header-xs .header__userInteractions {
   display: flex;
@@ -197,7 +198,6 @@ body .text-danger {
   }
 
   .header__secondary {
-    background: #fb3f3f;
     background: linear-gradient(135deg, rgba(251, 63, 63, 0.7245273109) 20%, red 21%, #f6f6f6 23%);
   }
 }

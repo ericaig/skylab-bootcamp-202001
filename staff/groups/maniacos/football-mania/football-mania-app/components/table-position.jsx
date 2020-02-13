@@ -1,7 +1,15 @@
-function TablePosition({table}){
+function TablePosition({table, detail, teams}){
+
     const {name, teamid, played, goalsfor, goalsagainst, goalsdifference, win, draw, loss, total } = table
+    const {idTeam} = detail
+
+    const teamDetail = teams.find(item=>{
+        return item.idTeam === teamid
+    })
+
     return <li className="table">
-        <h3 className="table__name">{name}</h3>
+        {teamDetail && <img src={teamDetail.strTeamBadge} style={{width: '30px'}} />}
+        <h3 className={`table__name${teamid === idTeam ? ' chosen' : ''}`}>{name}</h3>
         <section className="table__numbers">
             <span className="table__played">{played}</span>
             <span className="table__win">{win}</span>

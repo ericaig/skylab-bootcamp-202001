@@ -149,11 +149,12 @@ class App extends Component {
 
         try {
             const token = this.handleRetrieveToken()
+
             address.search = { query }
 
             searchTeams(query, token, (error, teams) => {
                 if (error instanceof Error) {
-                    this.__handleError__(error.message)
+                    this.__handleError__("not results")
                     return
                 }
                 this.setState({ teams, query, view: 'main', mainView: 'searchResults', detail: undefined })
@@ -192,7 +193,11 @@ class App extends Component {
                         return
                     }
 
-                    retrieveTable(table => {
+                    retrieveTable(idTeam, (error, table) => {
+                        if(error instanceof Error) {
+                            this.__handleError__(error.message)
+                            return
+                        }
                         retrieveEvents(detail.idTeam, (error, events) => {
                             if (error instanceof Error) {
                                 this.__handleError__(error.message)
@@ -467,7 +472,7 @@ class App extends Component {
                         {mainView === 'searchResults' && <Results teams={teams} goToDetail={handleGoToDetail} query={query} onGoToPlayerDetail={handleGoPlayerDetail} onFavClick={handleFavClick} />}
                         {mainView === "players" && <Resultplayers players={players} onClickPlayer={handleGoPlayerDetail} onToResults={handleGoToResults} />}
                         {mainView === "playerDetail" && player && <PlayerDetail player={player} onGoToPlayers={handleGoPlayers} />}
-                        {mainView === "table" && <ResultTable table={table} onToResults={handleGoToResults} />}
+                        {mainView === "table" && <ResultTable table={table} onToResults={handleGoToResults} detail={detail} teams={teams} />}
                     </div>
                 }
                 {/*<Footer/>*/}

@@ -51,7 +51,7 @@ function retrieveTeams(token, callback) {
                     if (team.idLeague == 4335) teams.push(team)
                 }
 
-                callback(undefined, teams)
+                callback(error, teams)
             })
         }
     })

@@ -1,12 +1,27 @@
 .favorites
     list-style: none
+    padding: 10px
+    margin: 0
 
     .favorite
         &__item
+            cursor: pointer
             display: grid
-            grid-template-columns: 30% auto
+            grid-template-columns: 20% auto
+            background-color: #f1f1f1
+            margin-bottom: 10px
+            padding: 5px
+            transition: background-color 200ms
+            &:hover
+                background-color: #cccccc
+
         &__logo
+            margin-right: 10px
             img
-                width: 50px
+                width: 40px
             // &__name
+        
+        &__logo, &__item
+            display: flex
+            align-items: center
                 

@@ -143,9 +143,10 @@ class App extends Component {
         }
         try {
             const token = this.handleRetrieveToken()
-            searchTeams(query, token, (error, teams) => {
+            searchTeams(token, query, (error, teams) => {
+                
                 if (error instanceof Error) {
-                    this.__handleError__(error.message)
+                    this.__handleError__("not results")
                     return
                 }
                 this.setState({ teams, view: 'main', mainView: 'searchResults', detail: undefined })

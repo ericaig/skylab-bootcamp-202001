@@ -295,7 +295,7 @@ class App extends Component {
                 // else if (section === 'players') view = 'players'
 
                 let view = ''
-                const viewIsValid = ['teamDetail', 'players', 'teamEvents'].indexOf(section) !== -1
+                const viewIsValid = ['teamDetail', 'players', 'teamEvents', 'table'].indexOf(section) !== -1
                 if (!viewIsValid) view = 'teamDetail'
                 else view = section
 

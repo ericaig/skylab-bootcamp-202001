@@ -3,10 +3,11 @@
     flex-direction: column
     align-items: center
     text-align: center
-    width: 100vw
+    _width: 100vw
     height: 100vh
+    overflow: hidden
     background-image: url('../images/landing-photo.jpg')
-    background-repeat: no-repeat
+    background-position-x: -10rem
     background-size: cover
 
     &__anchor
@@ -15,23 +16,19 @@
 
     &__container
         background-color: #00000091
-        width: 610px
-        height: 420px
+        width: 80%
+        height: 100%
         border-radius: 7px
-        align-self: flex-end
-        margin-right: 80px
 
     &__container-three
         margin-right: 10px
 
     &__logo
         background-image: url('../images/logo.png')
-        background-position: right
         background-repeat: no-repeat
-        background-size: contain
-        margin-left: 850px
-        height: 250px
-        width: 500px
+        background-size: cover
+        height: 25%
+        width: 100%
         
     
     &__title
@@ -105,4 +102,67 @@
 
     &__container-global
         display: flex
+        flex-direction: column
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px)
+        
+    .register
+        display: flex
+        flex-direction: column
+        align-items: center
+        text-align: center
+        _width: 100vw
+        height: 100vh
+        background-image: url('../images/landing-photo.jpg')
+        background-repeat: no-repeat
+        background-size: cover
+        background-position: 0rem
+
+        &__container-global
+        display: flex
         flex-direction: row
+
+        &__anchor
+            color: white
+            margin-bottom: 5px
+
+        &__container
+            background-color: #00000091
+            width: 20%
+            height: 350px
+            border-radius: 7px
+            align-self: flex-end
+            margin-right: 185px
+
+        &__logo
+            background-image: url('../images/logo.png')
+            background-position: right
+            background-repeat: no-repeat
+            background-size: contain
+            height: 25%
+            width: 100%
+            
+        
+        &__title
+            font-size: 45px
+            align-self: flex-end
+            color: white
+
+        &__username, &__password
+            border-radius: 5px
+            padding: 5px
+            margin: 10px
+            font-size: 20px
+            width: 85%
+            text-align: center
+            align-self: flex-end
+            
+        &__button
+            _width: 10%
+            border-radius: 5px
+            padding: 5px
+            margin: 10px
+            font-size: 20px
+            align-self: flex-end
+            background-color: white

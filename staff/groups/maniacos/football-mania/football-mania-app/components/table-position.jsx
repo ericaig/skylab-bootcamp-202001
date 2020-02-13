@@ -7,9 +7,11 @@ function TablePosition({table, detail, teams}){
         return item.idTeam === teamid
     })
 
-    return <li className="table">
-        {teamDetail && <img src={teamDetail.strTeamBadge} style={{width: '30px'}} />}
-        <h3 className={`table__name${teamid === idTeam ? ' chosen' : ''}`}>{name}</h3>
+    return <li className={`table${teamid === idTeam ? ' chosen' : ''}`}>
+        {teamDetail && <img className="table__badge" src={teamDetail.strTeamBadge} style={{width: '30px'}} />}
+        <div className="table__name-section">
+            <h3 className="table__name">{name}</h3>
+        </div>
         <section className="table__numbers">
             <span className="table__played">{played}</span>
             <span className="table__win">{win}</span>

@@ -1,7 +1,7 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 body .text-center {
   text-align: center;
@@ -25,6 +25,7 @@ body hr.faded-sides {
   padding: 5px;
   padding-left: 10px;
   box-sizing: content-box;
+  background-color: #ffffff;
 }
 .searchbar__group .searchbar__iconContainer {
   margin-right: 5px;
@@ -37,7 +38,7 @@ body hr.faded-sides {
   font-size: 16px;
   padding: 5px;
   box-sizing: content-box;
-  background-color: #f6f6f6cc;
+  background-color: #ffffff;
 }
 .searchbar__group .searchbar__inputContainer input:focus {
   outline: 0;
@@ -492,13 +493,30 @@ body hr.faded-sides {
 }
 .favorites {
   list-style: none;
+  padding: 10px;
+  margin: 0;
 }
 .favorites .favorite__item {
+  cursor: pointer;
   display: grid;
-  grid-template-columns: 30% auto;
+  grid-template-columns: 20% auto;
+  background-color: #f1f1f1;
+  margin-bottom: 10px;
+  padding: 5px;
+  transition: background-color 200ms;
+}
+.favorites .favorite__item:hover {
+  background-color: #cccccc;
+}
+.favorites .favorite__logo {
+  margin-right: 10px;
 }
 .favorites .favorite__logo img {
-  width: 50px;
+  width: 40px;
+}
+.favorites .favorite__logo, .favorites .favorite__item {
+  display: flex;
+  align-items: center;
 }
 
 .footer {
@@ -711,22 +729,35 @@ body hr.faded-sides {
   }
 }
 .feedback {
-  position: absolute;
+  position: fixed;
   width: 300px;
-  padding: 10px;
   right: 50px;
-  top: 50px;
+  top: 20px;
   z-index: 100;
+  box-shadow: 0px 0px 12px #999999;
+  opacity: 0.8;
+  padding: 15px 15px 15px 30px;
+  border-radius: 3px 3px 3px 3px;
+  color: #ffffff;
+}
+.feedback:hover {
+  opacity: 1;
 }
 
 .feedback__success {
-  background-color: green;
-  color: white;
+  background-color: #0abb87;
 }
 
 .feedback__error {
-  color: white;
-  background-color: #ff6666;
+  background-color: #fd397a;
+}
+
+.feedback__info {
+  background-color: #5578eb;
+}
+
+.feedback__warning {
+  background-color: #ffb822;
 }
 
 .register {

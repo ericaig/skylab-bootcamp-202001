@@ -4,7 +4,7 @@ class App extends Component {
 
     __handleError__(feedbackMessage, feedbackType = 'error') {
         this.setState({ feedbackMessage, feedbackType })
-        console.log(feedbackMessage)
+        // console.log(feedbackMessage)
         setTimeout(() => {
             this.setState({ feedbackMessage: undefined, feedbackType: undefined })
         }, 3000)
@@ -199,14 +199,16 @@ class App extends Component {
                             assignCurrentTeamDetail(past, () => {
                                 //let's get other teams details
 
-                                this.__handleError__('Please wait, loading events', 'success')
+                                if (detailView === 'teamEvents') {
+                                    this.__handleError__('Please wait, loading events', 'success')
+                                }
+                                
                                 this.setState({ detail, players, view: "main", mainView: detailView }, () => {
                                     address.hash = `detail/${idTeam}/${detailView}`
                                 })
 
                                 const assignOtherTeamsDetail = (teamEvents, callback) => {
                                     if (results.length !== teamEvents.length) {
-                                        // this.handleRetrieveVehicleDetails(teamEvents[position], (vehicle, style, maker, collection) => {
                                         let teamId = ''
                                         let teamToUpdate = ''
                                         let currentEvent = teamEvents[position]
@@ -232,7 +234,6 @@ class App extends Component {
                                             if (results.length !== teamEvents.length) {
                                                 assignOtherTeamsDetail(teamEvents, callback)
                                             } else {
-                                                console.log('ARRIVED AT THE END OF RECURSIVITY.... YAYYYY')
                                                 if (typeof callback === 'function') callback()
                                             }
                                         })
@@ -244,7 +245,6 @@ class App extends Component {
                                     results = []
                                     position = 0
                                     assignOtherTeamsDetail(future, () => {
-                                        console.log(events)
                                         this.setState({ events })
                                     })
                                 })

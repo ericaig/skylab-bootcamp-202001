@@ -5,9 +5,7 @@ function searchTeams(query, token, callback) {
     if (!query.trim()) throw new Error('query is empty')
     if (typeof callback !== 'function') throw new TypeError(`${callback} is not a function`)
     
-    debugger
     const tokenParts = token.split('.')
-    console.log(tokenParts)
     if (tokenParts.length !== 3) throw new Error('token is invalid')
 
     /*try {
@@ -29,7 +27,6 @@ function searchTeams(query, token, callback) {
             'Authorization': `Bearer ${token}`
         },
     }, (error, response) => {
-        debugger
         if (error) return callback(error)
         const content = JSON.parse(response.content)
         if (response.status !== 200) {

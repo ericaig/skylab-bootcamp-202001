@@ -1,6 +1,6 @@
 function PlayerDetail({player, onGoToPlayers}){
     const {strNationality, strPlayer, dateBorn, strBirthLocation, strDescriptionEN, strPosition, strThumb} = player
-    debugger
+
     return <article className="player-detail">
         <div>
             <h2 className="player-detail__name">{player[0].strPlayer}</h2>

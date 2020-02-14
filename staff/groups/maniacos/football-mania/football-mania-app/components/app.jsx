@@ -154,7 +154,9 @@ class App extends Component {
 
             searchTeams(query, token, (error, teams) => {
                 if (error instanceof Error) {
-                    this.__handleError__("not results")
+                    this.__handleError__("No team found", 'info')
+                    this.setState({query: undefined, teams: []})
+                    address.search = {}
                     return
                 }
                 this.setState({ teams, query, view: 'main', mainView: 'searchResults', detail: undefined })

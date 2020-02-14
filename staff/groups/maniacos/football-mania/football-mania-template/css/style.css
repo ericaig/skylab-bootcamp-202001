@@ -1,4 +1,6 @@
 body {
+  width: 100vw;
+  height: 100vh;
   padding: 0;
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
@@ -680,10 +682,9 @@ body .text-danger {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 100vw;
   height: 100vh;
   background-image: url("../images/landing-photo.jpg");
-  background-repeat: no-repeat;
+  background-position-x: -10rem;
   background-size: cover;
 }
 .login__anchor {
@@ -692,37 +693,24 @@ body .text-danger {
 }
 .login__container {
   background-color: #00000091;
-  width: 20%;
-  height: 350px;
+  width: 80%;
+  height: 50%;
   border-radius: 7px;
-  align-self: flex-end;
-  margin-right: 185px;
 }
 .login__logo {
   background-image: url("../images/logo.png");
-  background-position: right;
   background-repeat: no-repeat;
-  background-size: contain;
-  margin-left: 850px;
-  height: 250px;
-  width: 500px;
+  background-size: cover;
+  margin-right: 10%;
+  height: 25%;
+  width: 100%;
 }
 .login__title {
   font-size: 45px;
   align-self: flex-end;
   color: white;
 }
-.login__username {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.login__password {
-  _width: 20%;
+.login__username, .login__password {
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
@@ -731,7 +719,6 @@ body .text-danger {
   align-self: flex-end;
 }
 .login__button {
-  _width: 10%;
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
@@ -740,6 +727,46 @@ body .text-danger {
   background-color: white;
 }
 
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("../images/landing-photo.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0rem;
+  }
+  .login__container {
+    background-color: #00000091;
+    width: 20%;
+    height: 350px;
+    border-radius: 7px;
+    align-self: flex-end;
+    margin-right: 185px;
+  }
+  .login__logo {
+    background-image: url("../images/logo.png");
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 25%;
+    width: 100%;
+  }
+  .login__username, .login__password {
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px;
+    font-size: 20px;
+    width: 85%;
+    text-align: center;
+    align-self: flex-end;
+  }
+}
 .events {
   display: flex;
   flex-wrap: wrap;
@@ -847,10 +874,10 @@ body .text-danger {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  width: 100vw;
   height: 100vh;
+  overflow: hidden;
   background-image: url("../images/landing-photo.jpg");
-  background-repeat: no-repeat;
+  background-position-x: -10rem;
   background-size: cover;
 }
 .register__anchor {
@@ -859,76 +886,26 @@ body .text-danger {
 }
 .register__container {
   background-color: #00000091;
-  width: 610px;
-  height: 420px;
+  width: 80%;
+  height: 100%;
   border-radius: 7px;
-  align-self: flex-end;
-  margin-right: 80px;
 }
 .register__container-three {
   margin-right: 10px;
 }
 .register__logo {
   background-image: url("../images/logo.png");
-  background-position: right;
   background-repeat: no-repeat;
-  background-size: contain;
-  margin-left: 850px;
-  height: 250px;
-  width: 500px;
+  background-size: cover;
+  height: 25%;
+  width: 100%;
 }
 .register__title {
   font-size: 45px;
   align-self: flex-end;
   color: white;
 }
-.register__name {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__surname {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__username {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__password {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__age {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__city {
-  _width: 20%;
+.register__name, .register__surname, .register__username, .register__password, .register__age, .register__city {
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
@@ -937,7 +914,6 @@ body .text-danger {
   align-self: flex-end;
 }
 .register__button {
-  _width: 10%;
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
@@ -947,41 +923,85 @@ body .text-danger {
 }
 .register__container-global {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .register {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100vw;
+    height: 100vh;
+    background-image: url("../images/landing-photo.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0rem;
+  }
+  .register__container-global {
+    display: flex;
+    flex-direction: row;
+  }
+  .register__container {
+    background-color: #00000091;
+    width: 40%;
+    height: 60%;
+    border-radius: 7px;
+    align-self: flex-end;
+    margin-right: 30%;
+  }
+  .register__logo {
+    background-image: url("../images/logo.png");
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 25%;
+    width: 100%;
+  }
+}
 .table {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  width: 95%;
   justify-content: space-between;
   align-items: center;
 }
+.table.chosen {
+  background-color: #5ec00383;
+}
+.table__badge {
+  width: 10%;
+}
 .table__container {
-  width: 100%;
+  width: 95%;
+  margin: 0 auto;
+  padding: 0px;
 }
 .table__name {
-  border-bottom: 2px solid black;
-}
-.table__name.chosen {
-  background-color: #5fc003;
+  font-size: 11px;
 }
 .table__numbers {
-  width: 80vh;
+  width: 70%;
   display: flex;
   justify-content: space-between;
-  margin-right: 350px;
+  margin-right: 0px;
+  font-size: 11px;
 }
 .table__total {
   color: red;
+  font-weight: bold;
   border-bottom: 2px solid red;
 }
 .table__initials {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 80vh;
-  margin-left: 240px;
+  margin-left: 30%;
+  margin-right: 5%;
+  font-size: 11px;
+  font-weight: bold;
   border-bottom: 1px solid black;
 }
 
@@ -989,18 +1009,65 @@ body .text-danger {
   background-color: #f1f1f1;
 }
 
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .table {
+    display: flex;
+    flex-direction: row;
+    width: 95%;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .table.chosen {
+    background-color: #5ec00383;
+  }
+  .table__container {
+    width: 95%;
+    margin: 0 auto;
+  }
+  .table__badge {
+    width: 3%;
+  }
+  .table__name {
+    font-size: 15px;
+  }
+  .table__name-section {
+    width: 17%;
+    text-align: center;
+  }
+  .table__numbers {
+    width: 80%;
+    font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 0px;
+  }
+  .table__initials {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-left: 20%;
+    border-bottom: 1px solid black;
+  }
+
+  .table:hover {
+    background-color: #f1f1f1;
+  }
+}
 .profile {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  _width: 100vw;
+  width: 100vw;
   height: 100vh;
   background-image: url("../images/landing-photo.jpg");
+  background-position-x: -10rem;
+  background-size: cover;
 }
 .profile__container {
   background-color: #00000091;
-  width: 20%;
+  width: 80%;
   height: 90vh;
   border-radius: 7px;
 }
@@ -1025,6 +1092,42 @@ body .text-danger {
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: 100vh;
+    background-image: url("../images/landing-photo.jpg");
+    background-repeat: no-repeat;
+    background-position-x: 0rem;
+    background-size: cover;
+  }
+  .profile__container {
+    background-color: #00000091;
+    width: 20%;
+    height: 90vh;
+    border-radius: 7px;
+  }
+  .profile__title {
+    font-size: 45px;
+    color: white;
+  }
+  .profile__name, .profile__surname, .profile__age, .profile__city, .profile__username, .profile__old-password, .profile__password {
+    border-radius: 5px;
+    width: 85%;
+    padding: 5px;
+    margin: 10px;
+    font-size: 20px;
+    text-align: center;
+  }
+  .profile__button {
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px;
+    font-size: 20px;
+    background-color: white;
   .hide-lg {
     display: none !important;
   }

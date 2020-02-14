@@ -1,36 +1,87 @@
 .table
     display: flex
     flex-direction: row
-    width: 100%
+    width: 95%
     justify-content: space-between
     align-items: center
+    &.chosen
+        background-color: #5ec00383
+    
+    &__badge
+        width: 10%
 
     &__container
-        width: 100%
+        width: 95%
+        margin: 0 auto
+        padding: 0px
 
     &__name
-        border-bottom: 2px solid black
-        &.chosen
-            background-color: #5fc003
+        font-size: 11px
 
     &__numbers
-        width: 80vh
+        width: 70%
         display: flex
         justify-content: space-between
-        margin-right: 350px
+        margin-right: 0px
+        font-size: 11px
 
     &__total
         color: red
+        font-weight: bold
         border-bottom: 2px solid red
     
     &__initials
         display: flex
         flex-direction: row
         justify-content: space-between
-        width: 80vh
-        margin-left: 240px
+        margin-left: 30%
+        margin-right: 5%
+        font-size: 11px
+        font-weight: bold
         border-bottom: 1px solid black
 
 .table:hover
     background-color: #f1f1f1
-    
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px)
+
+    .table
+        display: flex
+        flex-direction: row
+        width: 95%
+        justify-content: space-between
+        align-items: center
+        &.chosen
+            background-color: #5ec00383
+
+        &__container
+            width: 95%
+            margin: 0 auto
+
+        &__badge
+            width: 3%
+
+        &__name
+            font-size: 15px
+
+        &__name-section
+            width: 17%
+            text-align: center
+
+        &__numbers
+            width: 80%
+            font-size: 15px
+            display: flex
+            justify-content: space-between
+            margin-right: 0px
+        
+        &__initials
+            display: flex
+            flex-direction: row
+            justify-content: space-between
+            margin-left: 20%
+            border-bottom: 1px solid black
+
+    .table:hover
+        background-color: #f1f1f1

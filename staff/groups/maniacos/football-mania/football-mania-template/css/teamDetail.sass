@@ -1,7 +1,7 @@
 $componentName: '.teamDetail'
 
 #{$componentName}
-    width: 80vw
+    width: 95%
     margin: auto
 
     .light--big-text
@@ -37,8 +37,7 @@ $componentName: '.teamDetail'
 
     &__galleries
         display: grid
-        grid-template-columns: auto auto
-        grid-gap: 10px
+        grid-template-columns: auto
         margin-top: 20px
 
         #{$componentName}__gallery:not(#{$componentName}__gallery-bg)
@@ -52,15 +51,18 @@ $componentName: '.teamDetail'
             height: 200px
 
             &-bg
-                background-color: #5d5d5d
+                background-color: $header-color
 
 /* MEDIA QUERIES */
+
 /* Small devices (landscape phones, 576px and up)*/
-@media (max-width: 991.98px)
+@media (min-width: 768px)
     #{$componentName}__galleries
         grid-template-columns: auto auto
+        grid-gap: 10px
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px)
     #{$componentName}__galleries
         grid-template-columns: auto auto auto
+        grid-gap: 30px

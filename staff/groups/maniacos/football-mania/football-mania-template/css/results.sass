@@ -4,9 +4,6 @@
     padding: 30px
     display: flex
     justify-content: space-between
-    // position: -webkit-sticky
-    // position: sticky
-    // top: 0
     background-color: #ffffff
     
     .search__query
@@ -14,15 +11,26 @@
         cursor: pointer
 
 .search__results
-    display: flex
-    flex-wrap: wrap
-    /*justify-content: space-between*/
+    // display: flex
+    // flex-wrap: wrap
+    display: grid
+    grid-template-columns: 100%
+    width: 100%
+    padding: 10px
+    box-sizing: content-box
 
 /* MEDIA QUERIES */
 /* Small devices (landscape phones, 576px and up)*/
-@media (max-width: 991.98px)
-
+@media (min-width: 768px)
+    .search__results
+        display: grid
+        grid-template-columns: auto auto
+        grid-gap: 30px
     
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px)
+    .search__results
+        display: grid
+        grid-template-columns: auto auto auto
+        grid-gap: 30px

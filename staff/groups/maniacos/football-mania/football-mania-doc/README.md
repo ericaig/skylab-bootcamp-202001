@@ -4,6 +4,8 @@
  
 Football Mania is an app for football lovers. In it you can consult general and specific information about the national first division football teams as well as their players, their sports calendars and general classification in the Spanish national league.
 
+![Football-Mania](https://media.giphy.com/media/Vx8MSphrScTAc/giphy.gif)
+
 
 ## Functional Description
 

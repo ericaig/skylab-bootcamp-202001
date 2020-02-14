@@ -195,7 +195,7 @@ class App extends Component {
                         return
                     }
 
-                    retrieveTable(idTeam, (error, table) => {
+                    retrieveTable((error, table) => {
                         if(error instanceof Error) {
                             this.__handleError__(error.message)
                             return

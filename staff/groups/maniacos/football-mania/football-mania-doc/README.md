@@ -27,10 +27,11 @@ The main features included in this application are the following:
 
 ![use case](./images-uml/use-cases.jpg)
 
-## Technical Description
 ### Workflow
 
 ![work flow](./images-uml/workflow.jpg)
+
+## Technical Description
 
 ### Blocks
 

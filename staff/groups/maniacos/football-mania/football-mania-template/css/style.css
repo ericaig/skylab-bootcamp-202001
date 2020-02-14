@@ -644,7 +644,6 @@ body hr.faded-sides {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  _width: 100vw;
   height: 100vh;
   background-image: url("../images/landing-photo.jpg");
   background-position-x: -10rem;
@@ -659,12 +658,9 @@ body hr.faded-sides {
   width: 80%;
   height: 50%;
   border-radius: 7px;
-  _margin-top: 40%;
-  _margin-right: 185px;
 }
 .login__logo {
   background-image: url("../images/logo.png");
-  _background-position: right;
   background-repeat: no-repeat;
   background-size: cover;
   margin-right: 10%;
@@ -676,17 +672,7 @@ body hr.faded-sides {
   align-self: flex-end;
   color: white;
 }
-.login__username {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.login__password {
-  _width: 20%;
+.login__username, .login__password {
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
@@ -695,7 +681,6 @@ body hr.faded-sides {
   align-self: flex-end;
 }
 .login__button {
-  _width: 10%;
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
@@ -718,10 +703,6 @@ body hr.faded-sides {
     background-size: cover;
     background-position: 0rem;
   }
-  .login__anchor {
-    color: white;
-    margin-bottom: 5px;
-  }
   .login__container {
     background-color: #00000091;
     width: 20%;
@@ -738,11 +719,6 @@ body hr.faded-sides {
     height: 25%;
     width: 100%;
   }
-  .login__title {
-    font-size: 45px;
-    align-self: flex-end;
-    color: white;
-  }
   .login__username, .login__password {
     border-radius: 5px;
     padding: 5px;
@@ -751,15 +727,6 @@ body hr.faded-sides {
     width: 85%;
     text-align: center;
     align-self: flex-end;
-  }
-  .login__button {
-    _width: 10%;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 10px;
-    font-size: 20px;
-    align-self: flex-end;
-    background-color: white;
   }
 }
 .events {
@@ -869,7 +836,6 @@ body hr.faded-sides {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  _width: 100vw;
   height: 100vh;
   overflow: hidden;
   background-image: url("../images/landing-photo.jpg");
@@ -901,53 +867,7 @@ body hr.faded-sides {
   align-self: flex-end;
   color: white;
 }
-.register__name {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__surname {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__username {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__password {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__age {
-  _width: 20%;
-  border-radius: 5px;
-  padding: 5px;
-  margin: 10px;
-  font-size: 20px;
-  text-align: center;
-  align-self: flex-end;
-}
-.register__city {
-  _width: 20%;
+.register__name, .register__surname, .register__username, .register__password, .register__age, .register__city {
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
@@ -956,7 +876,6 @@ body hr.faded-sides {
   align-self: flex-end;
 }
 .register__button {
-  _width: 10%;
   border-radius: 5px;
   padding: 5px;
   margin: 10px;
@@ -987,10 +906,6 @@ body hr.faded-sides {
     display: flex;
     flex-direction: row;
   }
-  .register__anchor {
-    color: white;
-    margin-bottom: 5px;
-  }
   .register__container {
     background-color: #00000091;
     width: 40%;
@@ -1006,29 +921,6 @@ body hr.faded-sides {
     background-size: contain;
     height: 25%;
     width: 100%;
-  }
-  .register__title {
-    font-size: 45px;
-    align-self: flex-end;
-    color: white;
-  }
-  .register__username, .register__password {
-    border-radius: 5px;
-    padding: 5px;
-    margin: 10px;
-    font-size: 20px;
-    _width: 85%;
-    text-align: center;
-    align-self: flex-end;
-  }
-  .register__button {
-    _width: 10%;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 10px;
-    font-size: 20px;
-    align-self: flex-end;
-    background-color: white;
   }
 }
 .table {
@@ -1050,7 +942,6 @@ body hr.faded-sides {
   padding: 0px;
 }
 .table__name {
-  _border-bottom: 2px solid black;
   font-size: 11px;
 }
 .table__numbers {
@@ -1113,15 +1004,10 @@ body hr.faded-sides {
     justify-content: space-between;
     margin-right: 0px;
   }
-  .table__total {
-    color: red;
-    border-bottom: 2px solid red;
-  }
   .table__initials {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    _width: 75%;
     margin-left: 20%;
     border-bottom: 1px solid black;
   }

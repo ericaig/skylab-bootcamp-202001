@@ -27,18 +27,27 @@ The main features included in this application are the following:
 
 ![use case](./images-uml/use-cases.jpg)
 
-## Technical Description
 ### Workflow
 
-![work flow](./images-uml/workflow.jpg)
+![work flow](./images-uml/flowdefinitive.png)
+
+## Technical Description
 
 ### Blocks
 
-![blocks](./images-uml/blocks.png)
+![blocks](./images-uml/bloks3.png)
 
-### Components
+### Modules
 
-![components](./images-uml/components.png)
+![components](./images-uml/Modules.jpg)
+
+### Secuences
+
+![secuences](./images-uml/secuences.definit.png)
+
+### Clases
+
+![clases](./images-uml/clases.png)
 
 ## Installation
 

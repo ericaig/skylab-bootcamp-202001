@@ -468,9 +468,9 @@ class App extends Component {
                         </div>}
                         {/*<div></div>*/}
                         {mainView === 'teamDetail' && <TeamDetail detail={detail} goToResults={handleGoToResults} />}
-                        {mainView === "teamEvents" && <ResultsEvents events={events} onToResults={handleGoToResults} />}
+                        {mainView === "teamEvents" && <ResultsEvents detail={detail} events={events} onToResults={handleGoToResults} />}
                         {mainView === 'searchResults' && <Results teams={teams} goToDetail={handleGoToDetail} query={query} onGoToPlayerDetail={handleGoPlayerDetail} onFavClick={handleFavClick} />}
-                        {mainView === "players" && <Resultplayers players={players} onClickPlayer={handleGoPlayerDetail} onToResults={handleGoToResults} />}
+                        {mainView === "players" && <Resultplayers  detail={detail} players={players} onClickPlayer={handleGoPlayerDetail} onToResults={handleGoToResults} />}
                         {mainView === "playerDetail" && player && <PlayerDetail player={player} onGoToPlayers={handleGoPlayers} />}
                         {mainView === "table" && <ResultTable table={table} onToResults={handleGoToResults} detail={detail} teams={teams} />}
                     </div>

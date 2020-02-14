@@ -18,12 +18,15 @@ function TeamDetail({ detail, goToResults }) {
     }
 
     return <section>
-        <a href="" onClick={(event) => {
+        {/* <a href="" onClick={(event) => {
             event.preventDefault()
             goToResults()
-        }}>Go back to Results</a><br /><br /><br />
+        }}>Go back to Results</a><br /><br /><br /> */}
+
 
         <section className="teamDetail">
+            <Breadcrumb items={[{ title: 'Results', breadcrumbClick: goToResults }, { title: strAlternate, breadcrumbClick: undefined}]}/>
+            
             <div className="teamDetail__header" style={headerStyle}>
                 <span className="teamDetail__title">
                     <a href={`//${strWebsite}`} target="_blank">{strAlternate}</a>

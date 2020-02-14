@@ -991,6 +991,31 @@ body .text-danger {
   background-color: white;
 }
 
+.breadcrumb {
+  list-style: none;
+  margin: 0;
+  padding: 10px 10px 10px 0px;
+}
+.breadcrumb__item {
+  color: #666666;
+  display: inline;
+}
+.breadcrumb__item a {
+  text-decoration: none;
+  color: #666666;
+}
+.breadcrumb__item a:hover {
+  text-decoration: underline;
+}
+.breadcrumb__item a:active {
+  color: #666666;
+}
+.breadcrumb__item-separator {
+  font-size: 1.5em;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .hide-lg {

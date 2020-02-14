@@ -1,3 +1,10 @@
+/**
+ * @param {string} teamId - Team ID to add or remove from favourites
+ * @param {string} token - User's authorization token. To retrieve user's current favourites teams
+ * @param {function} callback - Callback to execute after toggling user's favourite teams. It returns error on failure and nothing on success
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function toggleTeamFav(teamId, token, callback){
     if (typeof teamId !== 'string') throw new TypeError(`${teamId} is not a string`)
     if (!teamId.trim()) throw new Error('teamId is empty')

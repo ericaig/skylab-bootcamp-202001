@@ -1,3 +1,10 @@
+/**
+ * @param {string} username - The user's username for logging in
+ * @param {string} password  - The user's password for logging in
+ * @param {function} callback - Callback to execute after authentication. It returns error and token
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function authenticateUser(username, password, callback) {
     if (typeof username !== 'string') throw new TypeError(`username ${username} is not a string`)
     if (!username.trim()) throw new Error(`username ${username} is empty`)

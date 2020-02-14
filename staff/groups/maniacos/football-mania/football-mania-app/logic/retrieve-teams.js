@@ -1,3 +1,9 @@
+/**
+ * @param {string} token - User's authorization token. To retrieve user's favourite teams
+ * @param {function} callback - Callback to execute after retrieving teams in a country's league. It returns error and an array with objects
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function retrieveTeams(token, callback) {
     if (typeof token !== 'string') throw new TypeError(`${token} is not a string`)
     if (!token.trim()) throw new Error('token is empty')

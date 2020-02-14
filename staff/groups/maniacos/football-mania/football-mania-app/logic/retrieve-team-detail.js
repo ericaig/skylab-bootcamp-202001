@@ -1,3 +1,9 @@
+/**
+ * @param {string} idTeam - Team's ID
+ * @param {function} callback - Callback to execute after retrieving a team's detail. It returns error and an object
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function retrieveTeamDetail(teamId, callback) {
     if(typeof teamId !== 'string') throw new TypeError(`${teamId} is not a string`)
     if(!teamId.trim()) throw new Error('teamId is empty')

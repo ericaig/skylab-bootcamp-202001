@@ -1,3 +1,10 @@
+/**
+ * @param {string} query - User's search query
+ * @param {string} token - User's authorization token. To retrieve user's favourite teams
+ * @param {function} callback - Callback to execute after retrieving search result. It returns error and an array
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function searchTeams(query, token, callback) {
     if (typeof token !== 'string') throw new TypeError(`${token} is not a string`)
     if (!token.trim()) throw new Error('token is empty')

@@ -1,3 +1,10 @@
+/**
+ * @param {string} token - User's authorization token. To update user's details
+ * @param {object} newUser - An object containing the user's details
+ * @param {function} callback - Callback to execute after updating user's details. It returns error on failure and nothing on success
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function updateUser(token, newUser, callback) {
     if (typeof token !== 'string') throw new TypeError(`token ${token} is not a string`)
     if (!token.trim()) throw new Error(`token ${token} is empty`)

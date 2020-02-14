@@ -1,3 +1,9 @@
+/**
+ * @param {string} idTeam - Team's ID
+ * @param {function} callback - Callback to execute after retrieving a leagues current team's ranking. It returns error and an array with objects
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function retrieveTable(idTeam, callback) {
     if (typeof callback !== "function") throw new TypeError(`callback ${callback} is not a function`)
 

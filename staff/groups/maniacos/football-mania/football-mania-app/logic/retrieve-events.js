@@ -1,3 +1,8 @@
+/**
+ * @param {string} teamId - The team's identification
+ * @param {function} callback - Callback to execute after authentication. It returns error and token
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
 function retrieveEvents(teamId, callback) {
     if (typeof teamId !== "string") throw new TypeError(`${teamId} is not a string`)
     if (!teamId.trim()) throw new Error(`teamId ${teamId} is empty`)

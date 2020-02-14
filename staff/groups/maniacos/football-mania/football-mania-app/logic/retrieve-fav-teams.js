@@ -1,3 +1,9 @@
+/**
+ * @param {string} token - String to identify the logged in user
+ * @param {function} callback - Callback to execute after retrieving teams. It returns error and object
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function retrieveFavTeams(token, callback) {
     if (typeof token !== 'string') throw new TypeError(`${token} is not a string`)
     if (!token.trim()) throw new Error('token is empty')

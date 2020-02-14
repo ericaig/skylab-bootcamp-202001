@@ -1,3 +1,9 @@
+/**
+ * @param {string} token - User's authorization token.
+ * @param {function} callback - Callback to execute after retrieving user's information. It returns error and an object
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function retrieveUser(token, callback) {
     if (typeof token !== 'string') throw new TypeError(`token ${token} is not a string`)
 

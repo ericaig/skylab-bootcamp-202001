@@ -1,3 +1,14 @@
+/**
+ * @param {string} name - The user's name
+ * @param {string} surname - The user's surname
+ * @param {string} age - The user's age
+ * @param {string} city - The user's city
+ * @param {string} username - The user's username
+ * @param {string} password - The user's password
+ * @param {function} callback - Callback to execute after registration. It returns error, undefined or nothing if registration was successful
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function registerUser(name, surname, age, city, username, password, callback) {
     if (typeof name !== 'string') throw new TypeError(`${name} is not a string`)
     if (!name.trim()) throw new Error('name is empty')

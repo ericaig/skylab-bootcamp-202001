@@ -1,3 +1,9 @@
+/**
+ * @param {string} strTeam - Team's name
+ * @param {function} callback - Callback to execute after retrieving a team's players. It returns error and an array with objects
+ * @throws Will throw an error if an argument doesn't match it's type
+ */
+
 function retrievePlayers(strTeam, callback) {
     if (typeof strTeam !== "string") throw new TypeError(`${strTeam} is not a string`)
     if (!strTeam.trim()) throw new Error(`team name is empty`)

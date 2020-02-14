@@ -16,7 +16,7 @@ function ItemEvents({ item }) {
             <div className="event__home">
                 {homeTeamDetail ?
                     <div className="event__badge" style={{ backgroundImage: `url(${homeTeamDetail.strTeamBadge})`}}></div> :
-                    <div className="event__badge" style={{ backgroundImage: 'url("../football-mania-template/images/football-swoosh.png")' }}></div>
+                    <div className="event__badge" style={{ backgroundImage: 'url("./images/football-swoosh.png")' }}></div>
                 }
                 {strHomeTeam}
             </div>
@@ -24,7 +24,7 @@ function ItemEvents({ item }) {
             <div className="event__away">
                 {awayTeamDetail ?
                     <div className="event__badge" style={{ backgroundImage: `url(${awayTeamDetail.strTeamBadge})` }}></div> :
-                    <div className="event__badge" style={{ backgroundImage: 'url("../football-mania-template/images/football-swoosh.png")' }}></div>
+                    <div className="event__badge" style={{ backgroundImage: 'url("./images/football-swoosh.png")' }}></div>
                 }
                 {strAwayTeam}
             </div>

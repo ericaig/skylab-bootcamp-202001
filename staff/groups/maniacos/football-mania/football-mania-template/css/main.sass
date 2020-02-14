@@ -9,11 +9,13 @@
             height: 100vh
             width: 100vw
             position: fixed
-            transition: background-color 250ms, opacity 250ms
+            transition: display 0ms, background-color 250ms, opacity 250ms
             z-index: 9
             &.open
+                display: block
                 background-color: #000000
                 opacity: .4
             &.closed
                 background-color: transparent
                 opacity: 0
+                display: none

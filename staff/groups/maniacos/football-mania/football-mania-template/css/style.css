@@ -13,11 +13,19 @@ body hr.faded-sides {
   height: 1px;
   background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
 }
-
-.sticky__header {
+body .sticky__header {
   position: sticky;
   top: 0;
   z-index: 1;
+}
+body .no-margin {
+  margin: 0;
+}
+body .no-padding {
+  padding: 0;
+}
+body .text-danger {
+  color: #ff6666;
 }
 
 .searchbar__group {
@@ -49,6 +57,15 @@ body hr.faded-sides {
 .header {
   background-color: #ffffff;
 }
+.header .header__logo {
+  background-image: url("../images/logo.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 50px;
+  width: 100px;
+  cursor: pointer;
+}
 
 .header.header-xs {
   height: 50px;
@@ -58,6 +75,7 @@ body hr.faded-sides {
   align-items: center;
   padding-left: 10px;
   padding-right: 10px;
+  background: linear-gradient(135deg, rgba(251, 63, 63, 0.7245273109) 20%, red 21%, #f6f6f6 23%);
 }
 .header.header-xs .header__userInteractions {
   display: flex;
@@ -127,8 +145,6 @@ body hr.faded-sides {
   justify-content: space-between;
   box-shadow: 0px 2px 5px #ccc;
   background-color: #f6f6f6cc;
-  background: #fb3f3f;
-  background: linear-gradient(135deg, rgba(251, 63, 63, 0.7245273109) 20%, red 21%, #f6f6f6 23%);
 }
 .header__secondary .header__secondaryNavs {
   display: flex;
@@ -166,7 +182,14 @@ body hr.faded-sides {
 /* MEDIA QUERIES */
 /* Small devices (landscape phones, 576px and up)*/
 @media (max-width: 991.98px) {
-  .header.header-lg {
+  .header__primary, .header__secondaryLogo {
+    display: none;
+  }
+
+  .header__secondary {
+    justify-content: space-around;
+  }
+  .header__secondary .header__secondarySearch {
     display: none;
   }
 }
@@ -174,6 +197,10 @@ body hr.faded-sides {
 @media (min-width: 992px) {
   .header.header-xs {
     display: none;
+  }
+
+  .header__secondary {
+    background: linear-gradient(135deg, rgba(251, 63, 63, 0.7245273109) 20%, red 21%, #f6f6f6 23%);
   }
 }
 .main {
@@ -187,16 +214,18 @@ body hr.faded-sides {
     height: 100vh;
     width: 100vw;
     position: fixed;
-    transition: background-color 250ms, opacity 250ms;
+    transition: display 0ms, background-color 250ms, opacity 250ms;
     z-index: 9;
   }
   .main .backdrop.open {
+    display: block;
     background-color: #000000;
     opacity: 0.4;
   }
   .main .backdrop.closed {
     background-color: transparent;
     opacity: 0;
+    display: none;
   }
 }
 .sidemenu {
@@ -541,6 +570,15 @@ body hr.faded-sides {
   list-style: none;
   padding: 10px;
   margin: 0;
+}
+.favorites .fav__notif {
+  padding: 10px;
+}
+.favorites .sideMenu__item {
+  cursor: pointer;
+  background-color: #f1f1f1;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 .favorites .favorite__item {
   cursor: pointer;
@@ -1090,6 +1128,8 @@ body hr.faded-sides {
     margin: 10px;
     font-size: 20px;
     background-color: white;
+  .hide-lg {
+    display: none !important;
   }
 }
 

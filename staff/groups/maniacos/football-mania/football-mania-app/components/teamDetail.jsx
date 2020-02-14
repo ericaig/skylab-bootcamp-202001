@@ -17,7 +17,7 @@ function TeamDetail({ detail, goToResults }) {
         backgroundImage: `url(${strStadiumThumb})`
     }
 
-    return <section style={{ width: "100%" }}>
+    return <section>
         <a href="" onClick={(event) => {
             event.preventDefault()
             goToResults()

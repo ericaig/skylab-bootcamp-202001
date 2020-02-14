@@ -1,7 +1,9 @@
-function Favorites({ favoriteTeams, goToDetail, user, onLogoutClick }) {
+function Favorites({ favoriteTeams, goToDetail, user, onLogoutClick, onGoToProfile }) {
     console.log(favoriteTeams)
     return <ul className="favorites"> 
-        {user && <li className="sideMenu__item hide-lg">
+        {user && <li className="sideMenu__item hide-lg" onClick={() => {
+            onGoToProfile()
+        }}>
             <h4 className="favorite__name no-margin no-padding">
                 <i className="fas fa-user"></i>&nbsp;
                 <span>{`${user.name} ${user.surname}`}</span>

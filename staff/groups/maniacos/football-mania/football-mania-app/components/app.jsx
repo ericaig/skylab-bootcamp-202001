@@ -1,6 +1,6 @@
 const { Component } = React
 class App extends Component {
-    state = { view: undefined, sideMenuState: 'closed', detail: undefined, query: undefined, mainView: undefined, error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined, table: [] }
+    state = { view: undefined, sideMenuState: 'closed', detail: undefined, query: undefined, mainView: undefined, error: undefined, user: undefined, teams: [], favoriteTeams: [], events: {}, players: [], player: [], feedbackMessage: undefined, feedbackType: undefined, table: [], leagues: [] }
 
     __handleError__(feedbackMessage, feedbackType = 'error', timeout = 5000) {
         this.setState({ feedbackMessage, feedbackType })
@@ -14,6 +14,23 @@ class App extends Component {
         this.setState({ mainView: view }, () => {
             if (typeof callback === 'function') callback()
         })
+    }
+
+    handleRetrieveLeagues = (callback) => {
+        try{
+            retrieveLeagues((error, leagues) => {
+                if(error instanceof Error) {
+                    this.__handleError__(error.message)
+                    return
+                } else {
+                    this.setState({view: "leagues", leagues})
+                    if (typeof callback === 'function') callback()
+                }
+            })
+        } catch (error) {
+            this.__handleError__(error.message)
+        }
+
     }
 
     handleRetrieveTeams = (callback) => {
@@ -102,8 +119,9 @@ class App extends Component {
                             this.__handleError__(error.message)
                         } else {
                             this.setState({ view: "login", user }, () => {
-                                this.handleRetrieveFavoriteTeams()
-                                this.handleRetrieveTeams()
+                                // this.handleRetrieveFavoriteTeams()
+                                // this.handleRetrieveTeams()
+                                this.handleRetrieveLeagues()
                             })
                         }
                     })
@@ -440,7 +458,7 @@ class App extends Component {
     }
 
     render() {
-        const { state: { view, mainView, user, teams, query, detail, events, players, player, favoriteTeams, feedbackMessage, feedbackType, table, sideMenuState }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick, handleToggleSideMenu } = this
+        const { state: { view, mainView, user, teams, leagues, query, detail, events, players, player, favoriteTeams, feedbackMessage, feedbackType, table, sideMenuState }, handleGoToDetail, handleSearchTeams, handleLogin, handleRegister, handleGoToRegister, handleGoToLogin, handleProfile, handleGoToProfile, handleNavigation, handleGoToResults, handleGoPlayerDetail, handleGoPlayers, handleNavButtonsClick, handleLogout, handleFavClick, handleToggleSideMenu, handleGoToLeague } = this
         return <div>
             {feedbackMessage && <Feedback message={feedbackMessage} type={feedbackType} />}
             {user && <Header
@@ -462,6 +480,7 @@ class App extends Component {
                 {view === 'register' && <Register onToSubmit={handleRegister} onGoToLogin={handleGoToLogin} />}
                 {view === 'login' && <Login onLogin={handleLogin} onGoToRegister={handleGoToRegister} />}
                 {view === "profile" && <Profile onSubmit={handleProfile} user={user} />}
+                {view === "leagues" && <ResultLeagues leagues={leagues} goLeague={handleGoToLeague}/>}
                 {view === 'main' &&
                     <div className="main">
                         <div className={`backdrop ${sideMenuState}`} onClick={handleToggleSideMenu}></div>

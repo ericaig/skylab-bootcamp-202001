@@ -1,7 +1,3 @@
-if (typeof module !== 'undefined' && module.exports && typeof exports !== 'undefined') {
-    var Murray = require('./murray')
-}
-
 describe('Murray.prototype.concat', function () {
     it('should prototype.concat return empty array if no params given', function () {
         var murray = new Murray;

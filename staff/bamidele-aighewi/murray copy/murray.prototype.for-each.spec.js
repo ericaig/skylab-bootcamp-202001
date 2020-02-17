@@ -1,7 +1,3 @@
-if (typeof module !== 'undefined' && module.exports && typeof exports !== 'undefined') {
-    var Murray = require('./murray')
-}
-
 describe('Murray.prototype.forEach', function () {
     it('should murray [1, 2, 3] be modified adding 10 to each value', function () {
         //a = 10

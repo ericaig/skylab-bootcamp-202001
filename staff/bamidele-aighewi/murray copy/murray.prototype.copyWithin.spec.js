@@ -1,7 +1,3 @@
-if (typeof module !== 'undefined' && module.exports && typeof exports !== 'undefined') {
-    var Murray = require('./murray')
-}
-
 describe('Murray.prototype.copyWithin', function() {
     it('should prototype.copyWithin return empty array if no params given', function() {
         var murray = new Murray();

@@ -109,7 +109,3 @@ Murray.prototype.copyWithin = function(index, start, end) {
 
     return array;
 }
-
-if ( typeof module !== 'undefined' && module.exports && typeof exports !== 'undefined') {
-    module.exports = Murray
-}

@@ -4,7 +4,7 @@
  * @throws Will throw an error if an argument doesn't match it's type
  */
 
-function retrieveTeams(token, callback) {
+function retrieveTeams(id, country, token, callback) {
     if (typeof token !== 'string') throw new TypeError(`${token} is not a string`)
     if (!token.trim()) throw new Error('token is empty')
     if (typeof callback !== 'function') throw new TypeError(`${callback} is not a function`)
@@ -39,7 +39,7 @@ function retrieveTeams(token, callback) {
             let { footballFavs: favs } = content
             if (!favs) favs = []
 
-            call('https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=Soccer&c=Spain', undefined, (error, response) => {
+            call(`https://www.thesportsdb.com/api/v1/json/1/search_all_teams.php?s=Soccer&c=${country}`, undefined, (error, response) => {
                 const content = JSON.parse(response.content)
                 let teams = []
 
@@ -54,7 +54,7 @@ function retrieveTeams(token, callback) {
                     team.isFavorited = favs.indexOf(team.idTeam) !== -1
 
                     // filtrar equips de primera divisió
-                    if (team.idLeague == 4335) teams.push(team)
+                    if (team.idLeague == id) teams.push(team)
                 }
 
                 callback(error, teams)

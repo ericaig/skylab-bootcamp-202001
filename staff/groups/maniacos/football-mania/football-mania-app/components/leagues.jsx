@@ -1,12 +1,12 @@
-function Leagues({league, goLeague}){
+function Leagues({leagues, goLeague}){
     debugger
     //const {strBadge, idLeague} = leagues
     return <section>
-        <img src={league[1].strBadge} onClick={event =>{
+        <img src={leagues[1].strBadge} onClick={event =>{
             event.preventDefault()
-            goLeague(idLeague)}}/>
-        <img src={league[0].strBadge} onClick={event =>{
+            goLeague(leagues[1].idLeague, leagues[1].strCountry)}}/>
+        <img src={leagues[0].strBadge} onClick={event =>{
             event.preventDefault()
-            goLeague(idLeague)}}/>
+            goLeague(leagues[0].idLeague, leagues[0].strCountry)}}/>
     </section>
 }

@@ -33,14 +33,14 @@ class App extends Component {
 
     }
 
-    handleRetrieveTeams = (callback) => {
+    handleGoToLeague = (id, country, callback) => {
         address.search = {}
 
         try {
             const token = this.handleRetrieveToken()
             if (!token) return
 
-            retrieveTeams(token, (error, teams) => {
+            retrieveTeams(id, country, token, (error, teams) => {
                 if (error instanceof Error) {
                     this.__handleError__(error.message)
                     this.handleLogout()
@@ -50,6 +50,7 @@ class App extends Component {
                 this.setState({ teams, view: 'main', mainView: 'searchResults', detail: undefined }, () => {
                     if (typeof callback === 'function') callback()
                 })
+                console.log(id)
             })
         } catch (error) {
             this.__handleError__(error.message)

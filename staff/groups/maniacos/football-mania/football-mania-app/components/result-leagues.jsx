@@ -1,5 +1,6 @@
 function ResultLeagues({leagues, goLeague}){
+    //debugger
     return <section>
-        {leagues.map((league, index) => <Leagues key={index} league={league} goLeague={goLeague}/>)}
+        {<Leagues leagues={leagues} goLeague={goLeague}/>}
     </section>
 }

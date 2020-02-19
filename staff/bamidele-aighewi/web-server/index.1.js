@@ -1,7 +1,7 @@
 const net = require('net')
 const fs = require('fs')
-const logger = require('./logger')
-const config = require('./app-config')
+const logger = require('./utils/logger')
+const config = require('./utils/app-config')
 
 config.debugger = true
 logger.debug('Starting server')
@@ -14,7 +14,7 @@ const server = net.createServer(socket => {
 
         const [methodFile] = chunk.toString().split('\n')
         let [, file] = methodFile.split(' ')
-        file = file.replace('/', '')
+        file = `./public${file.replace('/', '')}`
 
         const endSocket = (status, statusMessage, html = '') =>{
             logger.debug('Shutting down server')

@@ -22,6 +22,7 @@ const logger = {
     debug(message, callback) { 
         config.debugger && this.__write__('DEBUG', `${message}`, callback)
     },
+    log(message, callback) { this.__write__('LOG', `${message}`, callback) },
     info(message, callback) { this.__write__('INFO', `${message}`, callback) },
     error(message, callback) { this.__write__('ERROR', `${message}`, callback) },
     warn(message, callback) { this.__write__('WARN', `${message}`, callback) },

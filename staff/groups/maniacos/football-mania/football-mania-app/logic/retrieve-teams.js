@@ -12,13 +12,6 @@ function retrieveTeams(id, country, token, callback) {
     const tokenParts = token.split('.')
     if (tokenParts.length !== 3) throw new Error('token is invalid')
 
-    /*try {
-        const { sub } = JSON.parse(atob(tokenParts[1]))
-        if(!sub) throw new Error('Invalid token. "Sub" does not exist in token')
-    } catch (error) {
-        throw new Error('token is not a valid base64 string')
-    }*/
-
     if (typeof callback !== 'function') throw new TypeError(`${callback} is not a function`)
 
     const [, payload,] = tokenParts

@@ -1,6 +1,4 @@
 function Leagues({leagues, goLeague}){
-    debugger
-    //const {strBadge, idLeague} = leagues
     return <section>
         <img src={leagues[1].strBadge} onClick={event =>{
             event.preventDefault()

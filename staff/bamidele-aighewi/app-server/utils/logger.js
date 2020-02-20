@@ -2,13 +2,13 @@ const fs = require('fs')
 const moment = require('moment')
 const config = require('./app-config')
 
-const LEVELS = ['DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL']
+const LEVELS = ['LOG', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL']
 
 let ws
 
 const logger = {
     __host__: '',
-    __level__: this.DEBUG,
+    __level__: this.LOG,
     __path__: undefined,
     set host(host) { this.__host__ = host },
     get host() { return this.__host__ },
@@ -27,11 +27,12 @@ const logger = {
 
                 callback('OK')
             })
+
+            // if (!ws) ws = fs.createWriteStream(this.__path__, { flags: 'a' })
+            // ws.write(`${output}\n`)
         }
     },
-    debug(message, callback) {
-        this.__write__(this.DEBUG, `${message}`, callback)
-    },
+    debug(message, callback) { this.__write__(this.DEBUG, `${message}`, callback) },
     log(message, callback) { this.__write__(this.LOG, `${message}`, callback) },
     info(message, callback) { this.__write__(this.INFO, `${message}`, callback) },
     error(message, callback) { this.__write__(this.ERROR, `${message}`, callback) },

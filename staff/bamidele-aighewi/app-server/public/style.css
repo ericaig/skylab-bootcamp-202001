@@ -1,7 +1,56 @@
-body {
-    background-color: limegreen;
+.app {
+  text-align: center;
+  position: relative;
+  margin: 0;
+  min-height: 100vh;
+}
+.app .cookie {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-right: 50px;
+  padding-left: 50px;
+  background-color: #3b3b3b;
+  position: absolute;
+  bottom: 0;
+}
+.app .cookie .cookie__header {
+  margin-bottom: 20px;
+  color: #a8a8a8;
+  text-align: left;
+}
+.app .cookie .cookie__consent {
+  color: #9c9c9c;
+  text-align: justify;
 }
 
-h1 {
-    color: purple;
+.login {
+  display: inline-block;
+  border: 1px solid black;
+  padding: 1px;
 }
+.login input {
+  border: none;
+}
+.login button {
+  border: none;
+}
+.login__error {
+  color: red;
+}
+
+.register {
+  display: inline-block;
+  border: 1px solid black;
+  padding: 1px;
+}
+.register input {
+  border: none;
+}
+.register button {
+  border: none;
+}
+.register__error {
+  color: red;
+}
+
+/*# sourceMappingURL=style.css.map */

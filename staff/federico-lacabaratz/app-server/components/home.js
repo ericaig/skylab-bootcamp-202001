@@ -1,0 +1,15 @@
+function Home (props = {}) {
+
+    const { name, username } = props
+    
+    return `<section>
+    <h1>Welcome ${name}!</h1>
+    <form action="/logout" method="POST">
+        <input type="hidden" value="${username}" name="username">
+        <button>Logout</button>
+    </form>
+</section>`
+
+}
+
+module.exports = Home

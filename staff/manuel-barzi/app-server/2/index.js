@@ -20,7 +20,6 @@ const app = express()
 app.use(loggerMidWare)
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/components', express.static(path.join(__dirname, 'components'))) // NOTE to see sass files in browser
-app.use(urlencodedBodyParser)
 app.use(cookieParserMidWare)
 app.use(acceptCookiesMidWare)
 
@@ -38,7 +37,7 @@ app.get('/login', (req, res) => {
     res.send(App({ title: 'Login', body: Login(), acceptCookies }))
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', urlencodedBodyParser, (req, res) => {
     const { body: { username, password } } = req
 
     try {
@@ -74,7 +73,7 @@ app.get('/home/:username', (req, res) => {
     } else res.redirect('/login')
 })
 
-app.post('/logout', (req, res) => {
+app.post('/logout', urlencodedBodyParser, (req, res) => {
     const { body: { username } } = req
 
     const index = sessions.indexOf(username)
@@ -87,7 +86,7 @@ app.post('/logout', (req, res) => {
     res.redirect('/login')
 })
 
-app.post('/register', (req, res) => {
+app.post('/register', urlencodedBodyParser, (req, res) => {
     const { body: { name, surname, username, password } } = req
 
     try {

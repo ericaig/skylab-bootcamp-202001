@@ -1,7 +1,7 @@
 const express = require('express')
 const { logger, loggerMidWare, cookieParserMidWare } = require('./utils')
 const path = require('path')
-const { authenticate, register, retrieveUser } = require('./logic')
+const { authenticateUser, registerUser, retrieveUser } = require('./logic')
 const bodyParser = require('body-parser')
 const { Landing, Login, Register, Home, App } = require('./components')
 const { sessions } = require('./data')
@@ -39,7 +39,7 @@ app.post('/login', (req, res) => {
     const { username, password } = req.body
 
     try {
-        authenticate(username, password)
+        authenticateUser(username, password)
 
         sessions.push(username)
 
@@ -88,7 +88,7 @@ app.post('/register', (req, res) => {
     const { name, surname, username, password } = req.body
 
     try {
-        register(name, surname, username, password)
+        registerUser(name, surname, username, password)
 
         res.redirect('/login')
 

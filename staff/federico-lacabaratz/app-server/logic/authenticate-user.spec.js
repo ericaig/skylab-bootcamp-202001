@@ -1,7 +1,7 @@
 const users = require('../data/data.js')
-const authenticate = require('./authenticate.js')
+const authenticateUser = require('./authenticate-user.js')
 
-describe('authenticate', function () {
+describe('authenticateUser', function () {
     let user
 
     beforeEach(function () {
@@ -22,24 +22,24 @@ describe('authenticate', function () {
 
         it('should succeed on correct credentials', function () {
             expect(function () {
-                authenticate(user.username, user.password)
+                authenticateUser(user.username, user.password)
             }).not.toThrow()
         })
 
         it('should fail on incorrect credentials', function () {
             expect(function () {
-                authenticate(user.username, user.password + '-wrong')
+                authenticateUser(user.username, user.password + '-wrong')
             }).toThrowError(Error, 'Wrong credentials')
 
             expect(function () {
-                authenticate(user.username + '-wrong', user.password)
+                authenticateUser(user.username + '-wrong', user.password)
             }).toThrowError(Error, 'Wrong credentials')
         })
     })
 
     it('should fail when user does not exist', function () {
         expect(function () {
-            authenticate(user.username, user.password)
+            authenticateUser(user.username, user.password)
         }).toThrowError(Error, 'Wrong credentials')
     })
 

@@ -1,6 +1,6 @@
 const users = require('../data/data')
 
-function authenticate (username, password) {
+function authenticateUser (username, password) {
     
     if (typeof username !== 'string') throw new TypeError('username ' + username + ' is not a string')
     if (typeof password !== 'string') throw new TypeError('password ' + password + ' is not a string')
@@ -10,4 +10,4 @@ function authenticate (username, password) {
     if (!user) throw new Error('Wrong credentials')
 }
 
-module.exports = authenticate
+module.exports = authenticateUser

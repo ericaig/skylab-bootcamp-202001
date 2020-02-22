@@ -1,6 +1,6 @@
 const users = require('../data/data')
 
-function register (name, surname, username, password) {
+function registerUser (name, surname, username, password) {
     
     if (typeof name !== 'string') throw new TypeError('name ' + name + ' is not a string')
     if (!name.trim()) throw new Error('name is empty')
@@ -20,4 +20,4 @@ function register (name, surname, username, password) {
     users.push(user)
 }
 
-module.exports = register
+module.exports = registerUser

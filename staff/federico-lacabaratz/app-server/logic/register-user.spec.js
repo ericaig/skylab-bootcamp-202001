@@ -1,7 +1,7 @@
 const users = require('../data/data.js')
-const register = require('./register.js')
+const registerUser = require('./register-user.js')
 
-describe('register', function () {
+describe('registerUser', function () {
     let user
     
     beforeEach(function () { 
@@ -19,7 +19,7 @@ describe('register', function () {
 
         it('should succeed on complete correct new data', function () {
             expect(function () { 
-                register(user.name, user.surname, user.username, user.password)
+                registerUser(user.name, user.surname, user.username, user.password)
             }).not.toThrow(Error)
         })
 
@@ -27,31 +27,31 @@ describe('register', function () {
             users.push(user)
             
             expect(function () { 
-                register(user.name, user.surname, user.username, user.password)
+                registerUser(user.name, user.surname, user.username, user.password)
             }).toThrowError(Error, 'User ' + user.username + ' already exists')
         })
         
         it('should fail when a user name is not a \'string\'', function () {
             expect(function () { 
-                register(1, user.surname, user.username, user.password)
+                registerUser(1, user.surname, user.username, user.password)
             }).toThrowError(TypeError, 'name ' + 1 + ' is not a string')
         })
         
         it('should fail when a user surname is not a \'string\'', function () {
             expect(function () { 
-                register(user.name, 1, user.username, user.password)
+                registerUser(user.name, 1, user.username, user.password)
             }).toThrowError(TypeError, 'surname ' + 1 + ' is not a string')
         })
         
         it('should fail when a user username is not a \'string\'', function () {
             expect(function () { 
-                register(user.name, user.surname, 1, user.password)
+                registerUser(user.name, user.surname, 1, user.password)
             }).toThrowError(TypeError, 'username ' + 1 + ' is not a string')
         })
         
         it('should fail when a user password is not a \'string\'', function () {
             expect(function () { 
-                register(user.name, user.surname, user.username, 1)
+                registerUser(user.name, user.surname, user.username, 1)
             }).toThrowError(TypeError, 'password ' + 1 + ' is not a string')
         })
     })

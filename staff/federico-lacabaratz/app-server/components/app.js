@@ -1,6 +1,7 @@
-function App (props = {}){
+const Cookies = require('./cookies')
 
-    const {title, body} = props
+module.exports = function (props = {}) {
+    const { title, body, acceptCookies } = props
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -8,12 +9,12 @@ function App (props = {}){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${title}</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/style.css">
 </head>
-<body>
+<body class="app">
     ${body}
+    ${!acceptCookies ? Cookies() : ''}
 </body>
 </html>`
-
 }
-
-module.exports = App

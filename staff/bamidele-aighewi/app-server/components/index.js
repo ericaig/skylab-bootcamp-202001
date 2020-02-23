@@ -1,8 +1,10 @@
 module.exports = {
     Login: require('./login'),
     App: require('./app'),
-    Home: require('./home'),
+    Search: require('./search'),
     Register: require('./register'),
     Landing: require('./landing'),
-    Cookie: require('./cookie'),
+    Results: require('./results'),
+    Item: require('./item'),
+    Detail: require('./detail'),
 }

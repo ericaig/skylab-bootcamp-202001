@@ -1,10 +1,7 @@
-const Cookie = require('./cookie')
+const Cookies = require('./cookies')
 
 module.exports = function (props = {}) {
-    const { title, body, req } = props
-
-    const { cookies: { cookieConsent } } = req
-    const cookieAccepted = cookieConsent && cookieConsent === 'yes'
+    const { title, body, acceptCookies } = props
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -16,8 +13,8 @@ module.exports = function (props = {}) {
     <link rel="stylesheet" href="/style.css">
 </head>
 <body class="app">
-    ${Cookie({ accepted: cookieAccepted })}
     ${body}
+    ${!acceptCookies ? Cookies() : ''}
 </body>
 </html>`
 }

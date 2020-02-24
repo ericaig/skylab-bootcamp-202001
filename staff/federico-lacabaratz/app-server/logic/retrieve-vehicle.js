@@ -26,7 +26,7 @@ module.exports =function (token, id, callback) {
 
         if (_error) return callback(new Error(_error))
 
-        const { favs = [] } = user
+        const { fav = [] } = user
 
         call(`https://skylabcoders.herokuapp.com/api/hotwheels/vehicles/${id}`, undefined, (error, response) => {
             if (error) return callback(error)
@@ -34,8 +34,7 @@ module.exports =function (token, id, callback) {
             if (response.status === 200) {
                 const vehicle = JSON.parse(response.content)
 
-                vehicle && (vehicle.isFav = favs.includes(vehicle.id))
-
+                vehicle && (vehicle.isFav = fav.includes(vehicle.id))
 
                 callback(undefined, vehicle)
             }

@@ -1,3 +1,6 @@
+const retrieveVehicle = require('./retrieve-vehicle')
+const { call } = require('../utils')
+
 describe('retrieveVehicle', () => {
     let name, surname, username, password, token, query, ids, id
 

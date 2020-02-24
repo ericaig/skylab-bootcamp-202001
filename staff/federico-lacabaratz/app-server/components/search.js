@@ -4,6 +4,7 @@ module.exports = function (props = {}) {
     const { error, query, name, vehicles } = props
 
     return `<section class="section">
+    <form action="/logout" method="POST"><button>Logout</button></form>
     <h2>Search</h2>
     <p>User: ${name} is logged in</p>
     <form action="/search/" method="GET" className="search">
@@ -12,7 +13,6 @@ module.exports = function (props = {}) {
     </form>
     ${error ? `<p class="search__error">${error}</p>` : ''}
     ${vehicles ? `<p>${Results({vehicles})}</p>` : ''}
-    <form action="/logout" method="POST"><button>Logout</button></form>
     </section>`
 
 }

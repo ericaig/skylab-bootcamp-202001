@@ -30,7 +30,9 @@ module.exports = function (token, query, callback) {
             if (response.status === 200) {
                 const results = JSON.parse(response.content)
 
-                callback(undefined, results, userFav)
+                results.forEach(vehicle => vehicle.isFav = fav.includes(vehicle.id))
+
+                callback(undefined, results)
             }
         })
     })

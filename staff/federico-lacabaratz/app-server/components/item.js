@@ -1,14 +1,14 @@
+const Detail = require('./detail')
+
 module.exports = function (props = {}) {
     const { item: {id, name, thumbnail, price} } = props
 
     return `<li>
-        <article>
-            <h3>${name}</h3>
-        </article>
-        <article name=${id}> 
-            <img src=${thumbnail}>
-            <span>${price} €</span>
-        </article>
+        <h3>${name}</h3>
+        <form action="/detail/${id}" method="GET">
+        <button type="submit" name="query" value=${id}><img src=${thumbnail}></button>
+        </form>
+        <span>${price} €</span>
     </li>`
 
 }

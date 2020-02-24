@@ -8,11 +8,10 @@ module.exports = function (props = {}) {
     <p>User: ${name} is logged in</p>
     <form action="/search/" method="GET" className="search">
     <input type="text" name="query" placeholder="criteria" defaultValue=${query}/>
-    <button type="submit">Search</button>
-    
+    <button type="submit">Search</button>  
+    </form>
     ${error ? `<p class="search__error">${error}</p>` : ''}
     ${vehicles ? `<p>${Results({vehicles})}</p>` : ''}
-    </form>
     <form action="/logout" method="POST"><button>Logout</button></form>
     </section>`
 

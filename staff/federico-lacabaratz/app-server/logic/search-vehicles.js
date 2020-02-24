@@ -2,6 +2,7 @@ const { call } = require('../utils')
 const atob = require('atob')
 
 module.exports = function (token, query, callback) {
+    console.log(`query in search vehicle: ${query}`)
     if (typeof token !== 'string') throw new TypeError(`${token} is not a string`)
     if (typeof query !== 'string') throw new TypeError(`${query} is not a string`)
     if (typeof callback !== 'function') throw new TypeError(`${callback} is not a function`)

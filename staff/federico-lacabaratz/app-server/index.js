@@ -1,10 +1,10 @@
 const express = require('express')
 const { logger, loggerMidWare } = require('./utils')
 const path = require('path')
-const { authenticateUser, retrieveUser, registerUser, searchVehicles } = require('./logic')
+const { authenticateUser, retrieveUser, registerUser, searchVehicles, retrieveVehicle } = require('./logic')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const { Login, App, Search, Register, Landing, Results, Item } = require('./components')
+const { Login, App, Search, Register, Landing, Results, Item, Detail } = require('./components')
 
 const urlencodedBodyParser = bodyParser.urlencoded({ extended: false })
 
@@ -30,7 +30,6 @@ app.get('/login', (req, res) => {
     const { session: { username } } = req
 
     if (username) return res.redirect(`/search/${username}`)
-
     const { session: { acceptCookies } } = req
 
     res.send(App({ title: 'Login', body: Login(), acceptCookies }))
@@ -97,9 +96,10 @@ app.get('/search/:username', (req, res) => {
         return res.send(App({ title: 'Login', body: Login({ error: message }), acceptCookies }))
     }
 })
-app.get('/search/', (req, res) => {
-    const { params: { username }, session: { token, acceptCookies }, query: { query } } = req
-
+app.get('/search', (req, res) => {
+    const { params: { username }, session: { token, acceptCookies }, query } = req
+    req.session.query=query
+        
     try {
 
         retrieveUser(token, (error, user) => {
@@ -109,12 +109,11 @@ app.get('/search/', (req, res) => {
                 return res.send(App({ title: 'Login', body: Login({ error: message }), acceptCookies }))
             }
             const { name } = user
-            
-            searchVehicles(token, query, (error, vehicles) => {
+            const _query = query.query
+           
+            searchVehicles(token, _query, (error, vehicles) => {
                 if (error) {
-                    const { message } = error
-                    const { session: { acceptCookies } } = req
-
+                    
                     return res.send(App({ title: 'Search', body: Search({ error: message }), acceptCookies }))
                 }
                 return res.send(App({ title: 'Search', body: Search({ name, vehicles }), acceptCookies }))
@@ -137,11 +136,13 @@ app.post('/register', urlencodedBodyParser, (req, res) => {
 
     try {
         registerUser(name, surname, username, password, error => {
-            if (error) { }
+            if (error) { 
+
             const { message } = error
             const { session: { acceptCookies } } = req
 
             return res.send(App({ title: 'Register', body: Register({ error: message }), acceptCookies }))
+            }
         })
 
         res.redirect('/login')
@@ -154,6 +155,20 @@ app.post('/register', urlencodedBodyParser, (req, res) => {
 
 app.get('/register', ({ session: { acceptCookies } }, res) => {
     res.send(App({ title: 'Register', body: Register(), acceptCookies }))
+})
+
+app.get('/detail/:id', (req, res) =>{
+    const { session: { acceptCookies, token }, params:{id} } = req
+    retrieveVehicle(token, id,(error, detail)=>{
+        if(error)
+        res.redirect(req.get('referer'))
+        if(detail)
+        res.send(App({title: `${detail.name}`, body:Detail({detail}, acceptCookies)}))
+    })
+})
+app.get('/back', (req, res)=>{
+    const {session: {query}}=req
+    res.redirect(`/search?query=${query.query}`)
 })
 
 app.post('/accept-cookies', (req, res) => {

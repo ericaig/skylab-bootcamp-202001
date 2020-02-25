@@ -1,0 +1,10 @@
+extends app
+
+block body
+  section.login
+    h1 Login
+    form(action="/login" method="POST")
+      input(type="text" name="username" placeholder="username" value=(username || false))
+      input(type="password" name="password" placeholder="password")
+      button Send
+    a(href="/register") Register

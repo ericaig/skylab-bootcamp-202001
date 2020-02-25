@@ -2,6 +2,7 @@ const { call } = require('../utils')
 
 module.exports = function (id, callback) {
     if (typeof id !== 'string') throw new TypeError(`${id} is not a string`)
+    if (!id.trim()) throw new Error('id is empty')
     if (typeof callback !== 'function') throw new TypeError(`${callback} is not a function`)
 
     call(`https://skylabcoders.herokuapp.com/api/hotwheels/styles/${id}`, undefined, (error, response) => {

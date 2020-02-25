@@ -1,33 +1,106 @@
-DEBUG 2020-02-23 10:47:22.042 setting up server
-INFO 2020-02-23 10:47:22.065 server up and running on port 8080
-DEBUG 2020-02-23 10:58:57.423 setting up server
-INFO 2020-02-23 10:58:57.440 server up and running on port 8080
-DEBUG 2020-02-23 10:58:58.334 token undefined is not a string
-DEBUG 2020-02-23 10:59:53.741 setting up server
-INFO 2020-02-23 10:59:53.764 server up and running on port 8080
-DEBUG 2020-02-23 10:59:54.486 token undefined is not a string
-DEBUG 2020-02-23 11:03:24.862 setting up server
-INFO 2020-02-23 11:03:24.899 server up and running on port 8080
-DEBUG 2020-02-23 11:12:23.504 setting up server
-INFO 2020-02-23 11:12:23.522 server up and running on port 8080
-DEBUG 2020-02-23 11:12:36.871 setting up server
-INFO 2020-02-23 11:12:36.889 server up and running on port 8080
-DEBUG 2020-02-23 11:13:13.152 setting up server
-INFO 2020-02-23 11:13:13.170 server up and running on port 8080
-WARN 2020-02-23 11:13:15.835 server abruptly stopped
-DEBUG 2020-02-23 11:13:24.448 setting up server
-INFO 2020-02-23 11:13:24.473 server up and running on port 8080
-DEBUG 2020-02-23 11:15:47.742 setting up server
-INFO 2020-02-23 11:15:47.770 server up and running on port 8080
-DEBUG 2020-02-23 11:17:28.357 setting up server
-INFO 2020-02-23 11:17:28.386 server up and running on port 8080
-DEBUG 2020-02-23 11:19:18.877 setting up server
-INFO 2020-02-23 11:19:18.905 server up and running on port 8080
-DEBUG 2020-02-23 11:20:13.008 setting up server
-INFO 2020-02-23 11:20:13.033 server up and running on port 8080
-DEBUG 2020-02-23 11:21:14.052 setting up server
-INFO 2020-02-23 11:21:14.068 server up and running on port 8080
-DEBUG 2020-02-23 11:22:20.598 token undefined is not a string
-DEBUG 2020-02-23 11:24:18.544 setting up server
-INFO 2020-02-23 11:24:18.563 server up and running on port 8080
-WARN 2020-02-23 11:49:13.788 server abruptly stopped
+DEBUG 2020-02-23 18:31:58.409 setting up server
+INFO 2020-02-23 18:31:58.427 server up and running on port 8080
+DEBUG 2020-02-23 18:33:19.383 setting up server
+INFO 2020-02-23 18:33:19.400 server up and running on port 8080
+DEBUG 2020-02-23 18:36:31.205 setting up server
+INFO 2020-02-23 18:36:31.222 server up and running on port 8080
+DEBUG 2020-02-23 18:36:52.138 setting up server
+INFO 2020-02-23 18:36:52.153 server up and running on port 8080
+DEBUG 2020-02-23 18:38:51.822 setting up server
+INFO 2020-02-23 18:38:51.852 server up and running on port 8080
+DEBUG 2020-02-23 18:43:27.200 setting up server
+INFO 2020-02-23 18:43:27.215 server up and running on port 8080
+DEBUG 2020-02-23 18:46:03.235 setting up server
+INFO 2020-02-23 18:46:03.252 server up and running on port 8080
+DEBUG 2020-02-23 19:11:22.929 setting up server
+INFO 2020-02-23 19:11:22.948 server up and running on port 8080
+DEBUG 2020-02-23 19:12:52.811 setting up server
+INFO 2020-02-23 19:12:52.829 server up and running on port 8080
+DEBUG 2020-02-23 19:16:57.108 setting up server
+INFO 2020-02-23 19:16:57.123 server up and running on port 8080
+DEBUG 2020-02-23 19:19:46.933 setting up server
+INFO 2020-02-23 19:19:46.949 server up and running on port 8080
+DEBUG 2020-02-23 19:22:44.258 setting up server
+INFO 2020-02-23 19:22:44.278 server up and running on port 8080
+DEBUG 2020-02-23 19:24:15.298 setting up server
+INFO 2020-02-23 19:24:15.317 server up and running on port 8080
+DEBUG 2020-02-23 19:25:46.827 setting up server
+INFO 2020-02-23 19:25:46.845 server up and running on port 8080
+DEBUG 2020-02-23 19:26:43.268 setting up server
+INFO 2020-02-23 19:26:43.286 server up and running on port 8080
+DEBUG 2020-02-23 19:27:09.942 setting up server
+INFO 2020-02-23 19:27:09.960 server up and running on port 8080
+DEBUG 2020-02-23 19:29:17.404 setting up server
+INFO 2020-02-23 19:29:17.423 server up and running on port 8080
+DEBUG 2020-02-23 19:31:34.960 token undefined is not a string
+DEBUG 2020-02-23 19:32:52.130 setting up server
+INFO 2020-02-23 19:32:52.147 server up and running on port 8080
+DEBUG 2020-02-23 19:32:53.496 token undefined is not a string
+WARN 2020-02-24 09:15:02.407 server abruptly stopped
+DEBUG 2020-02-24 09:15:08.470 setting up server
+INFO 2020-02-24 09:15:08.492 server up and running on port 8080
+DEBUG 2020-02-24 09:25:31.744 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.764 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.782 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.788 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.797 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.805 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.813 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.820 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.830 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.837 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.857 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.872 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.879 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.886 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.897 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.905 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.914 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.922 token undefined is not a string
+DEBUG 2020-02-24 09:25:31.929 token undefined is not a string
+DEBUG 2020-02-24 09:27:19.748 setting up server
+INFO 2020-02-24 09:27:19.781 server up and running on port 8080
+WARN 2020-02-24 09:49:05.135 server abruptly stopped
+DEBUG 2020-02-24 13:49:50.663 setting up server
+INFO 2020-02-24 13:49:50.695 server up and running on port 8080
+DEBUG 2020-02-24 13:49:59.238 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.292 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.301 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.310 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.321 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.334 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.342 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.351 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.360 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.367 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.375 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.411 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.425 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.446 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.455 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.463 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.471 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.479 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.490 token undefined is not a string
+DEBUG 2020-02-24 13:49:59.499 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.206 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.282 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.476 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.495 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.507 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.514 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.526 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.537 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.545 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.555 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.568 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.579 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.590 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.598 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.612 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.627 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.643 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.687 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.700 token undefined is not a string
+DEBUG 2020-02-24 13:50:02.715 token undefined is not a string
+WARN 2020-02-25 07:37:44.758 server abruptly stopped

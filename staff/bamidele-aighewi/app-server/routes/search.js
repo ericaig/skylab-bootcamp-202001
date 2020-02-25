@@ -26,7 +26,8 @@ module.exports = (req, res) => {
                             res.redirect('/error')
                         }
 
-                        res.send(App({ title: 'Search', body: Landing({ name, username, query, results: vehicles }), acceptCookies }))
+                        // res.send(App({ title: 'Search', body: Landing({ name, username, query, results: vehicles }), acceptCookies }))
+                        res.render('landing', { name, username, query, results: vehicles, acceptCookies })
                     })
                 } catch (error) {
                     logger.error(error)
@@ -50,7 +51,8 @@ module.exports = (req, res) => {
                     res.redirect('/error')
                 }
 
-                res.send(App({ title: 'Search', body: Landing({ query, results: vehicles }), acceptCookies }))
+                // res.send(App({ title: 'Search', body: Landing({ query, results: vehicles }), acceptCookies }))
+                res.render('landing', { query, results: vehicles, acceptCookies })
             })
         } catch (error) {
             logger.error(error)

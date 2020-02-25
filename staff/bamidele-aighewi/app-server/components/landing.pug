@@ -1,0 +1,11 @@
+if name 
+    include user
+else
+    section
+        a(href="/register") Register
+        |  or 
+        a(href="/login") Login
+
+include search
+if results
+    include results

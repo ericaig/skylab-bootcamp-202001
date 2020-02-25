@@ -1,6 +1,8 @@
 const retrieveUser = require('./retrieve-user')
 const { call } = require('../utils')
-require('../specs/specs-helper.js')
+require('../specs/specs-helper')
+require('../specs/specs-config')
+
 
 describe('retrieveUser', () => {
     let name, surname, username, password, token

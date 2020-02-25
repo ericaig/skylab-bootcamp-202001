@@ -1,18 +1,12 @@
-const Results = require('./results')
+const Feedback = require('./feedback')
 
 module.exports = function (props = {}) {
-    const { error, query, name, vehicles } = props
+    const { query = '', warning } = props
 
-    return `<section class="section">
-    <form action="/logout" method="POST"><button>Logout</button></form>
-    <h2>Search</h2>
-    <p>User: ${name} is logged in</p>
+    return `<h2>Search</h2>
     <form action="/search/" method="GET" className="search">
     <input type="text" name="query" placeholder="criteria" defaultValue=${query}/>
     <button type="submit">Search</button>  
-    </form>
-    ${error ? `<p class="search__error">${error}</p>` : ''}
-    ${vehicles ? `<p>${Results({vehicles})}</p>` : ''}
-    </section>`
-
+    ${warning ? Feedback({ level: 'warning', message: warning }) : ''}
+    </form>`
 }

@@ -1,5 +1,7 @@
-const authenticateUser = require('./authenticate-user')
+const { authenticateUser } = require('.')
 const { call } = require('../utils')
+require('../specs/specs-helper')
+require('../specs/specs-config')
 
 describe('authenticateUser', () => {
     let name, surname, username, password
@@ -144,5 +146,20 @@ describe('authenticateUser', () => {
         ).toThrowError(TypeError, `password ${password} is not a string`)
     })
 
-    // TODO should fail on non-function callback
+    it('should fail on non-function callback', () => {
+        callback = 1
+        expect(() =>
+            authenticateUser(username, password, callback)
+        ).toThrowError(TypeError, `${callback} is not a function`)
+
+        callback = true
+        expect(() =>
+            authenticateUser(username, password, callback)
+        ).toThrowError(TypeError, `${callback} is not a function`)
+
+        callback = undefined
+        expect(() =>
+            authenticateUser(username, password, callback)
+        ).toThrowError(TypeError, `${callback} is not a function`)
+    })
 })

@@ -1,5 +1,8 @@
 const registerUser = require('./register-user')
 const { call } = require('../utils')
+require('../specs/specs-helper')
+require('../specs/specs-config')
+
 
 describe('registerUser', () => {
     let name, surname, username, password

@@ -1,9 +1,9 @@
-module.exports = function (props={}) {
+module.exports = function (props = {}) {
     const { detail: { id, name, year, price, image, color, maker, style, collection, description, url, isFav } } = props
 
 
-return `<section>
-<form action='/back' method="GET"><button>Go Back</button></form>
+    return `<section>
+    <form action='/back' method="GET"><button>Go Back</button></form>
     <h3>${name} (${year})<h3><form action="/toggle-fav/${id}" method="POST">
     <button type="submit" name="isFav">
         <span class="fav"">${isFav ? '❤️' : '🤍'}</span>

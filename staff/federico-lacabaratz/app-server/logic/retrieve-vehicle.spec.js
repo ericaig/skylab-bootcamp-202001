@@ -1,5 +1,8 @@
 const retrieveVehicle = require('./retrieve-vehicle')
 const { call } = require('../utils')
+require('../specs/specs-helper')
+require('../specs/specs-config')
+
 
 describe('retrieveVehicle', () => {
     let name, surname, username, password, token, query, ids, id

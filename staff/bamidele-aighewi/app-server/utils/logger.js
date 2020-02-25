@@ -13,7 +13,7 @@ const logger = {
         if (level >= this.__level__) {
             const output = `${LEVELS[level]} ${moment().format('Y-MM-DD HH:mm:ss.SSS')} ${message}`
 
-            // console.log(output)
+            console.log(output)
 
             // fs.writeFile(this.__logFile__, `${output}\n`, { encoding: 'utf8', flag: 'a' }, error => {
             //     if (error) console.error(error)

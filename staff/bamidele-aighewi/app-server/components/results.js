@@ -1,12 +1,9 @@
 const Item = require('./item')
 
-module.exports = function ({ results }) {
-    let output = ''
+module.exports = function (props = {}) {
+    const { results } = props
 
-    if(results.length){
-        results.forEach(item => output += `${Item({item})}`)
-        output = `<ul class="results">${output}</ul>`
-    }
-
-    return output
+    return `<ul class="results">
+        ${results.map(item => Item({ item })).join('')}
+    </ul>`
 }

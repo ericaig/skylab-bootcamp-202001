@@ -13,7 +13,7 @@ module.exports = (req, res) => {
 
                     res.redirect(req.get('/error'))
                 }
-                debugger
+            
                 if (detail) {
                     res.send(App({ title: `${detail.name}`, body: Detail({ detail }), acceptCookies }))
                 }

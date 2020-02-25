@@ -14,7 +14,7 @@ module.exports = function(token, id, callback) {
     if (typeof id !== 'string') throw new TypeError(`${id} is not a string`)
     if (typeof callback !== 'function') throw new TypeError(`${callback} is not a function`)
 
-    call(`https://skylabcoders.herokuapp.com/api/v2/users/${sub}`, {
+    call(`https://skylabcoders.herokuapp.com/api/v2/users/`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`

@@ -4,6 +4,7 @@ const { logger } = require('../utils')
 
 module.exports = (req, res) => {
     const { query: { query }, session: { token } } = req
+    req.session.query = query
 
     if (token) {
         try {

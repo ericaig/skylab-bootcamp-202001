@@ -1,23 +1,33 @@
-const {retrieveFavVehicles} = require('../logic')
-const {App, Search} = require('../components')
-const{logger} = require('../utils')
+const { retrieveUser, retrieveFavVehicles } = require('../logic')
+const { App, Search } = require('../components')
+const { logger } = require('../utils')
 
 module.exports = (req, res) => {
     const { session: { acceptCookies, token }, params: { name } } = req
     try {
-        retrieveFavVehicles(token, (error, vehicles) => {
+        retrieveUser(token, (error, user) => {
             if (error) {
                 logger.error(error)
 
-                res.send(App({ title: 'Search', body: Search({ name, error }), acceptCookies }))
+                res.redirect('/error')
             }
-            else {
-                res.send(App({ title: 'favourites', body: Search({ name, vehicles }), acceptCookies }))
-            }
+
+            const { name, username } = user
+
+            retrieveFavVehicles(token, (error, vehicles) => {
+                if (error) {
+                    logger.error(error)
+
+                    res.redirect(req.get('/error'))
+                }
+                else {
+                    res.send(App({ title: 'favourites', body: Search({ name, vehicles }), acceptCookies }))
+                }
+            })
         })
-    } catch ({ message }) {
+    } catch (error) {
         logger.error(error)
-        
-        res.send(App({ title: 'Search', body: Search({ name, error: message }), acceptCookies }))
+
+        res.redirect(req.get('/error'))
     }
 }

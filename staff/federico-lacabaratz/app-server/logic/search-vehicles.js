@@ -1,7 +1,7 @@
 const { call } = require('../utils')
 const atob = require('atob')
 
-module.exports = function (token, query, callback) {
+module.exports = function (token, query) {
     if (token) {
         if (typeof token !== 'string') throw new TypeError(`token ${token} is not a string`)
 
@@ -14,7 +14,6 @@ module.exports = function (token, query, callback) {
     }
 
     if (typeof query !== 'string') throw new TypeError(`${query} is not a string`)
-    if (typeof callback !== 'function') throw new TypeError(`${callback} is not a function`)
 
     if (token)
         call(`https://skylabcoders.herokuapp.com/api/v2/users`, {

@@ -1,0 +1,9 @@
+mixin results(item)
+
+include item
+
+  li.results= item
+
+    ul.results
+      each item in results
+      li= item

@@ -1,0 +1,13 @@
+extends app
+
+block body
+    li
+      h3
+        if name
+        form(action="/toggle-fav/${id}" method="POST")
+          button(${isFav ? '❤️' : '🤍'})
+        h3
+          form(action="/detail/${id}" method="GET")
+            button(type="submit" name="query" value="${id}")
+              img(src="${thumbnail}")
+          span(${price} €)

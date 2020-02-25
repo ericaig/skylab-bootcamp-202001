@@ -1,7 +1,6 @@
-section
-    h1 Welcome, #{name || 'Anonymous'}!
-
-    if username
-        form(action="/logout" method="POST")
-            input(type="hidden" value=(username || false) name="username")
-            button Logout
+mixin user(name, username)
+    section
+        h1 Welcome, #{name}!
+            form(action="/logout" method="POST")
+                input(type="hidden" value=username name="username")
+                button Logout

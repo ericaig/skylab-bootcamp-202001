@@ -84,7 +84,7 @@
 .feedback--error {
   color: red;
 }
-.feedback--warning, .feedback--warn {
+.feedback--warning {
   color: orange;
 }
 

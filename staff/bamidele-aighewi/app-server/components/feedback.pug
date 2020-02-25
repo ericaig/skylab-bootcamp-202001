@@ -1,2 +1,2 @@
-- const style = level || 'error'
-p(class=`feedback feedback--${style}`) #{error}
+mixin feedback(level, message)
+    p.feedback(class = `feedback--${level}`)= message

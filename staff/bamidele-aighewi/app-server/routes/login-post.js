@@ -1,5 +1,4 @@
 const { authenticateUser } = require('../logic')
-const { App, Login } = require('../components')
 const { logger } = require('../utils')
 
 module.exports = (req, res) => {
@@ -13,7 +12,6 @@ module.exports = (req, res) => {
                 const { message } = error
                 const { session: { acceptCookies } } = req
 
-                //return res.send(App({ title: 'Login', body: Login({ error: message, username }), acceptCookies }))
                 return res.render('login', { error: message, username, acceptCookies })
             }
 
@@ -25,7 +23,6 @@ module.exports = (req, res) => {
                 if (fav) return res.redirect(307, `/toggle-fav/${fav}`)
 
                 res.redirect('/')
-                // res.render('landing')
             })
 
         })
@@ -35,7 +32,6 @@ module.exports = (req, res) => {
         const { message } = error
         const { session: { acceptCookies } } = req
 
-        //res.send(App({ title: 'Login', body: Login({ error: message }), acceptCookies }))
-        res.render('login', { error: message, level: 'error', username, acceptCookies })
+        res.render('login', { error: message, username, acceptCookies })
     }
 }

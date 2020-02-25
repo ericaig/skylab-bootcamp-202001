@@ -1,5 +1,7 @@
 include item
 
-ul(class="results") 
-    for item in results
-        +item(item.id, item.name, item.thumbnail, item.price, item.isFav)
+mixin results(results)
+    ul.results
+        each result in results
+            - const { id, name, isFav, thumbnail, price } = result
+            +item(id, name, isFav, thumbnail, price)

@@ -9,6 +9,7 @@ module.exports = function (token) {
     if (!header || !payload || !signature) throw new Error('invalid token')
 
     const { sub } = JSON.parse(atob(payload))
+
     if (!sub) throw new Error('no user id in token')
 
     return fetch(`https://skylabcoders.herokuapp.com/api/v2/users/${sub}`, {
@@ -22,6 +23,6 @@ module.exports = function (token) {
 
             const { name, surname, username } = data
 
-            return ({ name, surname, username })
+            return { name, surname, username }
         })
 }

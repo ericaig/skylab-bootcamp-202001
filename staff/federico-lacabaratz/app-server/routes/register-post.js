@@ -6,10 +6,7 @@ module.exports = (req, res) => {
 
     try {
         registerUser(name, surname, username, password)
-            .then(() => {
-                res.redirect('/login')
-            })
-
+            .then(() => res.redirect('/login'))
             .catch(error => {
                 logger.warn(error)
 

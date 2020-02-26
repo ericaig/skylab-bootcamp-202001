@@ -23,15 +23,13 @@ module.exports = function (token, query) {
             }
         })
             .then(response => {
+                const user = JSON.parse(response.content), { error: _error } = user
 
-                const user = JSON.parse(response.content), { error } = user
-
-                if (error) throw new Error(error)
+                if (_error) throw new Error(_error)
 
                 const { favs = [] } = user
 
                 return fetch(`https://skylabcoders.herokuapp.com/api/hotwheels/vehicles?q=${query}`)
-
                     .then(response => {
                         if (response.status === 200) {
                             const vehicles = JSON.parse(response.content)

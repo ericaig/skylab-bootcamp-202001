@@ -77,13 +77,13 @@ describe('authenticateUser', () => {
                         },
                         body: JSON.stringify({ password })
                     })
-                    .then(response => {
-                        if (response.content) {
-                            const { error } = JSON.parse(response.content)
+                        .then(response => {
+                            if (response.content) {
+                                const { error } = JSON.parse(response.content)
 
-                            if (error) throw new Error(error)
-                        }
-                    })
+                                if (error) throw new Error(error)
+                            }
+                        })
                 })
         )
     })

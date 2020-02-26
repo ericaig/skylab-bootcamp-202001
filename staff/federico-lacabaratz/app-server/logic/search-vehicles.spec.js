@@ -1,8 +1,6 @@
 const { searchVehicles } = require('.')
 const { fetch } = require('../utils')
 require('../utils/array.prototype.random')
-require('../specs/specs-helper.js')
-require('../specs/specs-config.js')
 
 describe('searchVehicles', () => {
     let name, surname, username, password, token, query, ids
@@ -30,23 +28,25 @@ describe('searchVehicles', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, surname, username, password })
             })
-                .then(() => 
-                    fetch(`https://skylabcoders.herokuapp.com/api/v2/users/auth`, {
+                .then(response => {
+                    if (response.content) {
+                        const { error } = JSON.parse(response.content)
+
+                        if (error) throw new Error(error)
+                    }
+
+                    return fetch(`https://skylabcoders.herokuapp.com/api/v2/users/auth`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ username, password })
                     })
-                        .then(response => {
-                            
-                            const { error: _error, token: _token } = JSON.parse(response.content)
+                })
+                .then(response => {
+                    const { error: _error, token: _token } = JSON.parse(response.content)
 
-                            if (_error) throw new Error(_error)
+                    if (_error) throw new Error(_error)
 
-                            token = _token
-                        })
-                )
-                .catch(error => {
-                    throw new Error(error)
+                    token = _token
                 })
         )
 
@@ -79,7 +79,7 @@ describe('searchVehicles', () => {
             beforeEach(() => {
                 const favs = [ids.random(), ids.random(), ids.random()]
 
-                return fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
+                return fetch(`https://skylabcoders.herokuapp.com/api/v2/users/`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
@@ -96,23 +96,24 @@ describe('searchVehicles', () => {
                     })
             })
 
-            it('should get results on matching query with favs as previously added', () => 
+            it('should get results on matching query with favs as previously added', () =>
                 searchVehicles(token, query)
                     .then(vehicles => {
                         expect(vehicles).toBeDefined()
                         expect(vehicles.length).toBeGreaterThan(0)
 
-                        return fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
+                        return fetch(`https://skylabcoders.herokuapp.com/api/v2/users/`, {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }
                         })
                             .then(response => {
+                                // retrieve user to check fav has been removed
 
-                                const user = JSON.parse(response.content), { error } = user
+                                const user = JSON.parse(response.content), { error: _error } = user
 
-                                if (error) throw new Error(error)
+                                if (_error) throw new Error(_error)
 
                                 const { favs } = user
 
@@ -133,16 +134,15 @@ describe('searchVehicles', () => {
             )
         })
 
-        it('should fail on invalid token', () => 
+        it('should fail on invalid token', () =>
             searchVehicles(`${token}-wrong`, query)
-            .then(() => { throw new Error('should not reach this point') }) 
-            .catch(error => {
-                expect(error).toBeInstanceOf(Error)
-                expect(error.message).toBe('invalid token')
-            })
+                .catch(error => {
+                    expect(error).toBeInstanceOf(Error)
+                    expect(error.message).toBe('invalid token')
+                })
         )
 
-        afterEach(() => 
+        afterEach(() =>
             fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
                 method: 'DELETE',
                 headers: {
@@ -163,20 +163,23 @@ describe('searchVehicles', () => {
 
     it('should fail on non-string query', () => {
         token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZTNiZDhmZDE3YjgwOTFiYWFjMTIxMzgiLCJpYXQiOjE1ODA5ODA3NjEsImV4cCI6MTU4MDk4NDM2MX0.t8g49qXznSCYiK040NvOWHPXWqnj9riJ_6MD2vwIv3M'
+
         expect(() =>
-            searchVehicles(token, undefined, () => { })
+            searchVehicles(token, undefined)
         ).toThrowError(TypeError, 'undefined is not a string')
 
         expect(() =>
-            searchVehicles(token, 1, () => { })
+            searchVehicles(token, 1)
         ).toThrowError(TypeError, '1 is not a string')
 
         expect(() =>
-            searchVehicles(token, true, () => { })
+            searchVehicles(token, true)
         ).toThrowError(TypeError, 'true is not a string')
 
         expect(() =>
-            searchVehicles(token, {}, () => { })
+            searchVehicles(token, {})
         ).toThrowError(TypeError, '[object Object] is not a string')
     })
+
+    // TODO unit test cases for anonymous searches
 })

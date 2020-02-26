@@ -1,6 +1,5 @@
 const { registerUser } = require('.')
 const { fetch } = require('../utils')
-require('../specs/specs-helper')
 
 describe('registerUser', () => {
     let name, surname, username, password
@@ -16,6 +15,33 @@ describe('registerUser', () => {
         registerUser(name, surname, username, password)
             .then(response => {
                 expect(response).toBeUndefined()
+
+                return fetch(`https://skylabcoders.herokuapp.com/api/v2/users/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                })
+            })
+            .then(response => {
+                const { error: _error, token } = JSON.parse(response.content)
+
+                if (_error) throw new Error(_error)
+
+                return fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+            })
+            .then(response => {
+                const user = JSON.parse(response.content), { error: _error } = user
+
+                if (_error) throw new Error(_error)
+
+                expect(user.name).toBe(name)
+                expect(user.surname).toBe(surname)
+                expect(user.username).toBe(username)
             })
     )
 
@@ -26,9 +52,6 @@ describe('registerUser', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, surname, username, password })
             })
-                .catch(error => {
-                    throw new Error(error)
-                })
         )
 
         it('should fail on already existing user', () =>

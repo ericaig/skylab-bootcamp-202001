@@ -16,13 +16,11 @@ module.exports = function (name, surname, username, password) {
         body: JSON.stringify({ name, surname, username, password })
     })
         .then(response => {
+            if (response.status === 201) return
+            else if (response.status === 409) {
+                const { error } = JSON.parse(response.content)
 
-        if (response.status === 201) return
-
-        else if (response.status === 409) {
-            const { error } = JSON.parse(response.content)
-
-            throw new Error(error)
-        } else throw new Error('Unknown error')
-    })
+                throw new Error(error)
+            } else throw new Error('Unknown error')
+        })
 }

@@ -1,5 +1,5 @@
 const { registerUser } = require('.')
-const { call } = require('../utils')
+const { fetch } = require('../utils')
 
 describe('registerUser', () => {
     let name, surname, username, password
@@ -11,68 +11,54 @@ describe('registerUser', () => {
         password = 'password-' + Math.random()
     })
 
-    it('should succeed on new user', done => {
-        registerUser(name, surname, username, password, (error, response) => {
-            expect(error).toBeUndefined()
-
+    it('should succeed on new user', () => {
+        return registerUser(name, surname, username, password).then(response => {
             expect(response).toBeUndefined()
-
-            done()
         })
     })
 
     describe('when user already exists', () => {
-        beforeEach(done => {
-            call(`https://skylabcoders.herokuapp.com/api/v2/users`, {
+        beforeEach(() =>
+            fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, surname, username, password })
-            }, error => {
-                if (error) return done(error)
-
-                done()
             })
-        })
+        )
 
-        it('should fail on already existing user', done => {
-            registerUser(name, surname, username, password, error => {
+        it('should fail on already existing user', () => {
+            return registerUser(name, surname, username, password).then(()=>{
+                throw new Error('should not reach this point')
+            }).catch(error => {
                 expect(error).toBeDefined()
                 expect(error.message).toBe(`user with username "${username}" already exists`)
-
-                done()
             })
         })
     })
 
-    afterEach(done => {
-        call(`https://skylabcoders.herokuapp.com/api/v2/users/auth`, {
+    afterEach(() => {
+        return fetch(`https://skylabcoders.herokuapp.com/api/v2/users/auth`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password })
-        }, (error, response) => {
-            if (error) return done(error)
-
+        }).then(response => {
             const { error: _error, token } = JSON.parse(response.content)
 
-            if (_error) return done(new Error(_error))
+            if (_error) throw new Error(_error)
 
-            call(`https://skylabcoders.herokuapp.com/api/v2/users`, {
+            return fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({ password })
-            }, (error, response) => {
-                if (error) return done(error)
-
+            }).then(response=>{
                 if (response.content) {
                     const { error } = JSON.parse(response.content)
 
-                    if (error) return done(new Error(error))
+                    if (error) throw new Error(error)
                 }
-
-                done()
             })
         })
     })

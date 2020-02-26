@@ -2,7 +2,7 @@ const { searchVehicles } = require('.')
 const { call } = require('../utils')
 require('../utils/array.prototype.random')
 
-fdescribe('searchVehicles', () => {
+describe('searchVehicles', () => {
     let name, surname, username, password, token, query, ids
 
     const queryIds = {

@@ -1,3 +1,3 @@
 module.exports = function(millis, callback) {
-    setTimeout(callback, millis)
+    setTimeout(callback, millis);
 }

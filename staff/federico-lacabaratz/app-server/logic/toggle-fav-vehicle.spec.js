@@ -1,8 +1,6 @@
 const { toggleFavVehicle } = require('.')
 require('../specs/specs-helper')
 const { call } = require('../utils')
-require('../specs/specs-helper')
-require('../specs/specs-config')
 require('../utils/array.prototype.random')
 
 describe('toggleFavVehicle', () => {

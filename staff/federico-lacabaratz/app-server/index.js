@@ -1,10 +1,10 @@
 const express = require('express')
-const { logger, loggerMidWare } = require('./utils')
+const { logger, loggerMidWare, /*wait*/ } = require('./utils')
 const path = require('path')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const FileStore = require('session-file-store')(session)
-const { landing, login, loginPost, logout, register, registerPost, acceptCookies, search, toggleFav, detail, back, favourites } = require('./routes')
+const { landing, login, loginPost, logout, register, registerPost, acceptCookies, search, toggleFav } = require('./routes')
 
 const urlencodedBodyParser = bodyParser.urlencoded({ extended: false })
 
@@ -24,10 +24,10 @@ app.use(loggerMidWare)
 app.use(express.static(path.join(__dirname, 'public')))
 app.use('/components', express.static(path.join(__dirname, 'components'))) // NOTE to see sass files in browser
 app.use(session({
-    secret: 'keyboard cat',
+    secret: 'my grandmas dad had a second life',
     cookie: { maxAge: 1000 * 60 * 60 * 24 },
     resave: false,
-    saveUninitialized: true, 
+    saveUninitialized: true,
     store: new FileStore({})
 }))
 
@@ -47,13 +47,7 @@ app.post('/accept-cookies', acceptCookies)
 
 app.get('/search', search)
 
-app.post('/toggle-fav/:id', urlencodedBodyParser, toggleFav)
-
-app.get('/favourites/:name', favourites)
-
-app.get('/detail/:id', detail)
-
-app.get('/back', back)
+app.post('/toggle-fav/:id', toggleFav)
 
 app.listen(port, () => logger.info(`server up and running on port ${port}`))
 

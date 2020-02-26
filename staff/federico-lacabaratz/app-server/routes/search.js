@@ -5,56 +5,33 @@ module.exports = (req, res) => {
     const { query: { query }, session: { token } } = req
     req.session.query = query
 
-    if (token) {
-        try {
-            retrieveUser(token, (error, user) => {
-                if (error) {
+    try {
+        if (token)
+            retrieveUser(token)
+                .then(user => {
+                    const { name, username } = user
+                    searchVehicles(token, query)
+                    const { session: { acceptCookies } } = req
+                        .then(vehicles => {
+                            res.render('landing', { name, username, query, results: vehicles, acceptCookies })
+                        })
+                })
+                .catch(error => {
                     logger.error(error)
-
                     res.redirect('/error')
-                }
-
-                const { name, username } = user
-
-                try {
-                    searchVehicles(token, query, (error, vehicles) => {
-                        const { session: { acceptCookies } } = req
-
-                        if (error) {
-                            logger.error(error)
-
-                            res.redirect('/error')
-                        }
-
-                        res.render('landing', { name, username, query, results: vehicles, acceptCookies })
-                    })
-                } catch (error) {
-                    logger.error(error)
-
-                    res.redirect('/error')
-                }
-            })
-        } catch (error) {
-            logger.error(error)
-
-            res.redirect('/error')
-        }
-    } else
-        try {
-            searchVehicles(undefined, query, (error, vehicles) => {
-                const { session: { acceptCookies } } = req
-
-                if (error) {
-                    logger.error(error)
-
-                    res.redirect('/error')
-                }
-
+                })
+        else
+            searchVehicles(undefined, query)
+        const { session: { acceptCookies } } = req
+            .then(vehicles => {
                 res.render('landing', { query, results: vehicles, acceptCookies })
             })
-        } catch (error) {
-            logger.error(error)
-
-            res.redirect('/error')
-        }
+            .catch(error => {
+                logger.error(error)
+                res.redirect('/error')
+            })
+    } catch (error) {
+        logger.error(error)
+        res.redirect('/error')
+    }
 }

@@ -28,9 +28,9 @@ module.exports = function (token, id, callback) {
 
         if (_error) return callback(new Error(_error))
 
-        const { fav = [] } = user
+        const { favs = [] } = user
 
-        fav.toggle(id)
+        favs.toggle(id)
 
         call(`https://skylabcoders.herokuapp.com/api/v2/users/`, {
             method: 'PATCH',
@@ -38,7 +38,7 @@ module.exports = function (token, id, callback) {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ fav })
+            body: JSON.stringify({ favs })
         }, (error, response) => {
             if (error) return callback(error)
 
@@ -52,5 +52,3 @@ module.exports = function (token, id, callback) {
         })
     })
 }
-
- 

@@ -1,10 +1,5 @@
-extends app
-
-block body
-    a(href="/register") Register
-    |  or 
-    a(href="/login") Login
-    h2 Search
-    form(action="/search/" method="GET" classname="search")
-      input(type="text" name="query" placeholder="criteria" value=(query || ''))
+mixin search(query)      
+    form.search(action="/search" method="GET")
+      h2 Search
+      input(type="text" name="query" placeholder="criteria" value=(query || false))
       button(type="submit") Search

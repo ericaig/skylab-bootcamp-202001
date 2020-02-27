@@ -7,6 +7,7 @@
     "start": "node .",
     "watch": "npx nodemon . --ignore ./sessions",
     "debug": "node debug .",
+    "test-debug": "node inspect node_modules/jasmine/bin/jasmine.js logic/*.spec.js",
     "inspect": "node inspect .",
     "test": "npx jasmine utils/*.spec.js logic/*.spec.js",
     "style": "npx sass components/index.sass public/style.css",

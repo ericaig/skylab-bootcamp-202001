@@ -1,11 +1,19 @@
 const { authenticateUser } = require('../logic')
+const jwt = require('jsonwebtoken')
+const { NotFoundError, EmptyValueError } = require('../errors')
+
+const { env: { JWT_SECRET, JWT_EXP } } = process
 
 module.exports = (req, res) => {
     const { body: { email, password } } = req
 
     try {
         authenticateUser(email, password)
-            .then(token => res.status(200).json({ token }))
+            .then(id => {
+                const token = jwt.sign({ sub: id }, JWT_SECRET, { expiresIn: JWT_EXP })
+
+                res.status(200).json({ token })
+            })
             .catch(({ message }) =>
                 res
                     .status(401)
@@ -13,9 +21,21 @@ module.exports = (req, res) => {
                         error: message
                     })
             )
-    } catch ({ message }) {
+    } catch (error) {
+        let status = 400
+
+        switch (true) {
+            case error instanceof NotFoundError:
+                status = 404
+                break
+            case error instanceof EmptyValueError:
+                status = 401
+        }
+
+        const { message } = error
+
         res
-            .status(401) //?
+            .status(status)
             .json({
                 error: message
             })

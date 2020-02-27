@@ -1,33 +1,25 @@
 const { validate } = require('../utils')
 const { users } = require('../data')
-const atob = require('atob')
 
 const fs = require('fs').promises
 const path = require('path')
-const jwt = require('jsonwebtoken')
+const { NotFoundError, NotAllowedError } = require('../errors')
 
-const { env: { SECRET } } = process
+module.exports = (id) => {
+    validate.string(id, 'id')
 
-module.exports = (token) => {
-    validate.string(token, 'token')
+    const user = users.find(user => user.id === id)
 
-    try {
-        jwt.verify(token, SECRET)
+    if (!user) throw new NotFoundError(`user with id ${id} does not exist`)
 
-        const [, payload] = token.split('.')
-        const { sub } = JSON.parse(atob(payload))
+    if (user.deactivated) throw new NotAllowedError(`user with id ${id} is deactivated`)
 
-        if (!sub) throw new Error('no user id in token')
+    user.retrieved = new Date
 
-        const user = users.find(user => user.id === sub)
+    return fs.writeFile(path.join(__dirname, '../data/users.json'), JSON.stringify(users, null, 4))
+        .then(() => {
+            const { name, surname, email } = user
 
-        const {name, surname, email} = user
-
-        user.retrieved = new Date
-
-        return fs.writeFile(path.join(__dirname, '../data/users.json'), JSON.stringify(users, null, 4))
-            .then(() => {return {name, surname, email}})
-    } catch (error) {
-        throw error
-    }
+            return { name, surname, email }
+        })
 }

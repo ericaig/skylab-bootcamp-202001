@@ -11,7 +11,7 @@ module.exports = (req, res) => {
             )
             .catch(({message}) => {
                 res
-                    .status(400)
+                    .status(401)
                     .json({
                         error: message
                     })
@@ -19,7 +19,7 @@ module.exports = (req, res) => {
             
     }catch ({message}) {
         res
-            .status(400)
+            .status(401)
             .json({
                 error: message
             })

@@ -21,12 +21,12 @@ module.exports = (token) => {
 
         const user = users.find(user => user.id === sub)
 
-        const {name, surname, email, created, authenticated, retrieved} = user
+        const {name, surname, email} = user
 
         user.retrieved = new Date
 
         return fs.writeFile(path.join(__dirname, '../data/users.json'), JSON.stringify(users, null, 4))
-            .then(() => {return {name, surname, email, created, authenticated, retrieved}})
+            .then(() => {return {name, surname, email}})
     } catch (error) {
         throw error
     }

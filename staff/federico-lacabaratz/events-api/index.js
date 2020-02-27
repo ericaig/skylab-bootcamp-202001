@@ -4,7 +4,7 @@ const { env: { PORT = 8080, NODE_ENV: env }, argv: [, , port = PORT] } = process
 
 const express = require('express')
 const winston = require('winston')
-const { registerUser, authenticateUser } = require('./routes')
+const { registerUser, authenticateUser, retrieveUser } = require('./routes')
 const { name, version } = require('./package')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
@@ -36,6 +36,8 @@ app.use(morgan('combined', { stream: accessLogStream }))
 app.post('/users', jsonBodyParser, registerUser)
 
 app.post('/users/auth', jsonBodyParser, authenticateUser)
+
+app.get('/users', retrieveUser)
 
 app.listen(port, () => logger.info(`server ${name} ${version} up and running on port ${port}`))
 

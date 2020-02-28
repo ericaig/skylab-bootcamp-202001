@@ -1,12 +1,11 @@
 const { expect } = require('chai')
-// require('mocha')
-// const {validate} = require('./utils')
 const { users } = require('../data')
 const fs = require('fs').promises
 const path = require('path')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
+
 const { authenticateUser } = require('../logic')
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 const { NotAllowedError } = require('../errors')
 
 describe('authenticateUser', () => {
@@ -33,8 +32,6 @@ describe('authenticateUser', () => {
                 expect(userId).to.be.a('string')
 
                 id = userId
-
-                return id
             })
         })
 
@@ -64,7 +61,41 @@ describe('authenticateUser', () => {
     })
 
     it('should fail on non-string email', () => {
-        expect(() => authenticateUser(1)).to.throw(TypeError, '')
+        const name = 'email'
+        let target
+        
+        target = 1
+        expect(() => authenticateUser(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+
+        target = null
+        expect(() => authenticateUser(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+
+        target = false
+        expect(() => authenticateUser(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+
+        target = {}
+        expect(() => authenticateUser(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+    })
+
+    it('should fail on empty email', () => {
+        const name = 'email'
+        let target
+
+        target = ''
+        expect(() => authenticateUser(target)).to.throw(Error, `${name} is empty`)
+
+        target = ' '
+        expect(() => authenticateUser(target)).to.throw(Error, `${name} is empty`)
+    })
+
+    it('should fail on invalid email address', () => {
+        let target
+
+        target = '@mail.com'
+        expect(() => authenticateUser(target)).to.throw(Error, `${target} is not an e-mail`)
+
+        target = 'asdfaf#@#®#rsfasdfasdf@mail.com'
+        expect(() => authenticateUser(target)).to.throw(Error, `${target} is not an e-mail`)
     })
 
 })

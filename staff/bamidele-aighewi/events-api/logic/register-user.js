@@ -2,7 +2,7 @@ const { validate } = require('../utils')
 const { users } = require('../data')
 const fs = require('fs').promises
 const path = require('path')
-const uuid = require('uuid/v4')
+const { v4: uuid } = require('uuid')
 
 module.exports = (name, surname, email, password) => {
     validate.string(name, 'name')

@@ -3,7 +3,7 @@ const { users } = require('../data')
 
 const fs = require('fs').promises
 const path = require('path')
-const { NotFoundError, EmptyValueError } = require('../errors')
+const { NotAllowedError, EmptyValueError } = require('../errors')
 
 module.exports = (email, password) => {
     validate.string(email, 'email')
@@ -12,7 +12,7 @@ module.exports = (email, password) => {
 
     const user = users.find(user => user.email === email && user.password === password)
 
-    if (!user) throw new NotFoundError(`Wrong credentials`)
+    if (!user) throw new NotAllowedError(`Wrong credentials`)
 
     if(!user.email) throw new EmptyValueError(`User email is empty`)
     

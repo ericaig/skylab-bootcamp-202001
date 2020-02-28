@@ -5,7 +5,7 @@ const fs = require('fs').promises
 const path = require('path')
 const { NotFoundError, NotAllowedError } = require('../errors')
 
-module.exports = (id) => {
+module.exports = id => {
     validate.string(id, 'id')
 
     const user = users.find(user => user.id === id)

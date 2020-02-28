@@ -1,6 +1,6 @@
 const { authenticateUser } = require('../logic')
 const jwt = require('jsonwebtoken')
-const { NotFoundError, EmptyValueError } = require('../errors')
+const { NotFoundError, ContentError } = require('../errors')
 
 const { env: { JWT_SECRET, JWT_EXP } } = process
 
@@ -28,7 +28,7 @@ module.exports = (req, res) => {
             case error instanceof NotFoundError:
                 status = 404
                 break
-            case error instanceof EmptyValueError:
+            case error instanceof ContentError:
                 status = 401
         }
 

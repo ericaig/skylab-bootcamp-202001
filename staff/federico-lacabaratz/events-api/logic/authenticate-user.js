@@ -3,7 +3,7 @@ const { users } = require('../data')
 
 const fs = require('fs').promises
 const path = require('path')
-const { NotAllowedError, EmptyValueError } = require('../errors')
+const { NotAllowedError, ContentError } = require('../errors')
 
 module.exports = (email, password) => {
     validate.string(email, 'email')
@@ -14,9 +14,9 @@ module.exports = (email, password) => {
 
     if (!user) throw new NotAllowedError(`Wrong credentials`)
 
-    if(!user.email) throw new EmptyValueError(`User email is empty`)
+    if(!user.email) throw new ContentError(`User email is empty`)
     
-    if(!user.password) throw new EmptyValueError(`User password is empty`)
+    if(!user.password) throw new ContentError(`User password is empty`)
 
     user.authenticated = new Date
 

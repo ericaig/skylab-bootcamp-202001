@@ -77,32 +77,23 @@ client.connect()
 
         // CREATE-READ
 
-        users.insertOne({ name: 'Menga', surname: 'Nota', email: 'menganita@gmail.com', password: '123' })
-            .then(result => {
-                const { insertedId: id } = result
+        // users.insertOne({ name: 'Menga', surname: 'Nota', email: 'menganita@gmail.com', password: '123' })
+        //     .then(result => {
+        //         const { insertedId: id } = result
 
-                return users.findOne({ _id: id })
-            })
-            .then(user => console.log(user))
+        //         return users.findOne({ _id: id })
+        //     })
+        //     .then(user => console.log(user))
 
         // UPDATE?
 
-        users.updateOne({ name: 'Menga', surname: 'Nota', email: 'menganita@gmail.com', password: '123' }, 
-                        {$set: {name: 'Fern', surname: 'andito', email: 'fernandito@gmail.com', password: '321'}})
+        users.updateOne({ name: 'Menga', surname: ''},{$set: {name: 'Erre'}},{ upsert: true })
             .then(result => {
-                const { insertedId: id } = result
-
-                return users.findOne({ _id: id })
+                const { upsertedId: id } = result
+                const idUpdated = id._id
+                return users.findOne({ _id: idUpdated})
             })
             .then(user => console.log(user))
 
         // DELETE?
     })
-
-    // db.inventory.updateOne(
-    //     { item: "paper" },
-    //     {
-    //       $set: { "size.uom": "cm", status: "P" },
-    //       $currentDate: { lastModified: true }
-    //     }
-    //  )

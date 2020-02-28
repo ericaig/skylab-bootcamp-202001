@@ -1,7 +1,6 @@
 const { authenticateUser } = require('../logic')
 const jwt = require('jsonwebtoken')
 const { env: { JWT_SECRET,  JWT_EXP } } = process
-const { NotAllowedError } = require('../errors')
 
 module.exports = (req, res) => {
     const { body: { email, password } } = req
@@ -20,12 +19,11 @@ module.exports = (req, res) => {
                         error: message
                     })
             )
-    } catch (error) {
-        const { message } = error
-        let status = 400
-        
-        if (error instanceof NotAllowedError) status = 401
-
-        res.status(status).json({ error: message})
+    } catch ({ message }) {
+        res
+            .status(401) //?
+            .json({
+                error: message
+            })
     }
 }

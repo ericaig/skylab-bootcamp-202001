@@ -32,16 +32,7 @@ describe('authenticate', () => {
             authenticateUser(user.email, user.password)
                 .then(id => {
                     expect(user.id).to.be.a('string')
-                    expect(user.name).to.be.a('string')
-                    expect(user.surname).to.be.a('string')
-                    expect(user.email).to.be.a('string')
-                    expect(user.password).to.be.a('string')
-
                     expect(user.id).to.have.lengthOf.above(0)
-                    expect(user.name).to.have.lengthOf.above(0)
-                    expect(user.surname).to.have.lengthOf.above(0)
-                    expect(user.email).to.have.lengthOf.above(0)
-                    expect(user.password).to.have.lengthOf.above(0)
                 })
         )
 

@@ -87,10 +87,10 @@ client.connect()
 
         // UPDATE?
 
-        users.updateOne({ name: 'Menga', surname: ''},{$set: {name: 'Erre'}},{ upsert: true })
-            .then(result => {
+        users.updateOne({ name: 'Ferrancito'},{$set: {name: 'Federiquito'}},{ upsert: true })
+            .then(result => { debugger
                 const { upsertedId: id } = result
-                const idUpdated = id._id
+                let idUpdated = id._id
                 return users.findOne({ _id: idUpdated})
             })
             .then(user => console.log(user))

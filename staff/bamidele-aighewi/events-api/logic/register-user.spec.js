@@ -36,12 +36,6 @@ describe('registerUser', () => {
             expect(user.email).to.equal(email)
             expect(user.password).to.equal(password)
         })
-
-        afterEach(() => {
-            const index = users.findIndex(item => item.email === email)
-            users.splice(index, 1)
-            return fs.writeFile(path.join(__dirname, '../data/users.json'), JSON.stringify(users, null, 4))
-        })
     })
 
     describe('when user exists', () => {
@@ -60,12 +54,12 @@ describe('registerUser', () => {
                 })
             }).to.throw(Error, `user with email ${email} already exists`)
         })
+    })
 
-        afterEach(() => {
-            const index = users.findIndex(item => item.email === email)
-            users.splice(index, 1)
-            return fs.writeFile(path.join(__dirname, '../data/users.json'), JSON.stringify(users, null, 4))
-        })
+    afterEach(() => {
+        const index = users.findIndex(item => item.email === email)
+        users.splice(index, 1)
+        return fs.writeFile(path.join(__dirname, '../data/users.json'), JSON.stringify(users, null, 4))
     })
 
     it('should fail on non-string name parametre', () => {

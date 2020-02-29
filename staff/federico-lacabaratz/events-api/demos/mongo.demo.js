@@ -77,23 +77,15 @@ client.connect()
 
         // CREATE-READ
 
-        // users.insertOne({ name: 'Menga', surname: 'Nota', email: 'menganita@gmail.com', password: '123' })
-        //     .then(result => {
-        //         const { insertedId: id } = result
+        users.insertOne({ name: 'Menga', surname: 'Nota', email: 'menganita@gmail.com', password: '123' })
+            .then(result => {
+                const { insertedId: id } = result
 
-        //         return users.findOne({ _id: id })
-        //     })
-        //     .then(user => console.log(user))
-
-        // UPDATE?
-
-        users.updateOne({ name: 'Ferrancito'},{$set: {name: 'Federiquito'}},{ upsert: true })
-            .then(result => { debugger
-                const { upsertedId: id } = result
-                let idUpdated = id._id
-                return users.findOne({ _id: idUpdated})
+                return users.findOne({ _id: id })
             })
             .then(user => console.log(user))
+
+        // UPDATE?
 
         // DELETE?
     })

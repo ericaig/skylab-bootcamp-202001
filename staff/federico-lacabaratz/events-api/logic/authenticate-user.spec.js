@@ -1,66 +1,60 @@
-const { authenticateUser } = require('.')
-const { expect } = require('chai')
-const { users } = require('../data')
-const fs = require('fs').promises
-const path = require('path')
-const uuid = require('uuid/v4')
-const { NotAllowedError } = require('../errors')
+require('dotenv').config()
 
-describe('authenticate', () => {
-    let user
+const { env: { TEST_MONGODB_URL } } = process
+const { database, models: { User } } = require('../data')
+const { expect } = require('chai')
+const { random } = Math
+const { ContentError } = require('../errors')
+const authenticateUser = require('./authenticate-user')
+
+describe.only('authenticateUser', () => {
+    before(() =>
+        database.connect(TEST_MONGODB_URL)
+            .then(() => users = database.collection('users'))
+    )
+
+    let name, surname, email, password, users
 
     beforeEach(() => {
-
-        user = {
-            id: uuid(),
-            name: `name-${Math.random()}`,
-            surname: `surname-${Math.random()}`,
-            email: `email-${Math.random()}@email.com`,
-            password: `password-${Math.random()}`,
-        }
+        name = `name-${random()}`
+        surname = `surname-${random()}`
+        email = `email-${random()}@mail.com`
+        password = `password-${random()}`
     })
 
     describe('when user already exists', () => {
-        beforeEach(() => {
-            users.push(user);
+        let _id
 
-            return fs.writeFile(path.join(__dirname, '../data/users.json'), JSON.stringify(users, null, 4))
-        })
+        beforeEach(() =>
+            users.insertOne(new User({ name, surname, email, password }))
+                .then(({ insertedId }) => _id = insertedId)
+        )
 
-
-        it('should succeed on correct credentials', () =>
-            authenticateUser(user.email, user.password)
+        it('should succeed on correct and valid and right credentials', () =>
+            authenticateUser(email, password)
                 .then(id => {
-                    expect(user.id).to.be.a('string')
-                    expect(user.id).to.have.lengthOf.above(0)
+                    expect(id).to.be.a('string')
+                    expect(id.length).to.be.greaterThan(0)
+                    expect(id).to.equal(_id.toString())
                 })
         )
 
         it('should should fail on incorrect email', () => {
             expect(() => {
-                return authenticateUser(`${user.email}wrong`, `${user.password}`).then(() => {
+                return authenticateUser(`${email}-wrong`, `${password}`).then(() => {
                     throw new Error('should not reach this point')
                 })
-            }).to.throw(NotAllowedError)
+            }).to.throw(ContentError, `${email}-wrong is not an e-mail`)
         })
 
-        it('should should fail on incorrect password', () => {
-            expect(() => {
-                return authenticateUser(`${user.email}`, `${user.password}-wrong`).then(() => {
-                    throw new Error('should not reach this point')
-                })
-            }).to.throw(NotAllowedError)
-        })
-
-        afterEach(() => {
-            const index = users.findIndex(user => user === user)
-            users.splice(index, 1)
-
-            return fs.writeFile(path.join(__dirname, '../data/users.json'), JSON.stringify(users, null, 4))
-        })
+        // it('should should fail on incorrect password', () => {
+        //     expect(() => {
+        //         return authenticateUser(`${email}`, `${password}-wrong`).then(() => {
+        //             throw new Error('should not reach this point')
+        //         })
+        //     }).to.throw(TypeError, `${password}-wrong is not a password`)
+        // })
     })
 
-    it('should fail on non-string email', () => {
-        expect(() => authenticateUser(1)).to.throw(TypeError, '')
-    })
+    after(() => database.disconnect())
 })

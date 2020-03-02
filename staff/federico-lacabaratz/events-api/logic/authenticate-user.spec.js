@@ -1,19 +1,18 @@
 require('dotenv').config()
 
 const { env: { TEST_MONGODB_URL } } = process
-const { database, models: { User } } = require('../data')
+const mongoose = require('mongoose')
 const { expect } = require('chai')
 const { random } = Math
-const { ContentError } = require('../errors')
 const authenticateUser = require('./authenticate-user')
+const { models: { User } } = require('../data')
 
-describe.only('authenticateUser', () => {
+describe('authenticateUser', () => {
     before(() =>
-        database.connect(TEST_MONGODB_URL)
-            .then(() => users = database.collection('users'))
+        mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     )
 
-    let name, surname, email, password, users
+    let name, surname, email, password
 
     beforeEach(() => {
         name = `name-${random()}`
@@ -26,8 +25,8 @@ describe.only('authenticateUser', () => {
         let _id
 
         beforeEach(() =>
-            users.insertOne(new User({ name, surname, email, password }))
-                .then(({ insertedId }) => _id = insertedId)
+            User.create({ name, surname, email, password })
+                .then(user => _id = user.id)
         )
 
         it('should succeed on correct and valid and right credentials', () =>
@@ -35,26 +34,12 @@ describe.only('authenticateUser', () => {
                 .then(id => {
                     expect(id).to.be.a('string')
                     expect(id.length).to.be.greaterThan(0)
-                    expect(id).to.equal(_id.toString())
+                    expect(id).to.equal(_id)
                 })
         )
-
-        it('should should fail on incorrect email', () => {
-            expect(() => {
-                return authenticateUser(`${email}-wrong`, `${password}`).then(() => {
-                    throw new Error('should not reach this point')
-                })
-            }).to.throw(ContentError, `${email}-wrong is not an e-mail`)
-        })
-
-        // it('should should fail on incorrect password', () => {
-        //     expect(() => {
-        //         return authenticateUser(`${email}`, `${password}-wrong`).then(() => {
-        //             throw new Error('should not reach this point')
-        //         })
-        //     }).to.throw(TypeError, `${password}-wrong is not a password`)
-        // })
     })
 
-    after(() => database.disconnect())
+    // TODO more happies and unhappies
+
+    after(() => mongoose.disconnect())
 })

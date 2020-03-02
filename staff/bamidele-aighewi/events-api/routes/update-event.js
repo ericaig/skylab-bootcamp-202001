@@ -3,7 +3,6 @@ const { ContentError } = require('../errors')
 
 module.exports = (req, res) => {
     const { params: { id }, payload: { sub: userId }, body: { title, description, location, date } } = req
-
     
     try {
         

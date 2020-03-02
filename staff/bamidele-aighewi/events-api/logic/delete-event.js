@@ -15,7 +15,4 @@ module.exports = (id, publisher) => {
         .deleteOne(filterParams)
         .then(() => { /* this is here (as is) because we don't want any external logic using this function (.then(res=>{})) to receive any props coming from mongodb or whatever db engine we are using to fetch datas */ })
     )
-
-    return events.insertOne(new Event({ publisher: ObjectId(publisher), title, description, location, date }))
-        .then(() => { })
 }

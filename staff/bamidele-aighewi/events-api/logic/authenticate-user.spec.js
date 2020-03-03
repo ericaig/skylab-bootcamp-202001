@@ -1,18 +1,18 @@
 require('dotenv').config()
 
 const { env: { TEST_MONGODB_URL } } = process
-const { database, models: { User } } = require('../data')
+const mongoose = require('mongoose')
 const { expect } = require('chai')
 const { random } = Math
 const authenticateUser = require('./authenticate-user')
+const { models: { User } } = require('../data')
 
 describe('authenticateUser', () => {
     before(() =>
-        database.connect(TEST_MONGODB_URL)
-            .then(() => users = database.collection('users'))
+        mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     )
 
-    let name, surname, email, password, users
+    let name, surname, email, password
 
     beforeEach(() => {
         name = `name-${random()}`
@@ -25,8 +25,8 @@ describe('authenticateUser', () => {
         let _id
 
         beforeEach(() =>
-            users.insertOne(new User({ name, surname, email, password }))
-                .then(({ insertedId }) => _id = insertedId)
+            User.create({ name, surname, email, password })
+                .then(user => _id = user.id)
         )
 
         it('should succeed on correct and valid and right credentials', () =>
@@ -34,12 +34,12 @@ describe('authenticateUser', () => {
                 .then(id => {
                     expect(id).to.be.a('string')
                     expect(id.length).to.be.greaterThan(0)
-                    expect(id).to.equal(_id.toString())
+                    expect(id).to.equal(_id)
                 })
         )
     })
 
     // TODO more happies and unhappies
 
-    after(() => database.disconnect())
+    after(() => mongoose.disconnect())
 })

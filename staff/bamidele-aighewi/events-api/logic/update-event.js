@@ -1,5 +1,5 @@
 const { validate } = require('../utils')
-const { database, database: { ObjectId } } = require('../data')
+const { models: { Event } } = require('../data')
 
 module.exports = (id, publisher, data) => {
     const _event = {}
@@ -31,14 +31,6 @@ module.exports = (id, publisher, data) => {
 
     if (!Object.keys(_event).length) throw new Error('No event data received')
 
-    const events = database.collection('events')
-
-    const filterParams = { _id: ObjectId(id), publisher: ObjectId(publisher) }
-
-    return events.findOne(filterParams).then(result => {
-        if (!result) throw new Error(`Event with id ${id} does not exist`)
-    }).then(() => events
-        .updateOne(filterParams, { $set: _event })
+    return Event.findOneAndUpdate({ _id: id, publisher }, { $set: _event })
         .then(() => { /* this is here (as is) because we don't want any external logic using this function (.then(res=>{})) to receive any props coming from mongodb or whatever db engine we are using to fetch datas */ })
-    )
 }

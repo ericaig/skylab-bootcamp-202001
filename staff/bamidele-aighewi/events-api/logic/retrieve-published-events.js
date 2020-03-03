@@ -1,21 +1,9 @@
 const { validate } = require('../utils')
-const { database, database: { ObjectId } } = require('../data')
+const { models: { Event } } = require('../data')
 // const { NotAllowedError } = require('../errors')
 
 module.exports = id => {
     validate.string(id, 'publisherId')
 
-    const publisher = ObjectId(id)
-    const events = database.collection('events')
-    const cursor = events.find({ publisher })
-
-    const _events = []
-
-    return (function streamItems() {
-        return cursor.hasNext()
-            .then(hasNext => hasNext && cursor.next())
-            .then(result => result && _events.push(result))
-            .then(result => (result && streamItems()) || _events)
-            // .catch(error => { throw error })
-    })()
+    return Event.find({publisher: id})
 }

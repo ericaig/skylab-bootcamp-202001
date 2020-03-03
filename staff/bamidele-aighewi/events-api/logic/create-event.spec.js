@@ -1,21 +1,18 @@
 require('dotenv').config()
 
 const { env: { TEST_MONGODB_URL } } = process
-const { database, database: { ObjectId }, models: { User, Event } } = require('../data')
+const mongoose = require('mongoose')
 const { expect } = require('chai')
 const { random } = Math
 const createEvent = require('./create-event')
+const { models: { User, Event } } = require('../data')
 
 describe('createEvent', () => {
     before(() =>
-        database.connect(TEST_MONGODB_URL)
-            .then(() => {
-                users = database.collection('users')
-                events = database.collection('events')
-            })
+        mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     )
 
-    let name, surname, email, password, users, events, title, description, date, location
+    let name, surname, email, password, title, description, date, location
 
     beforeEach(() => {
         name = `name-${random()}`
@@ -29,17 +26,17 @@ describe('createEvent', () => {
     })
 
     describe('when user already exists', () => {
-        let id
+        let _id
 
         beforeEach(() =>
-            users.insertOne(new User({ name, surname, email, password }))
-                .then(({ insertedId }) => id = insertedId.toString())
+            User.create({ name, surname, email, password })
+                .then(({ id }) => _id = id)
         )
 
         it('should succeed on correct and valid and right data', () =>
-            createEvent(id, title, description, location, date)
+            createEvent(_id, title, description, location, date)
                 .then(() =>
-                    events.findOne({ title, description, location, date, publisher: ObjectId(id) })
+                    Event.findOne({ title, description, location, date, publisher: _id })
                 )
                 .then(event => {
                     expect(event).to.exist
@@ -47,12 +44,12 @@ describe('createEvent', () => {
                     expect(event.description).to.equal(description)
                     expect(event.date).to.deep.equal(date)
                     expect(event.location).to.equal(location)
-                    expect(event.publisher.toString()).to.equal(id)
+                    expect(event.publisher.toString()).to.equal(_id)
                 })
         )
     })
 
     // TODO more happies and unhappies
 
-    after(() => database.disconnect())
+    after(() => mongoose.disconnect())
 })

@@ -2,10 +2,10 @@ const { createEvent } = require('../logic')
 const { ContentError } = require('../errors')
 
 module.exports = (req, res) => {
-    const { params: { id: publisher }, body: { title, description, location, date } } = req
+    const { params: { id }, body: { title, description, location, date } } = req
 
     try {
-        createEvent(publisher, title, description, location, new Date(date))
+        createEvent(id, title, description, location, new Date(date))
             .then(() => res.status(201).end())
             .catch(error => {
                 let status = 400

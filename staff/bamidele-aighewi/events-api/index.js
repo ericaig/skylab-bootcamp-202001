@@ -4,19 +4,20 @@ const { env: { PORT = 8080, NODE_ENV: env, MONGODB_URL }, argv: [, , port = PORT
 
 const express = require('express')
 const winston = require('winston')
+
 const {
     registerUser,
     authenticateUser,
     retrieveUser,
     createEvent,
+    deleteEvent,
+    retrieveAllEvents,
     retrievePublishedEvents,
     retrieveLastEvents,
     updateEvent,
-    deleteEvent,
     subscribeToEvent,
     unSubscribeFromEvent,
     retrieveSubscribedEvents,
-    retrieveAllEvents,
 } = require('./routes')
 const { name, version } = require('./package')
 const bodyParser = require('body-parser')
@@ -24,9 +25,9 @@ const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const { jwtVerifierMidWare } = require('./mid-wares')
-const { database } = require('./data')
+const mongoose = require('mongoose')
 
-database.connect(MONGODB_URL)
+mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         const logger = winston.createLogger({
             level: env === 'development' ? 'debug' : 'info',
@@ -51,21 +52,18 @@ database.connect(MONGODB_URL)
         app.use(morgan('combined', { stream: accessLogStream }))
 
         app.post('/users', jsonBodyParser, registerUser)
-
         app.post('/users/auth', jsonBodyParser, authenticateUser)
-
         app.get('/users', jwtVerifierMidWare, retrieveUser)
-
         app.post('/users/:id/events', [jwtVerifierMidWare, jsonBodyParser], createEvent)
+        app.get('/users/:id/published-events', jwtVerifierMidWare, retrievePublishedEvents)
+        app.get('/users/last-events', jwtVerifierMidWare, retrieveLastEvents)
         app.patch('/users/:id/events', [jwtVerifierMidWare, jsonBodyParser], subscribeToEvent)
         app.patch('/users/:id/unsubscribe-event', [jwtVerifierMidWare, jsonBodyParser], unSubscribeFromEvent)
         app.get('/users/:id/subscribed-events', jwtVerifierMidWare, retrieveSubscribedEvents)
 
-        app.get('/users/:id/published-events', jwtVerifierMidWare, retrievePublishedEvents)
-        app.get('/users/:id/last-events', jwtVerifierMidWare, retrieveLastEvents)
+        app.delete('/events/:id', jwtVerifierMidWare, deleteEvent)
         app.patch('/events/:id', [jwtVerifierMidWare, jsonBodyParser], updateEvent)
         app.get('/events', jwtVerifierMidWare, retrieveAllEvents)
-        app.delete('/events/:id', jwtVerifierMidWare, deleteEvent)
 
         app.listen(port, () => logger.info(`server ${name} ${version} up and running on port ${port}`))
 
@@ -74,6 +72,4 @@ database.connect(MONGODB_URL)
 
             process.exit(0)
         })
-    }).catch(({ message }) => {
-        console.error(`Something went wrong connecting to DB: ${message}`)
     })

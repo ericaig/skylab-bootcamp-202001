@@ -1,4 +1,4 @@
-const { MongoClient, ObjectId } = require('mongodb')
+const { MongoClient } = require('mongodb')
 
 // MongoClient.connect('mongodb://localhost:27017', { useUnifiedTopology: true })
 //     .then(client => {
@@ -11,8 +11,7 @@ client.connect()
     .then(() => {
         const db = client.db('events')
 
-        // const users = db.collection('users')
-        const events = db.collection('events')
+        const users = db.collection('users')
 
         // let's CRUD
 
@@ -78,22 +77,13 @@ client.connect()
 
         // CREATE-READ
 
-        // users.insertOne({ name: 'Menga', surname: 'Nota', email: 'menganita@gmail.com', password: '123' })
-        //     .then(result => {
-        //         const { insertedId: id } = result
+        users.insertOne({ name: 'Menga', surname: 'Nota', email: 'menganita@gmail.com', password: '123' })
+            .then(result => {
+                const { insertedId: id } = result
 
-        //         return users.findOne({ _id: id })
-        //     })
-        //     .then(user => console.log(user))
-
-
-        events.findOne({ _id: ObjectId('5e5986b47b2a5434d7e5d9a1') }).then(result=>{
-            console.log(result)
-            debugger
-        }).catch(error=>{
-            console.log(error)
-            debugger
-        })
+                return users.findOne({ _id: id })
+            })
+            .then(user => console.log(user))
 
         // UPDATE?
 

@@ -1,23 +1,21 @@
 const { validate } = require('../utils')
-const { database, database: { ObjectId } } = require('../data')
+const { models:{ User, Event } } = require('../data')
 
 module.exports = (userId, eventId) => {
     validate.string(userId, 'userId')
     validate.string(eventId, 'eventId')
 
-    const users = database.collection('users')
-    const events = database.collection('events')
 
-    return users.findOne({ _id: ObjectId(userId), subscribedToEvent: ObjectId(eventId) })
+    return User.findOne({ _id: userId, subscribedToEvent: eventId})
         .then(user => {
 
             if (user) throw new Error('user is already subscribed to this event')
         })
         .then(() => {
-            return users.updateOne({ _id: ObjectId(userId) }, { $push: { subscribedToEvent: ObjectId(eventId) } })
+            return User.updateOne({ _id: userId }, { $push: { subscribedToEvent: eventId } })
         })
         .then(() => {
-            return events.updateOne({ _id: ObjectId(eventId) }, { $push: { userSubscribed: ObjectId(userId) } })
+            return Event.updateOne({ _id: eventId }, { $push: { usersSubscribed: userId } })
                 .then(() => { })
         })
 }

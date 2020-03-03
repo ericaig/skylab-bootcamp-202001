@@ -1,13 +1,13 @@
-const { retrieveSubscribedEvents } = require('../logic')
-const {  NotFoundError } = require('../errors')
+const { deleteEvent } = require('../logic')
+const { NotFoundError } = require('../errors')
 
 module.exports = (req, res) => {
-    const { payload: { sub: id } } = req
+    const { payload: { sub: userId }, body: {eventId} } = req
 
     try {
-        retrieveSubscribedEvents(id)
-            .then(event =>
-                res.status(200).json(event)
+        deleteEvent(userId, eventId)
+            .then(() =>
+                res.status(200).json({ message: "You've successfully deleted this event" })
             )
             .catch(({ message }) =>
                 res
@@ -25,11 +25,11 @@ module.exports = (req, res) => {
                 break
         }
 
-        const {message} = error
+        const { message } = error
 
         res
             .status(status)
-            .json({ 
+            .json({
                 error: message
             })
     }

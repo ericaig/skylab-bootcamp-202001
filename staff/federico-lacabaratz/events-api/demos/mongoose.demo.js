@@ -1,17 +1,26 @@
+const createEvent = require('../logic/create-event')
+// const { models: { User, Event } } = require('../data')
+
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/test', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost:27017/events', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
 
-        const cat = {
-            name: { type: String, required: true }
-        }
+        
+        return createEvent('5e58dd58f50e09b65a2ce293`', 'test title -demo', 'demo description', 'demo location', new Date)
+        .then(()=>{
+            console.log('created event and updated user...')
+        })
 
-        const Cat = mongoose.model('Cat', cat)
+        // const cat = {
+        //     name: { type: String, required: true }
+        // }
 
-        const kitty = new Cat({ name: 'Garfield' })
+        // const Cat = mongoose.model('Cat', cat)
 
-        return kitty.save()
-            .then(() => console.log('meow'))
+        // const kitty = new Cat({ name: 'Garfield' })
+
+        // return kitty.save()
+        //     .then(() => console.log('meow'))
 
     })
     .then(() => mongoose.disconnect())

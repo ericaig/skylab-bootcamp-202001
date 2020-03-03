@@ -1,13 +1,13 @@
-const { deleteEvent } = require('../logic')
+const { unsubscribeEvent } = require('../logic')
 const { NotFoundError } = require('../errors')
 
 module.exports = (req, res) => {
     const { payload: { sub: userId }, body: {eventId} } = req
 
     try {
-        deleteEvent(userId, eventId)
+        unsubscribeEvent(userId, eventId)
             .then(() =>
-                res.status(200).json({ message: "You've successfully deleted this event" })
+                res.status(200).json({ message: "You've successfully unsubscribe this event from the database" })
             )
             .catch(({ message }) =>
                 res

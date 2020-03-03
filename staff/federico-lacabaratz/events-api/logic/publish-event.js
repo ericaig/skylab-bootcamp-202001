@@ -1,5 +1,5 @@
 const { validate } = require('../utils')
-const { models: { User, Event } } = require('../data')
+const { models: { Event } } = require('../data')
 
 module.exports = (publisher, title, description, location, date) => {
     validate.string(publisher, 'publisher')
@@ -12,7 +12,7 @@ module.exports = (publisher, title, description, location, date) => {
 
     return event.save()
         .then(events => {
-            return User.findOneAndUpdate({ _id: publisher }, { $push: {publishedEvents: events.id} })
+            return User.findOneAndUpdate({ _id: publisher }, { $push: { publishedEvents: events.id } })
         })
         .then(() => { })
 }

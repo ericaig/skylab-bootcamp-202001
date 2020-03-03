@@ -4,7 +4,7 @@ const { env: { PORT = 8080, NODE_ENV: env, MONGODB_URL }, argv: [, , port = PORT
 
 const express = require('express')
 const winston = require('winston')
-const { registerUser, authenticateUser, retrieveUser, createEvent, retrievePublishedEvents, retrieveLastEvents, subscribeEvent, retrieveSubscribedEvents, updateEvent, deleteEvent } = require('./routes')
+const { registerUser, authenticateUser, retrieveUser, publishEvent, retrievePublishedEvents, retrieveLastEvents, subscribeEvent, retrieveSubscribedEvents, updateEvent, unsubscribeEvent } = require('./routes')
 const { name, version } = require('./package')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
@@ -12,7 +12,6 @@ const fs = require('fs')
 const path = require('path')
 const { jwtVerifierMidWare } = require('./mid-wares')
 const mongoose = require('mongoose')
-mongoose.set('useFindAndModify', false);
 
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -44,8 +43,8 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 
         app.get('/users', jwtVerifierMidWare, retrieveUser)
 
-        app.post('/users/:id/events', [jwtVerifierMidWare, jsonBodyParser], createEvent)
-
+        app.post('/users/:id/events', [jwtVerifierMidWare, jsonBodyParser], publishEvent)
+        
         app.get('/events', jwtVerifierMidWare, retrievePublishedEvents)
 
         app.get('/lastevents', retrieveLastEvents)
@@ -56,8 +55,8 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 
         app.patch('/users/updateEvent/:id', [jwtVerifierMidWare, jsonBodyParser], updateEvent)
 
-        app.delete('/users/deleteEvent', [jwtVerifierMidWare, jsonBodyParser], deleteEvent)
-        
+        app.delete('/users/unsubscribeEvent', [jwtVerifierMidWare, jsonBodyParser], unsubscribeEvent)
+
         app.listen(port, () => logger.info(`server ${name} ${version} up and running on port ${port}`))
 
         process.on('SIGINT', () => {

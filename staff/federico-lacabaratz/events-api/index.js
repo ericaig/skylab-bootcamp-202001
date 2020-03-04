@@ -11,7 +11,9 @@ const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const { jwtVerifierMidWare } = require('./mid-wares')
+const cors = require('cors')
 const mongoose = require('mongoose')
+mongoose.set('useFindAndModify', false);
 
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -35,6 +37,8 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 
         const app = express()
 
+        app.use(cors())
+
         app.use(morgan('combined', { stream: accessLogStream }))
 
         app.post('/users', jsonBodyParser, registerUser)
@@ -44,7 +48,7 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
         app.get('/users', jwtVerifierMidWare, retrieveUser)
 
         app.post('/users/:id/events', [jwtVerifierMidWare, jsonBodyParser], publishEvent)
-        
+
         app.get('/events', jwtVerifierMidWare, retrievePublishedEvents)
 
         app.get('/lastevents', retrieveLastEvents)
@@ -55,8 +59,8 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 
         app.patch('/users/updateEvent/:id', [jwtVerifierMidWare, jsonBodyParser], updateEvent)
 
-        app.delete('/users/unsubscribeEvent', [jwtVerifierMidWare, jsonBodyParser], unsubscribeEvent)
-
+        app.delete('/users/deleteEvent', [jwtVerifierMidWare, jsonBodyParser], unsubscribeEvent)
+        
         app.listen(port, () => logger.info(`server ${name} ${version} up and running on port ${port}`))
 
         process.on('SIGINT', () => {

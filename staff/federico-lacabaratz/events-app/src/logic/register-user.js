@@ -1,6 +1,6 @@
 import { validate } from 'events-utils'
 
-const { env: { REACT_APP_API_URL: API_URL } } = process
+const API_URL = process.env.REACT_APP_API_URL
 
 export default (name, surname, email, password) => {
     validate.string(name, 'name')

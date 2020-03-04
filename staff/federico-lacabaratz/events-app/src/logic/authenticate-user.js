@@ -1,6 +1,6 @@
 const { validate } = require('events-utils')
 
-const { env: { REACT_APP_API_URL: API_URL } } = process
+const API_URL = process.env.REACT_APP_API_URL
 
 /**
  * Checks user credentials against the storage
@@ -27,7 +27,7 @@ module.exports = (email, password) => {
         .then(response => {
             return response.json()
                 .then(response => {
-                    const { error: _error, token } = JSON.parse(response.content)
+                    const { error: _error, token } = response
 
                     if (_error) throw new Error(_error)
 

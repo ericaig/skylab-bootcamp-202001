@@ -1,23 +1,19 @@
 require('dotenv').config()
 
 const { env: { TEST_MONGODB_URL } } = process
-const { database, models: { Event } } = require('../data')
+const { models: { Event, User } } = require('../data')
 const { expect } = require('chai')
 const { random } = Math
 const deleteEvent = require('./delete-event')
-const { ObjectId } = require('mongodb')
+const mongoose = require('mongoose')
 
 describe('deleteEvent', () => {
-    let events, users
-    let title, description, location, date, id
+    // let events, users
+    let title, description, location, date, eventId, publisherId
     let name, surname, email, password
 
     before(() => {
-        database.connect(TEST_MONGODB_URL).then(() => {
-            events = database.collection('events')
-            users = database.collection('users')
-            return users
-        })
+        mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     })
 
     beforeEach(() => {
@@ -33,19 +29,68 @@ describe('deleteEvent', () => {
     })
 
     describe('when an event has been deleted', () => {
-        beforeEach(() =>
-            users.insertOne({ name, surname, email, password })
-                .then(({ insertedId }) => insertedId)
-                .then(publisher =>
-                    events.insertOne({ publisher: ObjectId(publisher), title, description, location, date })
-                ).then(({ insertedId }) => {
-                    id = insertedId
-                    return id
+
+        beforeEach(() => {
+            return User.create({ name, surname, email, password })
+                .then(({ id }) => id)
+                .then(publisher => {
+                    publisherId = publisher
+                    return Event.create({ publisher, title, description, location, date })
+                }).then(({ id: insertedId }) => {
+                    eventId = insertedId
+                    return eventId
                 })
-        )
+        })
 
         it('should successfully delete an event', () => {
-            return deleteEvent(id)
+            return deleteEvent(eventId, publisherId).then((result) => {
+                expect(result).to.be.undefined
+            })
         })
     })
+
+    it('should fail on retrieving non-existing event', () =>
+        Event.findOne({ _id: eventId })
+            .then(result => {
+                expect(result).to.be.null
+            })
+    )
+
+    it('it should fail on non-string eventID parametre', () => {
+        const _name = 'id'
+        let target
+
+        target = 1
+        expect(() => deleteEvent(target, 'fake_publisher_id')).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = false
+        expect(() => deleteEvent(target, 'fake_publisher_id')).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = null
+        expect(() => deleteEvent(target, 'fake_publisher_id')).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = {}
+        expect(() => deleteEvent(target, 'fake_publisher_id')).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = undefined
+        expect(() => deleteEvent(target, 'fake_publisher_id')).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = []
+        expect(() => deleteEvent(target, 'fake_publisher_id')).to.throw(TypeError, `${_name} ${target} is not a string`)
+    })
+
+    it('it should fail on non-string publisher parametre', () => {
+        const _name = 'publisher'
+        let target
+
+        target = 1
+        expect(() => deleteEvent('fake_publisher_id', target)).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = false
+        expect(() => deleteEvent('fake_publisher_id', target)).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = null
+        expect(() => deleteEvent('fake_publisher_id', target)).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = {}
+        expect(() => deleteEvent('fake_publisher_id', target)).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = undefined
+        expect(() => deleteEvent('fake_publisher_id', target)).to.throw(TypeError, `${_name} ${target} is not a string`)
+        target = []
+        expect(() => deleteEvent('fake_publisher_id', target)).to.throw(TypeError, `${_name} ${target} is not a string`)
+    })
+
+    after(() => mongoose.disconnect())
 })

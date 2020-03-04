@@ -9,21 +9,21 @@ export default (name, surname, email, password) => {
     validate.email(email)
     validate.string(password, 'password')
 
-    return fetch(`${API_URL}/users`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, surname, email, password })
-    })
-        .then(response => {
-            if (response.status === 201) return
-
-            if (response.status === 409) {
-                return response.json()
-                    .then(response => {
-                        const { error } = response
-
-                        throw new Error(error)
-                    })
-            } else throw new Error('Unknown error')
+    return (async () => {
+        const response = await fetch(`${API_URL}/users`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, surname, email, password })
         })
+
+        if (response.status === 201) return
+
+        if (response.status === 409) {
+            const _response = await response.json()
+            const error = _response
+
+            throw new Error(error)
+        } else throw new Error('Unknown error')
+    })()
+
 }

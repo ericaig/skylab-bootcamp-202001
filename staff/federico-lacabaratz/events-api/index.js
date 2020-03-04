@@ -12,7 +12,7 @@ const fs = require('fs')
 const path = require('path')
 const { jwtVerifierMidWare } = require('./mid-wares')
 const cors = require('cors')
-const mongoose = require('mongoose')
+const {mongoose} = require('events-data')
 mongoose.set('useFindAndModify', false);
 
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })

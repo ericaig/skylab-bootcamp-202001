@@ -1,4 +1,4 @@
-const { Schema, SchemaTypes: { ObjectId } } = require('mongoose')
+const { Schema, Types: { ObjectId } } = require('mongoose')
 
 module.exports = new Schema({
     title: { type: String, required: true },

@@ -1,5 +1,5 @@
 const { updateEvent } = require('../logic')
-const { NotFoundError } = require('../errors')
+const { NotFoundError } = require('events-errors')
 
 module.exports = (req, res) => {
     const { payload: { sub: userId }, body, params: {id: eventId} } = req

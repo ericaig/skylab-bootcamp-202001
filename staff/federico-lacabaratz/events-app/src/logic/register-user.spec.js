@@ -1,16 +1,13 @@
-require('dotenv').config()
-
-const { expect } = require('chai')
 const { random } = Math
 const { mongoose, models: { User } } = require('events-data')
-const registerUser = require('./register-user')
+const { registerUser } = require('.')
 
-const { env: { TEST_MONGODB_URL } } = process
+const { env: { REACT_APP_TEST_MONGODB_URL: TEST_MONGODB_URL } } = process
 
 describe('registerUser', () => {
     let name, surname, email, password
 
-    before(() =>
+    beforeAll(() =>
         mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
             .then(() => User.deleteMany())
     )
@@ -25,23 +22,22 @@ describe('registerUser', () => {
     it('should succeed on correct user data', () =>
         registerUser(name, surname, email, password)
             .then(result => {
-                expect(result).not.to.exist
-                expect(result).to.be.undefined
+                expect(result).not.toBeDefined()
 
                 return User.findOne({ email })
             })
             .then(user => {
-                expect(user).to.exist
-                expect(user.id).to.be.a('string')
-                expect(user.name).to.equal(name)
-                expect(user.surname).to.equal(surname)
-                expect(user.email).to.equal(email)
-                expect(user.password).to.equal(password) // TODO encrypt this field!
-                expect(user.created).to.be.instanceOf(Date)
+                expect(user).toBeDefined()
+                expect(typeof user.id).toBe('string')
+                expect(user.name).toBe(name)
+                expect(user.surname).toBe(surname)
+                expect(user.email).toBe(email)
+                expect(user.password).toBe(password) // TODO encrypt this field!
+                expect(user.created).toBeInstanceOf(Date)
             })
     )
 
     // TODO unhappy paths and other happies if exist
 
-    after(() => User.deleteMany().then(() => mongoose.disconnect()))
+    afterAll(() => User.deleteMany().then(() => mongoose.disconnect()))
 })

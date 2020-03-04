@@ -1,11 +1,10 @@
 require('dotenv').config()
 
 const { env: { TEST_MONGODB_URL } } = process
-const mongoose = require('mongoose')
+const { mongoose, models: { User, Event } } = require('events-data')
 const { expect } = require('chai')
 const { random } = Math
 const retrieveLastEvents = require('./retrieve-last-events')
-const { models: { User, Event } } = require('../data')
 
 describe('retrieveLastEvents', () => {
     before(() =>
@@ -64,7 +63,8 @@ describe('retrieveLastEvents', () => {
                         expect(event.description).to.equal(description)
                         expect(event.date).to.deep.equal(date)
                         expect(event.location).to.equal(location)
-                        expect(event.publisher.toString()).to.equal(_id)
+                        expect(event.publisher).to.be.a('string')
+                        expect(event.publisher).to.equal(_id)
                     })
                 })
         )

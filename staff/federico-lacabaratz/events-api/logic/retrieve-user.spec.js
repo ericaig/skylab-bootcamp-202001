@@ -1,15 +1,15 @@
 require('dotenv').config()
 
 const { env: { TEST_MONGODB_URL } } = process
-const { models: { User } } = require('../data')
 const { expect } = require('chai')
 const { random } = Math
 const retrieveUser = require('./retrieve-user')
-const mongoose = require('mongoose')
+const { mongoose, models: { User } } = require('events-data')
 
 describe('retrieveUser', () => {
     before(() =>
         mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+            .then(() => User.deleteMany())
     )
 
     let name, surname, email, password, users
@@ -43,5 +43,5 @@ describe('retrieveUser', () => {
 
     // TODO more happies and unhappies
 
-    after(() => mongoose.disconnect())
+    after(() => User.deleteMany().then(() => mongoose.disconnect()))
 })

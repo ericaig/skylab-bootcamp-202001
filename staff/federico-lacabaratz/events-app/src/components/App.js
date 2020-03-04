@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-
+import React, { useState, Fragment } from 'react'
 import Register from './register-user'
 import {registerUser} from '../logic'
 
@@ -14,13 +13,9 @@ function App() {
       })
   }
 
-  return <main>
+  return <Fragment>
     {view === 'register' && <Register onSubmit={handleRegister} />}
-  </main>
-
-
-
-
+  </Fragment>
 }
 
 export default App

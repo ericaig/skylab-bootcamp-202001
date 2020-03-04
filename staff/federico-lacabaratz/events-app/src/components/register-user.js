@@ -14,7 +14,7 @@ const Register = ({ onSubmit }) => {
         <form onSubmit={handleOnSubmit}>
             <input type='text' name='name' placeholder='name'></input>
             <input type='text' name='surname' placeholder='surname'></input>
-            <input type='text' name='email' placeholder='email'></input>
+            <input type='text' name='email' placeholder='email@mail.com'></input>
             <input type='password' name='password' placeholder='password'></input>
             <button>Register</button>
         </form>

@@ -1,9 +1,8 @@
-import { ContentError } from '../errors'
+const { ContentError } = require('events-errors')
 
-// eslint-disable-next-line
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-export default {
+module.exports = {
     string(target, name, empty = true) {
         //if (typeof target !== 'string') throw new TypeError(`${name} ${target} is not a string`)
         this.type(target, name, String)

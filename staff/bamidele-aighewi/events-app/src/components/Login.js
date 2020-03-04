@@ -6,7 +6,7 @@ export default
     const handleSubmit = (event) => {
         event.preventDefault()
         const { email, password } = event.target
-        onSubmit(email, password)
+        onSubmit(email.value, password.value)
     }
 
     return <form onSubmit={handleSubmit}>

@@ -1,5 +1,5 @@
 const { registerUser } = require('.')
-const { fetch } = require('../utils')
+// const { fetch } = require('events-utils')
 
 describe('registerUser', () => {
     let name, surname, username, password

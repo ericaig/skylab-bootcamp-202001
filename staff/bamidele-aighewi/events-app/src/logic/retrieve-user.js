@@ -1,27 +1,26 @@
-const { fetch } = require('../utils')
-const atob = require('atob')
+import {validate} from 'events-utils'
 
+export default function (token) {
+    validate.string(token, 'token')
 
-module.exports = function (token) {
-    if (typeof token !== 'string') throw new TypeError(`token ${token} is not a string`)
-
-    const [header, payload, signature] = token.split('.')
-    if (!header || !payload || !signature) throw new Error('invalid token')
+    const [, payload] = token.split('.')
 
     const { sub } = JSON.parse(atob(payload))
 
     if (!sub) throw new Error('no user id in token')
 
-    return fetch(`https://skylabcoders.herokuapp.com/api/v2/users/`, {
+    return fetch(`http://localhost:8085/users/`, {
         method: 'GET',
         headers: { 'Authorization': `Bearer ${token}` }
-    }).then(response => {
-        const data = JSON.parse(response.content), { error: _error } = data
+    })
+    .then(res=>res.json())
+    .then(data => {
+        const { error: _error } = data
 
         if (_error) throw new Error(_error)
 
-        const { name, surname, username } = data
+        const { name, surname, email } = data
 
-        return { name, surname, username }
+        return { name, surname, email }
     })
 }

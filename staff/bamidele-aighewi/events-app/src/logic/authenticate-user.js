@@ -1,16 +1,19 @@
-const { fetch } = require('../utils')
+import { validate } from 'events-utils'
+const API_URL = process.env.REACT_APP_API_URL
 
-module.exports = function (username, password) {
-    if (typeof username !== 'string') throw new TypeError(`username ${username} is not a string`)
-    if (typeof password !== 'string') throw new TypeError(`password ${password} is not a string`)
+export default function (email, password) {
+    validate.string(email, 'email')
+    validate.email(email)
+    validate.string(password, 'password')
 
-    return fetch(`https://skylabcoders.herokuapp.com/api/v2/users/auth`, {
+    return fetch(`${API_URL}/users/auth`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ email, password })
     })
+        .then(response => response.json())
         .then(response => {
-            const { error: _error, token } = JSON.parse(response.content)
+            const { error: _error, token } = response
 
             if (_error) throw new Error(_error)
 

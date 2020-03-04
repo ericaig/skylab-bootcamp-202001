@@ -14,7 +14,7 @@ const API_URL = process.env.REACT_APP_API_URL
  * @throws {TypeError} if user data does not have the correct type
  * @throws {NotAllowedError} on wrong credentials
  */
-export default (email, password) => {
+module.exports = (email, password) => {
     validate.string(email, 'email')
     validate.email(email)
     validate.string(password, 'password')

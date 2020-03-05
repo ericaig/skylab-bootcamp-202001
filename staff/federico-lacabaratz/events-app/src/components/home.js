@@ -1,7 +1,12 @@
 import React from 'react'
 
-const Home = () => {
-    return <h1>BIENVENIDO</h1>
+const Home = ({userData: {name, surname, email}}) => {
+    return <section>
+        <h1>BIENVENIDO</h1>
+        <p>{name}</p>
+        <p>{surname}</p>
+        <p>{email}</p>
+        </section>
 }
 
 export default Home

@@ -1,4 +1,5 @@
 const { validate } = require('events-utils')
+const { NotAllowedError } = require('events-errors')
 
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -28,7 +29,7 @@ module.exports = (email, password) => {
 
         const { token } = await res.json()
 
-        if (!token.length) throw new Error(`wrong credentials`)
+        if (!token.length) throw new NotAllowedError(`wrong credentials`)
 
         return token
     })()

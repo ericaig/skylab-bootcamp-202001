@@ -7,5 +7,7 @@ module.exports = new Schema({
     location: { type: String, required: true },
     publisher: { type: ObjectId, required: true, ref: 'User' },
     created: { type: Date, required: true, default: Date.now },
-    usersSubscribed: {type:[ObjectId], ref: 'User'}
+    usersSubscribed: {
+        type: [{ type: [ObjectId], ref: 'User' }]
+    }
 })

@@ -12,7 +12,7 @@ const fs = require('fs')
 const path = require('path')
 const { jwtVerifierMidWare } = require('./mid-wares')
 const cors = require('cors')
-const {mongoose} = require('events-data')
+const { mongoose } = require('events-data')
 mongoose.set('useFindAndModify', false);
 
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -60,7 +60,7 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
         app.patch('/users/updateEvent/:id', [jwtVerifierMidWare, jsonBodyParser], updateEvent)
 
         app.delete('/users/deleteEvent', [jwtVerifierMidWare, jsonBodyParser], unsubscribeEvent)
-        
+
         app.listen(port, () => logger.info(`server ${name} ${version} up and running on port ${port}`))
 
         process.on('SIGINT', () => {

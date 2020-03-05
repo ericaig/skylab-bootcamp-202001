@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "atob": "^2.1.2",
     "events-errors": "file:../events-errors"
   },
   "devDependencies": {

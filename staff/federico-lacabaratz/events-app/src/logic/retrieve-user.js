@@ -7,22 +7,30 @@ module.exports = token => {
     validate.string(token, 'token')
     validate.token(token)
 
-    return (async() => {
-        const res = await fetch(`${API_URL}/users`, {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-    })
+    return (async () => {
+        const response = await fetch(`${API_URL}/users`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
 
-        const data = await res.json()
+        const { status } = response
 
-        const { error: _error } = data
+        if (status === 200) {
+            const user = await response.json()
 
-        if(_error) {
-            
-            throw new NotAllowedError(_error)
+            return user
         }
-        const { name, surname, email} = data
 
-        return {name, surname, email}
+        if (status >= 400 && status < 500) {
+            const { error } = await response.json()
+
+            if (status === 401) {
+                throw new NotAllowedError(error)
+            }
+
+            throw new Error(error)
+        }
+
+        throw new Error('server error')
     })()
 }

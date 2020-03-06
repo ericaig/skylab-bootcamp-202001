@@ -21,17 +21,30 @@ module.exports = (email, password) => {
     validate.string(password, 'password')
 
     return (async () => {
-        const res = await fetch(`${API_URL}/users/auth`, {
+        const response = await fetch(`${API_URL}/users/auth`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
         })
 
-        const { token } = await res.json()
+        const { status } = response
 
-        if (!token.length) throw new NotAllowedError(`wrong credentials`)
+        if (status === 200) {
+            const { token } = await response.json()
 
-        return token
+            return token
+        }
+        
+        if (status >= 400 && status < 500) {
+            const { error } = await response.json()
+
+            if (status === 401) {
+                throw new NotAllowedError(error)
+            }
+
+            throw new Error(error)
+        }
+
+        throw new Error('server error')
     })()
-
 }

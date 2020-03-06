@@ -10,8 +10,17 @@ module.exports = {
         if (empty && !target.trim()) throw new ContentError(`${name} is empty`)
     },
 
+    token(token) {
+        if (typeof atob !== 'function') throw new Error('atob function not found')
+        
+        const [header, payload, signature] = token.split('.')
+        if (!header || !payload || !signature) throw new Error('invalid token')
+        const { sub } = JSON.parse(atob(payload))
+        if (!sub) throw new Error('no user id in token')
+    },
+
     email(target) {
-        if (!EMAIL_REGEX.test(target)) throw new ContentError(`${target} is not an e-mail`) // TODO custom error?
+        if (!EMAIL_REGEX.test(target)) throw new ContentError(`${target} is not an e-mail`)
     },
 
     type(target, name, type) {

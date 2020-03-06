@@ -1,4 +1,5 @@
-import {validate} from 'events-utils'
+import { validate } from 'events-utils'
+const API_URL = process.env.REACT_APP_API_URL
 
 export default function (token) {
     validate.string(token, 'token')
@@ -9,18 +10,21 @@ export default function (token) {
 
     if (!sub) throw new Error('no user id in token')
 
-    return fetch(`http://localhost:8085/users/`, {
-        method: 'GET',
-        headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(res=>res.json())
-    .then(data => {
-        const { error: _error } = data
+    return (async () => {
+
+        const response = await fetch(`${API_URL}/users/`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+        const body = await response.json()
+
+
+        const { error: _error } = body
 
         if (_error) throw new Error(_error)
 
-        const { name, surname, email } = data
+        const { name, surname, email } = body
 
         return { name, surname, email }
-    })
+    })()
 }

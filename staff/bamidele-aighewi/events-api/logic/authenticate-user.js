@@ -1,5 +1,5 @@
 const { validate } = require('events-utils')
-const { models: { User } } = require('../data')
+const { models: { User } } = require('events-data')
 const { NotAllowedError } = require('events-errors')
 
 /**

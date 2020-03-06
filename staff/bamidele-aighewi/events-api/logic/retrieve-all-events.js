@@ -1,5 +1,5 @@
-const { database } = require('../data')
-const { models: { Event } } = require('../data')
+const { database } = require('events-data')
+const { models: { Event } } = require('events-data')
 
 
 module.exports = () => Event.find()

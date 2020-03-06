@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const { env: { PORT = 8080, NODE_ENV: env, MONGODB_URL }, argv: [, , port = PORT] } = process
+const { env: { PORT = 8080, NODE_ENV: env, MONGODB_URL, TEST_MONGODB_URL }, argv: [, , port = PORT] } = process
 
 const express = require('express')
 const winston = require('winston')
@@ -25,10 +25,11 @@ const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const { jwtVerifierMidWare } = require('./mid-wares')
-const mongoose = require('mongoose')
+const { mongoose } = require('events-data')
 const cors = require('cors')
 
-mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+// MONGODB_URL
+mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
 
         const logger = winston.createLogger({
@@ -58,8 +59,8 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
         app.post('/users', jsonBodyParser, registerUser)
         app.post('/users/auth', jsonBodyParser, authenticateUser)
         app.get('/users', jwtVerifierMidWare, retrieveUser)
-        app.post('/users/:id/events', [jwtVerifierMidWare, jsonBodyParser], createEvent)
-        app.get('/users/:id/published-events', jwtVerifierMidWare, retrievePublishedEvents)
+        app.post('/users/events', [jwtVerifierMidWare, jsonBodyParser], createEvent)
+        app.get('/users/published-events', jwtVerifierMidWare, retrievePublishedEvents)
         app.get('/users/last-events', jwtVerifierMidWare, retrieveLastEvents)
         app.patch('/users/:id/events', [jwtVerifierMidWare, jsonBodyParser], subscribeToEvent)
         app.patch('/users/:id/unsubscribe-event', [jwtVerifierMidWare, jsonBodyParser], unSubscribeFromEvent)

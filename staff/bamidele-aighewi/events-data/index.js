@@ -1,3 +1,6 @@
+const mongoose = require('mongoose')
+
 module.exports = {
-    models: require('./models')
+    models: require('./models'),
+    mongoose
 }

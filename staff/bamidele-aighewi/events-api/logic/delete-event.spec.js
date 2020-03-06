@@ -1,11 +1,11 @@
 require('dotenv').config()
 
 const { env: { TEST_MONGODB_URL } } = process
-const { models: { Event, User } } = require('../data')
+const { models: { Event, User } } = require('events-data')
 const { expect } = require('chai')
 const { random } = Math
 const deleteEvent = require('./delete-event')
-const mongoose = require('mongoose')
+const { mongoose } = require('events-data')
 
 describe('deleteEvent', () => {
     // let events, users

@@ -1,6 +1,6 @@
 const { validate } = require('events-utils')
 const { NotFoundError } = require('events-errors')
-const { models: { Event, User } } = require('../data')
+const { models: { Event, User } } = require('events-data')
 
 module.exports = (userId) => {
     validate.string(userId, 'userId')

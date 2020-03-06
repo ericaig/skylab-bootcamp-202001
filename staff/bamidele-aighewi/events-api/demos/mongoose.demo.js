@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const { models: { Event, User } } = require('../data')
+const { mongoose } = require('events-data')
+const { models: { Event, User } } = require('events-data')
 const { NotFoundError } = require('events-errors')
 
 mongoose.connect('mongodb://localhost:27017/events', { useNewUrlParser: true, useUnifiedTopology: true })

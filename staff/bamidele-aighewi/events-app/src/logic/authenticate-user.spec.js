@@ -1,133 +1,57 @@
-const { authenticateUser } = require('.')
-const { fetch } = require('events-utils')
-require('../specs/specs-helper')
+const authenticateUser = require('./authenticate-user')
+const { random } = Math
+const { mongoose, models: { User } } = require('events-data')
+const { validate } = require('events-utils')
+
+const TEST_MONGODB_URL = process.env.REACT_APP_TEST_MONGODB_URL
 
 describe('authenticateUser', () => {
-    let name, surname, username, password
+    let name, surname, email, password
+
+    beforeAll(async () => {
+        await mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+        await User.deleteMany()
+    })
 
     beforeEach(() => {
-        name = 'name-' + Math.random()
-        surname = 'surname-' + Math.random()
-        username = 'username-' + Math.random()
-        password = 'password-' + Math.random()
+        name = `name-${random()}`
+        surname = `surname-${random()}`
+        email = `email-${random()}@mail.com`
+        password = `password-${random()}`
     })
 
     describe('when user already exists', () => {
-        beforeEach(() =>
-            fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, surname, username, password })
-            })
-                .then(response => {
-                    if (response.content) {
-                        const { error } = JSON.parse(response.content)
+        let _id
 
-                        if (error) throw new Error(error)
-                    }
-                })
-        )
+        beforeEach(async () => {
+            const { id } = await User.create({ name, surname, email, password })
+            _id = id
+        })
 
-        it('should succeed on correct credentials', () =>
-            authenticateUser(username, password)
-                .then(token => {
-                    expect(token).toBeA('string')
+        it('should succeed on correct and valid and right credentials', async () => {
+            const token = await authenticateUser(email, password)
+            expect(token).to.be.a('string')
+            expect(token.length).to.beGreaterThan(0)
 
-                    const [header, payload, signature] = token.split('.')
-                    expect(header.length).toBeGreaterThan(0)
-                    expect(payload.length).toBeGreaterThan(0)
-                    expect(signature.length).toBeGreaterThan(0)
-                })
-        )
+            expect(() => validate.token(token)).not.toThrow()
 
-        it('should fail on incorrect password', () =>
-            authenticateUser(username, `${password}-wrong`)
-                .then(() => { throw new Error('should not reach this point') })
-                .catch(error => {
-                    expect(error).toBeInstanceOf(Error)
-                    expect(error.message).toBe('username and/or password wrong')
-                })
-        )
-
-        it('should fail on incorrect username', () =>
-            authenticateUser(`${username}-wrong`, password)
-                .then(() => { throw new Error('should not reach this point') })
-                .catch(error => {
-                    expect(error).toBeInstanceOf(Error)
-                    expect(error.message).toBe('username and/or password wrong')
-                })
-        )
-
-        afterEach(() =>
-            fetch(`https://skylabcoders.herokuapp.com/api/v2/users/auth`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            })
-                .then(response => {
-                    const { error: _error, token } = JSON.parse(response.content)
-
-                    if (_error) throw new Error(_error)
-
-                    return fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({ password })
-                    })
-                        .then(response => {
-                            if (response.content) {
-                                const { error } = JSON.parse(response.content)
-
-                                if (error) throw new Error(error)
-                            }
-                        })
-                })
-        )
+            const [, payload] = token.split('.')
+            const { sub: id } = JSON.parse(atob(payload))
+            expect(id).to.equal(_id)
+        })
     })
 
-    it('should fail when user does not exist', () =>
-        authenticateUser(username, password)
-            .then(() => { throw new Error('should not reach this point') })
-            .catch(error => {
-                expect(error).toBeInstanceOf(Error)
-                expect(error.message).toBe('username and/or password wrong')
-            })
-    )
-
-    it('should fail on non-string username', () => {
-        username = 1
-        expect(() =>
-            authenticateUser(username, password)
-        ).toThrowError(TypeError, `username ${username} is not a string`)
-
-        username = true
-        expect(() =>
-            authenticateUser(username, password)
-        ).toThrowError(TypeError, `username ${username} is not a string`)
-
-        username = undefined
-        expect(() =>
-            authenticateUser(username, password)
-        ).toThrowError(TypeError, `username ${username} is not a string`)
+    describe('when user does not exist', ()=>{
+        it('should fail on authenticating user with wrong credentials', async () => {
+            try {
+                await authenticateUser(`${email}`, `${password}-wrong`)    
+            } catch (error) {
+                expect(error).toBeIntanceOf(Error)
+            }
+        })
     })
 
-    it('should fail on non-string password', () => {
-        password = 1
-        expect(() =>
-            authenticateUser(username, password)
-        ).toThrowError(TypeError, `password ${password} is not a string`)
+    // TODO more happies and unhappies
 
-        password = true
-        expect(() =>
-            authenticateUser(username, password)
-        ).toThrowError(TypeError, `password ${password} is not a string`)
-
-        password = undefined
-        expect(() =>
-            authenticateUser(username, password)
-        ).toThrowError(TypeError, `password ${password} is not a string`)
-    })
+    afterAll(async () => await mongoose.disconnect())
 })

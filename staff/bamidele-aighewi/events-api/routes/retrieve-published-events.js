@@ -1,6 +1,6 @@
 const { retrievePublishedEvents } = require('../logic')
 module.exports = (req, res) => {
-    const { params: { id } } = req
+    const { payload: { sub: id } } = req
 
     try {
         retrievePublishedEvents(id).then(events => {

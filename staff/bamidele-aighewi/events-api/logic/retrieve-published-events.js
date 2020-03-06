@@ -1,5 +1,5 @@
 const { validate } = require('events-utils')
-const { models: { Event } } = require('../data')
+const { models: { Event } } = require('events-data')
 // const { NotAllowedError } = require('events-errors')
 
 module.exports = id => {

@@ -1,65 +1,48 @@
-const { registerUser } = require('.')
-// const { fetch } = require('events-utils')
+const registerUser = require('./register-user')
+const { random } = Math
+const { mongoose, models: { User } } = require('events-data')
 
-describe('registerUser', () => {
-    let name, surname, username, password
+const TEST_MONGODB_URL = process.env.REACT_APP_TEST_MONGODB_URL
 
-    beforeEach(() => {
-        name = 'name-' + Math.random()
-        surname = 'surname-' + Math.random()
-        username = 'username-' + Math.random()
-        password = 'password-' + Math.random()
-    })
-
-    it('should succeed on new user', () => {
-        return registerUser(name, surname, username, password).then(response => {
-            expect(response).toBeUndefined()
-        })
-    })
+fdescribe('registerUser', () => {
 
     describe('when user already exists', () => {
-        beforeEach(() =>
-            fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, surname, username, password })
-            })
-        )
+        let name, surname, email, password
 
-        it('should fail on already existing user', () => {
-            return registerUser(name, surname, username, password).then(()=>{
-                throw new Error('should not reach this point')
-            }).catch(error => {
-                expect(error).toBeDefined()
-                expect(error.message).toBe(`user with username "${username}" already exists`)
-            })
+        beforeAll(async () => {
+            await mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+            await User.deleteMany()
         })
+
+        beforeEach(() => {
+            name = `name-${random()}`
+            surname = `surname-${random()}`
+            email = `email-${random()}@mail.com`
+            password = `password-${random()}`
+        })
+
+        it('should succeed on correct user data', async () => {
+            const result = await registerUser(name, surname, email, password)
+            expect(result).not.toBeDefined()
+
+            const user = await User.findOne({ email })
+            expect(user).toBeDefined()
+
+            expect(typeof user.id).toBe('string')
+            expect(user.name).toBe(name)
+            expect(user.surname).toBe(surname)
+            expect(user.email).toBe(email)
+            expect(user.password).toBe(password) // TODO encrypt this field!
+            expect(user.created).toBeInstanceOf(Date)
+        })
+
+
     })
 
-    afterEach(() => {
-        return fetch(`https://skylabcoders.herokuapp.com/api/v2/users/auth`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        }).then(response => {
-            const { error: _error, token } = JSON.parse(response.content)
+    // TODO unhappy paths and other happies if exist
 
-            if (_error) throw new Error(_error)
-
-            return fetch(`https://skylabcoders.herokuapp.com/api/v2/users`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ password })
-            }).then(response=>{
-                if (response.content) {
-                    const { error } = JSON.parse(response.content)
-
-                    if (error) throw new Error(error)
-                }
-            })
-        })
+    afterAll(async () => {
+        await User.deleteMany()
+        await mongoose.disconnect()
     })
 })

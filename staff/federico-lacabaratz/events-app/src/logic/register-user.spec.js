@@ -1,7 +1,6 @@
 const { random } = Math
 const { mongoose, models: { User } } = require('events-data')
 const { registerUser } = require('.')
-const { NotAllowedError } = require('events-errors')
 
 const TEST_MONGODB_URL = process.env.REACT_APP_TEST_MONGODB_URL
 
@@ -23,7 +22,7 @@ describe('registerUser', () => {
     it('should succeed on correct user data', async () => {
         const result = await registerUser(name, surname, email, password)
         expect(result).toBeUndefined()
-        
+
         const user = await User.findOne({ email })
         expect(user).toBeDefined()
         expect(user.name).toBe(name)
@@ -65,7 +64,93 @@ describe('registerUser', () => {
         })
     })
 
-    // TODO unhappy paths and other happies if exist
+    it('should fail on non-string name', () => {
+        name = 1
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `name ${name} is not a string`)
+
+        name = true
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `name ${name} is not a string`)
+
+        name = undefined
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `name ${name} is not a string`)
+
+        name = null
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `name ${name} is not a string`)
+    })
+
+    it('should fail on non-string surname', () => {
+        surname = 1
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `surname ${surname} is not a string`)
+
+        surname = true
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `surname ${surname} is not a string`)
+
+        surname = undefined
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `surname ${surname} is not a string`)
+
+        surname = null
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `surname ${surname} is not a string`)
+    })
+
+    it('should fail on non-string email', () => {
+        email = 1
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `email ${email} is not a string`)
+
+        email = true
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `email ${email} is not a string`)
+
+        email = undefined
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `email ${email} is not a string`)
+
+        email = null
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `email ${email} is not a string`)
+    })
+
+    it('should fail on non-string password', () => {
+        password = 1
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `password ${password} is not a string`)
+
+        password = true
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `password ${password} is not a string`)
+
+        password = undefined
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `password ${password} is not a string`)
+
+        password = null
+        expect(() =>
+            registerUser(name, surname, email, password)
+        ).toThrowError(TypeError, `password ${password} is not a string`)
+    })
 
     afterAll(async () => {
         await Promise.resolve(User.deleteMany())

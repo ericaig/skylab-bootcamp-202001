@@ -5,12 +5,12 @@ const { NotAllowedError } = require('events-errors')
 
 const TEST_MONGODB_URL = process.env.REACT_APP_TEST_MONGODB_URL
 
-fdescribe('registerUser', () => {
+describe('registerUser', () => {
     let name, surname, email, password
 
     beforeAll(async () => {
         await mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-        return await User.deleteMany()
+        return await Promise.resolve(User.deleteMany())
     })
 
     beforeEach(() => {
@@ -23,8 +23,8 @@ fdescribe('registerUser', () => {
     it('should succeed on correct user data', async () => {
         const result = await registerUser(name, surname, email, password)
         expect(result).toBeUndefined()
+        
         const user = await User.findOne({ email })
-
         expect(user).toBeDefined()
         expect(user.name).toBe(name)
         expect(user.surname).toBe(surname)
@@ -34,21 +34,41 @@ fdescribe('registerUser', () => {
 
     })
 
-    it('should fail on already registered user', async () => {
+    describe('when user already exists', () => {
 
-        const result = await registerUser(name, surname, email, password)
-        const user = await User.findOne({ email })
-        const error = await registerUser(name, surname, user.email, password)
-        
+        beforeEach(async () => {
+            try {
+                return await fetch('http://localhost:8089/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, surname, email, password })
+                })
 
-        expect(error).toThrow(NotAllowedError)
-        expect(error.message).toBe(`user with email ${result.email} already exists`)
+
+            } catch (error) {
+                throw new Error(error)
+
+            }
+        })
+
+        it('should fail on already registered user', async () => {
+            try {
+                await registerUser(name, surname, email, password)
+
+                throw new Error('You should not reach this point')
+
+            } catch (error) {
+                expect(error).toBeDefined()
+                expect(error.message).toBe(`user with email ${email} already exists`)
+
+            }
+        })
     })
 
     // TODO unhappy paths and other happies if exist
 
     afterAll(async () => {
-        await User.deleteMany()
+        await Promise.resolve(User.deleteMany())
         return await mongoose.disconnect()
     })
 })

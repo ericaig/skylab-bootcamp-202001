@@ -16,16 +16,22 @@ module.exports = (name, surname, email, password) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, surname, email, password })
         })
-
-        if (response.status === 201) return
-
-        const { error } = await response.json()
         
-        if (response.status === 409) {
+        const { status } = response
 
-            throw new NotAllowedError(error)
+        if (status === 201) return
 
-        } else throw new Error('Unknown error')
+        if (status >= 400 && status < 500) {
+            const { error } = await response.json()
+
+            if (status === 409) {
+                throw new NotAllowedError(error)
+            }
+
+            throw new Error(error)
+        }
+
+        throw new Error('server error')
     })()
 
 }

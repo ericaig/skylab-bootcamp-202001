@@ -1,13 +1,13 @@
 const { random } = Math
-const { mongoose, models: { User } } = require('events-data')
 const { retrieveUser } = require('.')
+const { mongoose, models: { User } } = require('events-data')
 const jwt = require('jsonwebtoken')
 
-const { env: { 
-    REACT_APP_TEST_MONGODB_URL: TEST_MONGODB_URL,
-    REACT_APP_TEST_MONGODB_URL: TEST_JWT_SECRET } } = process
+const TEST_MONGODB_URL = process.env.REACT_APP_TEST_MONGODB_URL
 
-describe.only('retrieveUser', () => {
+const TEST_JWT_SECRET = process.env.REACT_APP_TEST_JWT_SECRET
+
+describe('retrieveUser', () => {
     beforeAll(async() => {
         await mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
         return await Promise.resolve(User.deleteMany())
@@ -40,10 +40,43 @@ describe.only('retrieveUser', () => {
             expect(user.password).toBeUndefined()
             
         })
+
+        it('should fail on invalid token', async () => {
+            try {
+                await retrieveUser(`${token}-wrong`)
+
+                throw new Error('you should not reach this point')
+            } catch (error) {
+                expect(error).toBeDefined()
+                expect(error.message).toBe(`invalid signature`)
+            }
+        })
+    })
+    
+    it('should fail on non-string token', () => {
+        let token = 1
+        expect(() =>
+            retrieveUser(token)
+        ).toThrowError(TypeError, `token ${token} is not a string`)
+
+        token = true
+        expect(() =>
+            retrieveUser(token)
+        ).toThrowError(TypeError, `token ${token} is not a string`)
+
+        token = undefined
+        expect(() =>
+            retrieveUser(token)
+        ).toThrowError(TypeError, `token ${token} is not a string`)
     })
 
+    it('should fail on invalid token format', () => {
+        let token = 'abc'
 
-    // TODO more happies and unhappies
+        expect(() =>
+            retrieveUser(token)
+        ).toThrowError(Error, 'invalid token')
+    })
 
     afterAll(async () => {
         await Promise.resolve(User.deleteMany())

@@ -10,11 +10,14 @@ module.exports = token => {
     return (async () => {
         const response = await fetch(`${API_URL}/users`, {
             method: 'GET',
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         })
 
-        const { status } = response
-
+        const { status } = await response
+        debugger
         if (status === 200) {
             const user = await response.json()
 

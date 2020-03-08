@@ -31,8 +31,8 @@ describe.only('retrieveUser', () => {
         })
 
         it('should succeed on correct data', async () => {
+            
             const user = await retrieveUser(token)
-
             expect(user).toBeDefined()
             expect(user.name).toEqual(name)
             expect(user.surname).toEqual(surname)

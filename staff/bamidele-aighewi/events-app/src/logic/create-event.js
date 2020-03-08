@@ -6,7 +6,7 @@ export default function (token, title, description, location, date) {
     validate.string(title, 'title')
     validate.string(description, 'description')
     validate.string(location, 'location')
-    validate.type(date, 'date', Date)
+    // validate.type(date, 'date', Date)
 
     return (async () => {
         const response = await fetch(`${API_URL}/users/events`, {

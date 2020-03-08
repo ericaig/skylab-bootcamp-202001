@@ -1,16 +1,30 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 // import './App.css'
 import './App.sass'
 import Register from './Register'
 import Login from './Login'
+import Landing from './Landing'
+import CreateEvent from './CreateEvent'
+import PublishedEvents from './PublishedEvents'
 import { registerUser, authenticateUser, retrieveUser, createEvent, retrievePublishedEvents } from '../logic'
 // import { sayHello } from '../logic'
 
 function App() {
   const [view, setView] = useState('login')
+  const [feedback, setFeedback] = useState()
+  const [loggedIn, setLoggedIn] = useState(false)
+  const [user, setUser] = useState({})
+  const [publishedEvents, setPublishedEvents] = useState([])
 
-  // const changeView = view => setView(view)
+  // set handleToken = token => sessionStorage.setItem('token', token)
+  const handleJWToken = token => sessionStorage.setItem('token', token)
+  const retrieveJWToken = () => sessionStorage.getItem('token')
+
+  const handleFeedback = (message, type = 'error') => {
+    setFeedback({ message, type })
+    console.log(`${type.toUpperCase()}: ${message}`)
+  }
 
   const handleRegister = (name, surname, email, password) => {
     (async () => {
@@ -18,9 +32,25 @@ function App() {
         await registerUser(name, surname, email, password)
         setView('login')
       } catch ({ message }) {
-        console.log(message)
+        handleFeedback(message)
       }
     })()
+  }
+
+  const handleLoggedInState = (token, user) => {
+    setUser(user)
+    setLoggedIn(true)
+    handleJWToken(token)
+    setView('landing')
+  }
+
+  const handleLogout = () => {
+    setUser()
+    setLoggedIn(false)
+    setFeedback()
+    setPublishedEvents([])
+    sessionStorage.clear()
+    setView('login')
   }
 
   const handleLogin = (email, password) => {
@@ -28,23 +58,25 @@ function App() {
       try {
         const token = await authenticateUser(email, password)
         const user = await retrieveUser(token)
-        console.log(token)
-        console.log(user)
-        sessionStorage.setItem('token', token)
+        handleLoggedInState(token, user)
       } catch ({ message }) {
-        console.log(message)
+        handleFeedback(message)
       }
     })()
   }
 
-  const handleCreateEvent = () => {
-    (async () => {
+  const handleCreateEvent = (title, description, location, date) => {
+    console.log(title, description, location, date)
+
+    ;(async () => {
       try {
-        const token = sessionStorage.getItem('token')
-        const response = await createEvent(token, 'Event from event-app', 'Event-app description', 'Event-app', new Date())
-        console.log('create event', response)
+        const token = retrieveJWToken()
+        date = (date && Date(date)) || ''
+        await createEvent(token, title, description, location, date)
+        handleFeedback('Successfully created event', 'success')
+        handleRetrievePublishedEvents()
       } catch ({ message }) {
-        console.log(message)
+        handleFeedback(message)
       }
     })()
   }
@@ -55,18 +87,46 @@ function App() {
         const token = sessionStorage.getItem('token')
         const events = await retrievePublishedEvents(token)
         console.log(events)
-      } catch ({message}) {
-        console.log(message)
+        setPublishedEvents(events)
+      } catch ({ message }) {
+        handleFeedback(message)
       }
     })()
   }
+
+  const handleDeleteEvent = id =>{
+    console.log(id)
+  }
+
+  useEffect(() => {
+    const token = retrieveJWToken()
+    if (token) {
+      ; (async () => {
+        const user = await retrieveUser(token)
+        handleLoggedInState(token, user)
+        handleRetrievePublishedEvents()
+      })()
+    }
+  }, [])
 
   return <div className="App">
     {view === 'register' && <Register onSubmit={handleRegister} goToLogin={() => { setView('login') }} />}
     {view === 'login' && <Login onSubmit={handleLogin} goToRegister={() => { setView('register') }} />}
 
-    <button onClick={handleCreateEvent}>Create event</button>
-    <button onClick={handleRetrievePublishedEvents}>Retrieve events</button>
+    {loggedIn &&
+      <>
+        {/* Logged in pages */}
+        {user && <span>Hello, {user.name}</span>}<br />
+        <button onClick={handleLogout}>Logout user</button><br />
+        {view === 'landing' && <Landing setView={setView} />}
+        {view === 'create-event' && <CreateEvent onSubmit={handleCreateEvent} />}
+        
+        {publishedEvents && <PublishedEvents events={publishedEvents} deleteEvent={handleDeleteEvent} />}
+      </>
+    }
+
+    {/* <button onClick={handleCreateEvent}>Create event</button>
+    <button onClick={handleRetrievePublishedEvents}>Retrieve events</button> */}
   </div>
 }
 

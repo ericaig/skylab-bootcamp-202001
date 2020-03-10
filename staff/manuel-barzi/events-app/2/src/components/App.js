@@ -7,7 +7,7 @@ import Home from './Home'
 import { registerUser, authenticateUser, retrieveUser } from '../logic'
 
 function App() {
-  const [page, setPage] = useState('login')
+  const [page, setPage] = useState('register')
   const [error, setError] = useState()
   const [name, setName] = useState()
 

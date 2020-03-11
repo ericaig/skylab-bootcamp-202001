@@ -1,17 +1,22 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import React, { useState, useContext } from 'react'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import TextField from '@material-ui/core/TextField'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import Link from '@material-ui/core/Link'
+import Grid from '@material-ui/core/Grid'
+import Box from '@material-ui/core/Box'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import Typography from '@material-ui/core/Typography'
+import { makeStyles } from '@material-ui/core/styles'
+import Container from '@material-ui/core/Container'
+// import Collapse from '@material-ui/lab/Collapse'
+import Alert from '@material-ui/lab/Alert'
+import { withRouter } from 'react-router-dom'
+import login from '../logic/login'
+// import { Context } from './ContextProvider'
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -31,10 +36,42 @@ const useStyles = makeStyles(theme => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
-}));
+}))
 
-export default function SignIn() {
-    const classes = useStyles();
+export default withRouter(function ({ history }) {
+    // const [state, setState] = useContext(Context)
+    const classes = useStyles()
+    const [feedback, setFeedback] = useState()
+    const feedbackTimeout = undefined
+
+    function unsetFeedback(){
+        if (feedbackTimeout !== "undefined")
+            clearTimeout(feedbackTimeout)
+    }
+
+    function handleFeedback(message){
+        unsetFeedback()
+        setTimeout(() => {
+            
+        }, 5000);
+    }
+
+    async function handleSubmit(event) {
+        event.preventDefault()
+
+        const { target: {
+            email: { value: email },
+            password: { value: password }
+        } } = event
+
+        try {
+            await login(email, password)
+
+            history.push('/register')
+        } catch ({ message }) {
+            setFeedback(message)
+        }
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -45,10 +82,14 @@ export default function SignIn() {
                 </Avatar>
                 <Typography component="h1" variant="h5">Sign in</Typography>
                 {/* <Typography component="h1" variant="h6">Sign in</Typography> */}
-                <form className={classes.form} noValidate>
-                    <TextField variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus/>
-                    <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password"/>
-                    <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me"/>
+                <form onSubmit={handleSubmit} className={classes.form} noValidate>
+                    <TextField variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus />
+                    <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
+                    <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+                    
+                    <Alert severity="warning">This is a warning alert — check it out!</Alert>
+                    {/* <Collapse in={!!feedback}></Collapse> */}
+                    
                     <Button type="submit" fullWidth variant="contained" size="large" color="primary" className={classes.submit}>
                         Sign In
                     </Button>
@@ -69,7 +110,7 @@ export default function SignIn() {
             <Box mt={8}>
                 <Typography variant="body2" color="textSecondary" align="center">
                     {'Copyright © '}
-                    <Link color="inherit" href="https://material-ui.com/">
+                    <Link color="inherit" href="/">
                         Timekeeper
                     </Link>{' '}
                     {new Date().getFullYear()}
@@ -77,5 +118,5 @@ export default function SignIn() {
                 </Typography>
             </Box>
         </Container>
-    );
-}
+    )
+})

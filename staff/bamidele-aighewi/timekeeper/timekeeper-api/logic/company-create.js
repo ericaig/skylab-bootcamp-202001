@@ -1,6 +1,7 @@
 const { validate } = require('timekeeper-utils')
-const { models: { Company, User } } = require('timekeeper-data')
-const {v4: uuid} = require('uuid')
+const { models: { Company, User }, roles } = require('timekeeper-data')
+const { NotAllowedError } = require('timekeeper-errors')
+const { v4: uuid } = require('uuid')
 
 module.exports = function (name, email, address, owner, web, nif, city, postalCode, startTime, endTime) {
     validate.string(name)
@@ -20,6 +21,7 @@ module.exports = function (name, email, address, owner, web, nif, city, postalCo
         const user = await User.findOne({ _id: owner })
         if (!user) throw new Error(`Client with id ${owner} doesn't exist`)
         if (user.company) throw new Error(`Client with id ${owner} already has a company created`)
+        if (roles.CLIENT !== user.role) throw new NotAllowedError(`User with id ${owner} does not have permission to create a company`)
 
         const _company = new Company({
             name,

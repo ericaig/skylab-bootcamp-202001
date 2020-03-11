@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
-const modelInstanceSanitizer = require('./utils/sanitize-model-instance')
+const { sanitizer, roles } = require('./utils')
 
 module.exports = {
     models: require('./models'),
-    sanitizer: modelInstanceSanitizer,
+    sanitizer,
+    roles,
     mongoose
 }

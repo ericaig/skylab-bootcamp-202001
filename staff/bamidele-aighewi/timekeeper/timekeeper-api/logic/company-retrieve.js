@@ -7,14 +7,15 @@ module.exports = owner => {
 
     return (async () => {
         const company = await Company.findOne({ owner })
-            .populate({ 
+            .populate({
                 path: 'owner',
                 select: 'name surname email -_id'
             })
-        
-            sanitizer(company)
+            .lean()
 
         if (!company) throw new NotFoundError(`Company with owner id ${owner} does not exist`)
+
+        sanitizer(company)
 
         return company
     })()

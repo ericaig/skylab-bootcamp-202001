@@ -1,5 +1,6 @@
 const { validate } = require('timekeeper-utils')
-const { models: { Company, User } } = require('timekeeper-data')
+const { NotFoundError } = require('timekeeper-errors')
+const { models: { Company, User }, roles } = require('timekeeper-data')
 
 module.exports = (owner, props) => {
     validate.string(owner, 'id')
@@ -45,9 +46,22 @@ module.exports = (owner, props) => {
     if (!Object.keys(_company)) throw new Error('No data received to modify')
 
     return (async () => {
-        const { company: companyId } = await User.findById(owner)
+        return User.findOne({ _id: owner, role: roles.CLIENT }).lean()
+            .then(user => {
+                if (!user) throw new NotFoundError(`User with id ${owner} not found`)
+                if (!('company' in user)) throw new NotFoundError(`User with id ${owner} is not linked to a company`)
+                return user
+            })
+            .then(async ({ company: companyId }) => {
+                const company = await Company.findOne({ _id: companyId })
 
-        return Company.findOneAndUpdate({ _id: companyId }, { $set: _company })
+                if (!company) throw new NotFoundError(`Company with id ${companyId} not found`)
+
+                return company
+            })
+            .then(company =>
+                company.updateOne(_company)
+            )
             .then(() => { })
     })()
 }

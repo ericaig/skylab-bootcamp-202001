@@ -1,14 +1,22 @@
 const { validate } = require('timekeeper-utils')
-const { models: { Company, User } } = require('timekeeper-data')
+const { models: { Company, User }, roles } = require('timekeeper-data')
+const { NotFoundError } = require('timekeeper-errors')
 
 module.exports = (owner) => {
     validate.string(owner, 'owner')
 
     return (async () => {
-        const user = await User.findById(owner)
-        const { company } = user
+        let user
 
-        return Company.deleteOne({ _id: company, owner })
+        return User.findOne({ _id: owner, role: roles.CLIENT })
+            .then(_user => {
+                if (!_user) throw new NotFoundError(`User with id ${owner} not found`)
+                user = _user
+                return _user
+            })
+            .then(({ company }) => 
+                Company.deleteOne({ _id: company, owner })
+            )
             .then(() => {
                 user.company = undefined
                 return user.save()

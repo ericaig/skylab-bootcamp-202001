@@ -5,20 +5,15 @@ const { env: { PORT = 8080, NODE_ENV: env, MONGODB_URL, TEST_MONGODB_URL }, argv
 const express = require('express')
 const winston = require('winston')
 
-const {
-    registerUser,
-    authenticateUser,
-    retrieveUser,
-} = require('./routes')
 const { name, version } = require('./package')
-const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
-const { jwtVerifierMidWare } = require('./mid-wares')
 const { mongoose } = require('timekeeper-data')
 const cors = require('cors')
+const router = require('./routes')
 
+mongoose.set('useFindAndModify', false)
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
 
@@ -36,8 +31,6 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
             }))
         }
 
-        const jsonBodyParser = bodyParser.json()
-
         const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
 
         const app = express()
@@ -46,9 +39,7 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 
         app.use(morgan('combined', { stream: accessLogStream }))
 
-        app.post('/users', jsonBodyParser, registerUser)
-        app.post('/users/auth', jsonBodyParser, authenticateUser)
-        app.get('/users', jwtVerifierMidWare, retrieveUser)
+        app.use('/api/v1', router)
 
         app.listen(port, () => logger.info(`SUCCESS! Server ${name} ${version} is up and running on port ${port}`))
 

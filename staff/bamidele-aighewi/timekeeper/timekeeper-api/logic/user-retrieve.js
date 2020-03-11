@@ -1,6 +1,6 @@
 const { validate } = require('timekeeper-utils')
 const { models: { User } } = require('timekeeper-data')
-const { NotAllowedError } = require('timekeeper-errors')
+const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
 
 module.exports = id => {
     validate.string(id, 'id')
@@ -15,5 +15,5 @@ module.exports = id => {
 
             return user.save()
         })
-        .then(({ name, surname, email }) => ({ name, surname, email }))
+        .then(({ name, surname, email, company }) => ({ name, surname, email, company }))
 }

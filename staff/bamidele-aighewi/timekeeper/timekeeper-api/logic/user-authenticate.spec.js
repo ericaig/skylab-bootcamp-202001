@@ -1,15 +1,16 @@
 require('dotenv').config()
 
 const { env: { TEST_MONGODB_URL } } = process
-const { mongoose } = require('timekeeper-data')
+const { mongoose, models: { User } } = require('timekeeper-data')
 const { expect } = require('chai')
 const { random } = Math
 const authenticateUser = require('./authenticate-user')
-const { models: { User } } = require('timekeeper-data')
+const bcrypt = require('bcryptjs')
 
 describe('authenticateUser', () => {
     before(() =>
         mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+            .then(() => User.deleteMany())
     )
 
     let name, surname, email, password
@@ -25,7 +26,10 @@ describe('authenticateUser', () => {
         let _id
 
         beforeEach(() =>
-            User.create({ name, surname, email, password })
+            bcrypt.hash(password, 10)
+                .then(password =>
+                    User.create({ name, surname, email, password })
+                )
                 .then(user => _id = user.id)
         )
 
@@ -41,5 +45,5 @@ describe('authenticateUser', () => {
 
     // TODO more happies and unhappies
 
-    after(() => mongoose.disconnect())
+    after(() => User.deleteMany().then(() => mongoose.disconnect()))
 })

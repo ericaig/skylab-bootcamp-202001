@@ -1,14 +1,12 @@
-const { retrieveUser } = require('../logic')
+const { createCompany } = require('../../logic')
 const { NotFoundError, NotAllowedError } = require('timekeeper-errors')
 
 module.exports = (req, res) => {
-    const { payload: { sub: id } } = req
+    const { payload: { sub: owner }, body: { name, email, address, web, nif, city, postalCode, startTime, endTime } } = req
 
     try {
-        retrieveUser(id)
-            .then(user =>
-                res.status(200).json(user)
-            )
+        createCompany(name, email, address, owner, web, nif, city, postalCode, startTime, endTime)
+            .then(() => res.status(200).end())
             .catch(({ message }) =>
                 res
                     .status(401)

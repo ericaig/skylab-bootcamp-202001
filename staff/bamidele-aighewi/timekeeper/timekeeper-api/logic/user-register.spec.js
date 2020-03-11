@@ -2,17 +2,18 @@ require('dotenv').config()
 
 const { expect } = require('chai')
 const { random } = Math
-const { mongoose } = require('timekeeper-data')
+const { mongoose, models: { User } } = require('timekeeper-data')
 const registerUser = require('./register-user')
-const { models: { User } } = require('timekeeper-data')
+const bcrypt = require('bcryptjs')
 
 const { env: { TEST_MONGODB_URL } } = process
 
-describe('registerUser', () => {
+describe.only('registerUser', () => {
     let name, surname, email, password
 
     before(() =>
         mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+            .then(() => User.deleteMany())
     )
 
     beforeEach(() => {
@@ -36,12 +37,14 @@ describe('registerUser', () => {
                 expect(user.name).to.equal(name)
                 expect(user.surname).to.equal(surname)
                 expect(user.email).to.equal(email)
-                expect(user.password).to.equal(password) // TODO encrypt this field!
                 expect(user.created).to.be.instanceOf(Date)
+
+                return bcrypt.compare(password, user.password)
             })
+            .then(validPassword => expect(validPassword).to.be.true)
     )
 
     // TODO unhappy paths and other happies if exist
 
-    after(() => mongoose.disconnect())
+    //after(() => User.deleteMany().then(() => mongoose.disconnect()))
 })

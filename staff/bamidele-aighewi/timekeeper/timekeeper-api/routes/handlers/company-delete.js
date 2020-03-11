@@ -1,17 +1,14 @@
-const { registerUser } = require('../logic')
-const { NotAllowedError, ContentError } = require('timekeeper-errors')
+const { companyDelete } = require('../../logic')
+const { ContentError } = require('timekeeper-errors')
 
 module.exports = (req, res) => {
-    const { body: { name, surname, email, password } } = req
+    const { payload: { sub: userId } } = req
 
     try {
-        registerUser(name, surname, email, password)
+        companyDelete(userId)
             .then(() => res.status(201).end())
             .catch(error => {
                 let status = 400
-
-                if (error instanceof NotAllowedError)
-                    status = 409 // conflict
 
                 const { message } = error
 

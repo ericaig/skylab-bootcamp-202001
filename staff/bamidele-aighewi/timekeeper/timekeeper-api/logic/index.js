@@ -6,4 +6,5 @@ module.exports = {
     companyRetrieve: require('./company-retrieve'),
     companyUpdate: require('./company-update'),
     companyDelete: require('./company-delete'),
+    workerRegister: require('./worker-register'),
 }

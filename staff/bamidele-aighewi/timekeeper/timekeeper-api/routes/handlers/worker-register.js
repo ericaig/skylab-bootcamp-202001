@@ -1,12 +1,11 @@
-const { registerUser } = require('../../logic')
+const { workerRegister } = require('../../logic')
 const { NotAllowedError, ContentError } = require('timekeeper-errors')
-const { utils: { roles: { CLIENT } } } = require('timekeeper-data')
 
 module.exports = (req, res) => {
-    const { body: { name, surname, email, password } } = req
+    const { params: { inviteToken }, body: { name, surname, email, password } } = req
 
     try {
-        registerUser(name, surname, email, password, CLIENT)
+        workerRegister(inviteToken, name, surname, email, password)
             .then(() => res.status(201).end())
             .catch(error => {
                 let status = 400

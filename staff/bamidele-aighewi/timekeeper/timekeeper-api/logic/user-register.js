@@ -1,5 +1,5 @@
 const { validate } = require('timekeeper-utils')
-const { models: { User }, roles } = require('timekeeper-data')
+const { models: { User } } = require('timekeeper-data')
 const { NotAllowedError } = require('timekeeper-errors')
 const bcrypt = require('bcryptjs')
 
@@ -17,7 +17,7 @@ module.exports = (name, surname, email, password, role) => {
             return bcrypt.hash(password, 10)
         })
         .then(password => {
-            user = new User({ name, surname, email, password, role, created: new Date })
+            const user = new User({ name, surname, email, password, role, created: new Date })
 
             return user.save()
         })

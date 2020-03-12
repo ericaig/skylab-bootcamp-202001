@@ -7,6 +7,7 @@ const {
     companyRetrieve,
     companyUpdate,
     companyDelete,
+    workerRegister,
 } = require('./handlers')
 
 const { jwtVerifierMidWare } = require('../mid-wares')
@@ -19,6 +20,7 @@ const router = new Router()
 router.post('/users', jsonBodyParser, registerUser)
 router.post('/users/auth', jsonBodyParser, authenticateUser)
 router.get('/users', jwtVerifierMidWare, retrieveUser)
+router.post('/users/:inviteToken/invite', jsonBodyParser, workerRegister)
 
 /* COMPANY ROUTES */
 router.get('/company', jwtVerifierMidWare, companyRetrieve)

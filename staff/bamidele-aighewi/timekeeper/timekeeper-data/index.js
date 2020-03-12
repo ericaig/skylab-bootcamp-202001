@@ -1,9 +1,12 @@
 const mongoose = require('mongoose')
-const { sanitizer, roles } = require('./utils')
+// const { sanitizer, roles, eventTypes } = require('./utils')
+const utils = require('./utils')
 
 module.exports = {
     models: require('./models'),
-    sanitizer,
-    roles,
-    mongoose
+    mongoose,
+    // sanitizer,
+    // roles,
+    // eventTypes,
+    utils
 }

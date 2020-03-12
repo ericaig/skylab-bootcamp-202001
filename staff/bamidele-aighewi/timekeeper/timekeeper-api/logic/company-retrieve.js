@@ -1,5 +1,5 @@
 const { validate } = require('timekeeper-utils')
-const { models: { Company }, sanitizer } = require('timekeeper-data')
+const { models: { Company }, utils: { sanitizer } } = require('timekeeper-data')
 const { NotFoundError } = require('timekeeper-errors')
 
 module.exports = owner => {

@@ -17,12 +17,7 @@ module.exports = new Schema({
     company: { type: ObjectId, ref: 'Company' },
     role: {
         type: Number,
-        /**
-         * 1 - developer
-         * 2 - client
-         * 3 - worker
-         */
-        enum: [roles.DEVELOPER, roles.CLIENT, roles.WORKER],
+        enum: [...Object.values(roles)],
         required: true
     }
 })

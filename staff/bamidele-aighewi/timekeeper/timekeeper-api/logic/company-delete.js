@@ -1,5 +1,5 @@
 const { validate } = require('timekeeper-utils')
-const { models: { Company, User }, roles } = require('timekeeper-data')
+const { models: { Company, User }, utils: { roles: { CLIENT } } } = require('timekeeper-data')
 const { NotFoundError } = require('timekeeper-errors')
 
 module.exports = (owner) => {
@@ -8,7 +8,7 @@ module.exports = (owner) => {
     return (async () => {
         let user
 
-        return User.findOne({ _id: owner, role: roles.CLIENT })
+        return User.findOne({ _id: owner, role: CLIENT })
             .then(_user => {
                 if (!_user) throw new NotFoundError(`User with id ${owner} not found`)
                 user = _user

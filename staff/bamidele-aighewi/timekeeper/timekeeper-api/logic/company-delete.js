@@ -1,9 +1,11 @@
 const { validate } = require('timekeeper-utils')
 const { models: { Company, User }, utils: { roles: { CLIENT } } } = require('timekeeper-data')
-const { NotFoundError } = require('timekeeper-errors')
+const { NotFoundError, NotAllowedError } = require('timekeeper-errors')
 
 module.exports = (owner) => {
     validate.string(owner, 'owner')
+
+    throw new NotAllowedError(`At this moment, deleting companies is not possible. Please try again latter :) `)
 
     return (async () => {
         let user

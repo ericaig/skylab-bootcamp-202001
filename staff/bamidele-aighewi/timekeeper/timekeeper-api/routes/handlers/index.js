@@ -7,4 +7,7 @@ module.exports = {
     companyUpdate: require('./company-update'),
     companyDelete: require('./company-delete'),
     workerRegister: require('./worker-register'),
+    weekDaysCreate: require('./week-days-create'),
+    weekDaysRetrieve: require('./week-days-retrieve'),
+    weekDaysUpdate: require('./week-days-update'),
 }

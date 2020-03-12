@@ -5,10 +5,13 @@ const URL_REGEX = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$
 
 module.exports = {
     string(target, name, empty = true) {
-        //if (typeof target !== 'string') throw new TypeError(`${name} ${target} is not a string`)
         this.type(target, name, String)
 
         if (empty && !target.trim()) throw new ContentError(`${name} is empty`)
+    },
+
+    boolean(target, name) {
+        this.type(target, name, Boolean)
     },
 
     token(token) {

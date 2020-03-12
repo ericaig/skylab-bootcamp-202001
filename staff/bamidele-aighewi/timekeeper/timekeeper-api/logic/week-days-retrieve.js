@@ -3,15 +3,8 @@ const { models: { WeekDay, User, Company }, utils: { roles: { CLIENT, ADMINISTRA
 const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
 // const { v4: uuid } = require('uuid')
 
-module.exports = function (user, monday, tuesday, wednesday, thursday, friday, saturday, sunday) {
+module.exports = function (user) {
     validate.string(user, 'user')
-    validate.boolean(monday, 'monday')
-    validate.boolean(tuesday, 'tuesday')
-    validate.boolean(wednesday, 'wednesday')
-    validate.boolean(thursday, 'thursday')
-    validate.boolean(friday, 'friday')
-    validate.boolean(saturday, 'saturday')
-    validate.boolean(sunday, 'sunday')
 
     return (async () => {
         const _user = await User.findById(user).lean()
@@ -32,14 +25,15 @@ module.exports = function (user, monday, tuesday, wednesday, thursday, friday, s
 
         if (!_company) throw new NotFoundError(`Company with id ${company} not found`)
 
-        const _weekday = await WeekDay.findOne({ company })
+        const weekday = await WeekDay.findOne({ company })
+            .populate('createdBy', 'name surname -_id')
+            .populate('updatedBy', 'name surname -_id')
+            .lean()
 
-        if (_weekday) throw new NotAllowedError(`Week days already created for company ${company}`)
+        if (!weekday) throw new NotFoundError(`Company ${company} does not have week days created`)
 
-        const { id: userId } = _user
+        sanitizer(weekday)
 
-        const weekday = new WeekDay({ company, monday, tuesday, wednesday, thursday, friday, saturday, sunday, createdBy: userId, updatedBy: userId })
-
-        return weekday.save().then(() => { })
+        return weekday
     })()
 }

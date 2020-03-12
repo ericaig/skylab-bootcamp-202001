@@ -1,5 +1,6 @@
 module.exports = {
     DEVELOPER: 1,
     CLIENT: 2,
-    WORKER: 3
+    ADMINISTRATOR: 3,
+    WORKER: 4
 }

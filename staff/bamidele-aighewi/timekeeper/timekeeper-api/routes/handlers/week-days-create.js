@@ -1,14 +1,15 @@
-const { companyDelete } = require('../../logic')
+const { weekDaysCreate } = require('../../logic')
 const { errorStatus } = require('timekeeper-errors')
 
 module.exports = (req, res) => {
-    const { payload: { sub: userId } } = req
+    const { payload: { sub: user }, body: { monday, tuesday, wednesday, thursday, friday, saturday, sunday } } = req
 
     try {
-        companyDelete(userId)
-            .then(() => res.status(201).end())
+        weekDaysCreate(user, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+            .then(() => res.status(200).end())
             .catch(error =>
-                res.status(errorStatus(error))
+                res
+                    .status(errorStatus(error))
                     .json({
                         error: error.message
                     })

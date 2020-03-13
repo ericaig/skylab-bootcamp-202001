@@ -10,4 +10,6 @@ module.exports = {
     weekDaysCreate: require('./week-days-create'),
     weekDaysRetrieve: require('./week-days-retrieve'),
     weekDaysUpdate: require('./week-days-update'),
+    eventCreate: require('./event-create'),
+    eventCompanyCreate: require('./event-company-create'),
 }

@@ -1,5 +1,5 @@
 const { Schema, SchemaTypes: { ObjectId } } = require('mongoose')
-const { eventTypes } = require('../utils')
+const { eventTypes, eventStates } = require('../utils')
 
 module.exports = new Schema({
     company: { type: ObjectId, required: [true, 'Company is required'], ref: 'Company' },
@@ -9,6 +9,11 @@ module.exports = new Schema({
     type: {
         type: Number,
         enum: [...Object.values(eventTypes)],
+        required: true
+    },
+    state: {
+        type: Number,
+        enum: [...Object.values(eventStates)],
         required: true
     },
     description: {type: String, required: [true, 'Event description is required']},

@@ -13,7 +13,10 @@ const { mongoose } = require('timekeeper-data')
 const cors = require('cors')
 const router = require('./routes')
 
+// To supress deprecation warnings by mongoose
 mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
+
 mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
 

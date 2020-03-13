@@ -1,5 +1,5 @@
 const { ContentError } = require('timekeeper-errors')
-
+const moment = require('moment')
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const URL_REGEX = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
 
@@ -8,6 +8,11 @@ module.exports = {
         this.type(target, name, String)
 
         if (empty && !target.trim()) throw new ContentError(`${name} is empty`)
+    },
+
+    number(target, name) {
+        // this.type(target, name, Number)
+        if (!/^\d+$/.test(target)) throw new TypeError(`${name} ${target} is not a number`)
     },
 
     boolean(target, name) {
@@ -25,6 +30,10 @@ module.exports = {
 
     email(target) {
         if (!EMAIL_REGEX.test(target)) throw new ContentError(`${target} is not an e-mail`)
+    },
+
+    date(target, format = "YYYY-MM-DD") {
+        if (!moment(target, format).isValid()) throw new TypeError(`${target} is not a valid date`)
     },
 
     type(target, name, type) {

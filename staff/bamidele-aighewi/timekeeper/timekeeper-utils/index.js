@@ -1,3 +1,4 @@
 module.exports = {
-    validate: require('./validate')
+    validate: require('./validate'),
+    validateSpecial: require('./validate-special')
 }

@@ -10,7 +10,9 @@ const {
     workerRegister,
     weekDaysCreate,
     weekDaysRetrieve,
-    weekDaysUpdate
+    weekDaysUpdate,
+    eventCreate,
+    eventCompanyCreate
 } = require('./handlers')
 
 const { jwtVerifierMidWare } = require('../mid-wares')
@@ -35,5 +37,9 @@ router.delete('/company', jwtVerifierMidWare, companyDelete)
 router.get('/week-days', jwtVerifierMidWare, weekDaysRetrieve)
 router.post('/week-days', [jwtVerifierMidWare, jsonBodyParser], weekDaysCreate)
 router.patch('/week-days', [jwtVerifierMidWare, jsonBodyParser], weekDaysUpdate)
+
+/* EVENT ROUTES */
+router.post('/events', [jwtVerifierMidWare, jsonBodyParser], eventCreate)
+router.post('/events-company', [jwtVerifierMidWare, jsonBodyParser], eventCompanyCreate)
 
 module.exports = router

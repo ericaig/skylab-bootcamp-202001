@@ -9,6 +9,9 @@ module.exports = (name, surname, email, password, role) => {
     validate.string(email, 'email')
     validate.email(email)
     validate.string(password, 'password')
+    validate.number(role, 'role')
+
+    // TODO: check that role is valid
 
     return User.findOne({ email })
         .then(user => {

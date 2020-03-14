@@ -7,7 +7,7 @@ try {
     // validate.date("13-03-2020", "DD-MM-YYYY")
     // console.log('Date is valid')
 
-    console.log(moment('2020-03-13').isBetween("2020-03-13", '2020-03-13', null, '[]'))
+    // fconsole.log(moment('2020-03-13').isBetween("2020-03-13", '2020-03-13', null, '[]'))
 } catch (error) {
     console.log(error.message)
 }

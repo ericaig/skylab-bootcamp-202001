@@ -5,7 +5,7 @@ module.exports = new Schema({
     company: { type: ObjectId, required: [true, 'Company is required'], ref: 'Company' },
     user: { type: ObjectId, ref: 'User' },
     start: { type: Date, required: [true, 'Start field is required'] },
-    end: { type: Date, required: [true, 'End field is required'] },
+    end: { type: Date },
     type: {
         type: Number,
         enum: [...Object.values(eventTypes)],

@@ -29,7 +29,7 @@ module.exports = function (user, start, end, type, description, state = '') {
         const { role } = _user
 
         // if user does not have a higher level permission, let's set event state to pending...
-        if (![DEVELOPER, CLIENT, ADMINISTRATOR].includes(role)) state = PENDING
+        if (![DEVELOPER, CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`User with id ${user} does not have permission to create company events`)
 
         const { company } = _user
 
@@ -45,6 +45,9 @@ module.exports = function (user, start, end, type, description, state = '') {
 
         sanitizer(_weekday)
 
+        validateSpecial.activeDayOfWeek(start, _weekday)
+        validateSpecial.activeDayOfWeek(end, _weekday)
+
         // let's look for overlapse
         // https://stackoverflow.com/a/26877645
         const overlaps = await Event.find({
@@ -57,9 +60,6 @@ module.exports = function (user, start, end, type, description, state = '') {
         if (overlaps.length) throw new NotAllowedError(`There ${overlaps.length > 1 ? 'are' : 'is'} ${overlaps.length} overlapsed event between the dates ${start} - ${end}`)
 
         // const { id: userId } = _user
-
-        validateSpecial.activeDayOfWeek(start, _weekday)
-        validateSpecial.activeDayOfWeek(end, _weekday)
 
         // TODO: validate eventType
 

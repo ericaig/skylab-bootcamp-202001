@@ -10,6 +10,16 @@ const {
 } = require('timekeeper-data')
 const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
 
+/**
+ * @function
+ * This helps to create general events that aren't company's calendar or User's sign ins and out
+ * @param {string} user - User id
+ * @param {string} start - EVent start date -> expected format = YYYY-MM-DD
+ * @param {string} end - Event end date -> expected format = YYYY-MM-DD
+ * @param {number} type - Event type
+ * @param {string} description - Brief description about the event
+ * @param {number} state - The state of the event. Pending/Accepted
+ */
 module.exports = function (user, start, end, type, description, state = '') {
     validate.string(user, 'user')
     validate.date(start)
@@ -45,9 +55,13 @@ module.exports = function (user, start, end, type, description, state = '') {
 
         sanitizer(_weekday)
 
+        validateSpecial.activeDayOfWeek(start, _weekday)
+        validateSpecial.activeDayOfWeek(end, _weekday)
+
         // let's look for overlapse
         // https://stackoverflow.com/a/26877645
         const overlaps = await Event.find({
+            company,
             user,
             type,
             start: { "$lte": new Date(end) },
@@ -57,9 +71,6 @@ module.exports = function (user, start, end, type, description, state = '') {
         if (overlaps.length) throw new NotAllowedError(`There ${overlaps.length > 1 ? 'are' : 'is'} ${overlaps.length} overlapsed event between the dates ${start} - ${end}`)
 
         // const { id: userId } = _user
-
-        validateSpecial.activeDayOfWeek(start, _weekday)
-        validateSpecial.activeDayOfWeek(end, _weekday)
 
         // TODO: validate eventType
 

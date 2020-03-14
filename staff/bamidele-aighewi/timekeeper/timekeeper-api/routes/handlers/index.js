@@ -12,4 +12,5 @@ module.exports = {
     weekDaysUpdate: require('./week-days-update'),
     eventCreate: require('./event-create'),
     eventCompanyCreate: require('./event-company-create'),
+    eventSignInOut: require('./event-sign-in-out'),
 }

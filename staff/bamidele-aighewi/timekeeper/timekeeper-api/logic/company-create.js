@@ -3,13 +3,14 @@ const { models: { Company, User }, utils: { roles: { CLIENT } } } = require('tim
 const { NotAllowedError } = require('timekeeper-errors')
 const { v4: uuid } = require('uuid')
 
-module.exports = function (name, email, address, owner, web, nif, city, postalCode, startTime, endTime) {
+module.exports = function (name, email, address, owner, web, cif, city, postalCode, startTime, endTime) {
     validate.string(name, 'name')
     validate.email(email)
     validate.string(address, 'address')
     validate.string(owner, 'owner')
     validate.url(web)
-    validate.string(nif, 'nif')
+    validate.string(cif, 'cif')
+    validate.cif(cif, 'cif')
     validate.string(city, 'city')
     validate.string(postalCode, 'postalCode')
     validate.string(startTime, 'startTime')
@@ -29,7 +30,7 @@ module.exports = function (name, email, address, owner, web, nif, city, postalCo
             address,
             owner,
             web,
-            nif,
+            cif,
             city,
             postalCode,
             startTime,

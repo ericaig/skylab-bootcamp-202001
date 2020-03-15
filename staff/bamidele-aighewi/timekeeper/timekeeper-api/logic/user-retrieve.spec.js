@@ -4,44 +4,66 @@ const { env: { TEST_MONGODB_URL } } = process
 const { models: { User } } = require('timekeeper-data')
 const { expect } = require('chai')
 const { random } = Math
-const retrieveUser = require('./retrieve-user')
-const { mongoose } = require('timekeeper-data')
+const userRetrieve = require('./user-retrieve')
+const { mongoose, utils: { roles: { CLIENT } } } = require('timekeeper-data')
+// const { NotAllowedError } = require('timekeeper-errors')
 
-describe('retrieveUser', () => {
+describe('userRetrieve', () => {
     before(() =>
         mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+            .then(() => User.deleteMany())
     )
 
-    let name, surname, email, password, users
+    let name, surname, email, password, role, users
 
     beforeEach(() => {
         name = `name-${random()}`
         surname = `surname-${random()}`
         email = `email-${random()}@mail.com`
         password = `password-${random()}`
+        role = CLIENT
     })
 
     describe('when user already exists', () => {
         let _id
 
         beforeEach(() =>
-            User.create({ name, surname, email, password })
+            User.create({ name, surname, email, password, role, created: new Date })
                 .then(({ id }) => _id = id)
         )
 
         it('should succeed on correct and valid and right data', () =>
-            retrieveUser(_id)
+            userRetrieve(_id)
                 .then(user => {
                     expect(user.constructor).to.equal(Object)
                     expect(user.name).to.equal(name)
                     expect(user.surname).to.equal(surname)
                     expect(user.email).to.equal(email)
+                    expect(user.role).to.equal(role)
                     expect(user.password).to.be.undefined
                 })
         )
     })
 
-    // TODO more happies and unhappies
+    it('should fail on non integer id parameter', () => {
+        const name = 'id'
+        let target
 
-    after(() => mongoose.disconnect())
+        target = false
+        expect(() => userRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+
+        target = null
+        expect(() => userRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+
+        target = undefined
+        expect(() => userRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+
+        target = {}
+        expect(() => userRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+
+        target = []
+        expect(() => userRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+    })
+
+    after(() => User.deleteMany().then(() => mongoose.disconnect()))
 })

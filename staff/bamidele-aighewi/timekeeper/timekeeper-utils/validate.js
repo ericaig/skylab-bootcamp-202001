@@ -2,7 +2,7 @@ const { ContentError } = require('timekeeper-errors')
 const moment = require('moment')
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 const URL_REGEX = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
-
+const isValidCif = require('./validate-cif')
 module.exports = {
     string(target, name, empty = true) {
         this.type(target, name, String)
@@ -17,6 +17,10 @@ module.exports = {
 
     boolean(target, name) {
         this.type(target, name, Boolean)
+    },
+
+    object(target, name) {
+        this.type(target, name, Object)
     },
 
     token(token) {
@@ -46,5 +50,9 @@ module.exports = {
 
     url(target) {
         if (!URL_REGEX.test(target)) throw new ContentError(`${target} is not a valid url`)
+    },
+
+    cif(target, name) {
+        if (!isValidCif(target)) throw new ContentError(`${name} ${target} is not a valid CIF`)
     }
 }

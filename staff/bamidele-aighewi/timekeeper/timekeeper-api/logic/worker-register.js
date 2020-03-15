@@ -15,10 +15,10 @@ module.exports = (invite, name, surname, email, password) => {
 
     return Company.findOne({ invite })
         .then(company => {
-            if(!company) throw new NotFoundError(`No company found with the invite link`)
+            if (!company) throw new NotFoundError(`No company found with the invite link`)
             _company = company._id
         })
-        .then(()=>
+        .then(() =>
             User.findOne({ email })
         )
         .then(user => {

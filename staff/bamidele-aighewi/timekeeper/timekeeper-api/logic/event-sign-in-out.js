@@ -9,6 +9,16 @@ const {
 } = require('timekeeper-data')
 const { NotFoundError } = require('timekeeper-errors')
 
+/**
+ * @function
+ * This helps to create sign-in-out events
+ * @param {string} user - User id
+ * @param {string} start - EVent start date -> expected format = YYYY-MM-DD HH:mm:ss
+ * @param {string} end - Event end date -> expected format = YYYY-MM-DD HH:mm:ss
+ * @param {number} type - Event type
+ * @param {string} description - Brief description about the event
+ * @param {number} state - The state of the event. Pending/Accepted
+ */
 module.exports = function (user) {
     validate.string(user, 'user')
 

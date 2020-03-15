@@ -20,14 +20,15 @@ const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
  * @param {string} description - Brief description about the event
  * @param {number} state - The state of the event. Pending/Accepted
  */
-module.exports = function (user, start, end, type, description, state = '') {
+module.exports = function (user, start, end, type, description, state) {
     validate.string(user, 'user')
     validate.date(start)
     validate.date(end)
     validate.number(type, 'type')
     if (![USER_HOLIDAY, USER_ABSENCE].includes(type)) throw new NotAllowedError(`Invalid event type ${type}`)
     validate.string(description, 'description')
-    if (!!state.trim()) validate.number(state, 'state')
+    // if (!!state.trim()) validate.number(state, 'state')
+    if (typeof state !== 'undefined') validate.number(state, 'state')
 
     return (async () => {
         const _user = await User.findById(user).lean()

@@ -2,7 +2,7 @@ const { eventCreate } = require('../../logic')
 const { errorStatus } = require('timekeeper-errors')
 
 module.exports = (req, res) => {
-    const { payload: { sub: user }, body: { start, end, type, description, state = '1' } } = req
+    const { payload: { sub: user }, body: { start, end, type, description, state = 1 } } = req
 
     try {
         eventCreate(user, start, end, type, description, state)

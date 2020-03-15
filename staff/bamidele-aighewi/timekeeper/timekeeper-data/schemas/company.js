@@ -1,4 +1,4 @@
-const { Schema, SchemaTypes: { ObjectId} } = require('mongoose')
+const { Schema, SchemaTypes: { ObjectId } } = require('mongoose')
 
 /**
  * @param {String} owner - Owner of the company
@@ -14,15 +14,20 @@ const { Schema, SchemaTypes: { ObjectId} } = require('mongoose')
  * @param {String} updatedAt - Date and time the company was updated
  */
 module.exports = new Schema({
+    // if owner is changed to array of ObjectIds in the future, don't forget to review tests... and logics
     owner: { type: ObjectId, required: [true, "Owner ID is required"], ref: 'User' },
     name: { type: String, required: [true, "Name is required"] },
-    nif: { type: String, required: [true, "NIF is required"] },
+    cif: {
+        type: String,
+        unique: true,
+        required: [true, "CIF is required"]
+    },
     invite: { type: String },
     email: {
         type: String,
         // unique: true,
         match: [
-            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             'Please enter a valid email address'
         ],
         required: [true, 'E-mail is required']

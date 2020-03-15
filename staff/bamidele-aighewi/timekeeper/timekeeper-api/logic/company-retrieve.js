@@ -9,13 +9,14 @@ module.exports = owner => {
         const company = await Company.findOne({ owner })
             .populate({
                 path: 'owner',
-                select: 'name surname email -_id'
+                select: 'name surname email'
             })
             .lean()
 
         if (!company) throw new NotFoundError(`Company with owner id ${owner} does not exist`)
 
         sanitizer(company)
+        sanitizer(company.owner)
 
         return company
     })()

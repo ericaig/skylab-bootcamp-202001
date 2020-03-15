@@ -10,7 +10,7 @@ const { v4: uuid } = require('uuid')
 
 const { env: { TEST_MONGODB_URL } } = process
 
-describe.only('workerRegister', () => {
+describe('workerRegister', () => {
     let name, surname, email, password
     let owner, company, invite
 
@@ -19,7 +19,7 @@ describe.only('workerRegister', () => {
             .then(() =>
                 User.deleteMany()
             )
-            .then(() => Company.deleteOne())
+            .then(() => Company.deleteMany())
             .then(() =>
                 // create client
                 User.create({ name: 'Client-name', surname: 'Client-surname', email: 'client@mail.com', password: '123', role: CLIENT })
@@ -27,7 +27,7 @@ describe.only('workerRegister', () => {
                 // create client's company
                 owner = _owner
                 const _invite = uuid()
-                return Company.create({ invite: _invite, name: 'Company-name', email: 'Company-email@mail.com', address: 'Company-address', owner, web: 'http://company.url', nif: 'Company-nif', city: 'Company-city', postalCode: '08560', startTime: '08:00', endTime: '17:00' })
+                return Company.create({ invite: _invite, name: 'Company-name', email: 'Company-email@mail.com', address: 'Company-address', owner, web: 'http://company.url', cif: 'Company-cif', city: 'Company-city', postalCode: '08560', startTime: '08:00', endTime: '17:00' })
                     .then(({ id }) => {
                         company = id
                         return _invite
@@ -198,9 +198,9 @@ describe.only('workerRegister', () => {
         expect(() => workerRegister('invite-token', 'Eric', 'Aig', 'eric@mail.com', target)).to.throw(TypeError, `${name} ${target} is not a string`)
     })
 
-    after(() =>
-        User.deleteMany()
-            .then(() => Company.deleteOne())
-            .then(() => mongoose.disconnect())
-    )
+    after(async () => {
+        await User.deleteMany()
+        await Company.deleteMany()
+        await mongoose.disconnect()
+    })
 })

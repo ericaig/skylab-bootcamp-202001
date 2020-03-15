@@ -22,9 +22,13 @@ module.exports = function (props, editableFields) {
                 validate.email(value)
             else if (type === 'url')
                 validate.url(value)
+            else if (type === 'cif')
+                validate.cif(value, field)
+            else if (type === 'number')
+                validate.number(value, field)
             else if (type === 'boolean') {
                 const { acceptString } = validateOpts
-                if (!!acceptString) validate.string(value, field)
+                if (!!acceptString && typeof value === 'string') validate.string(value, field)
                 else validate.boolean(value, field)
             }
 

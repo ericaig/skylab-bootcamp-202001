@@ -3,21 +3,31 @@ const {
     models: { WeekDay, User, Company, Event },
     utils: {
         roles: { CLIENT, ADMINISTRATOR, DEVELOPER },
-        eventStates: { PENDING },
+        // eventStates: { PENDING },
         sanitizer,
         eventTypes: { WORK_DAY, WORK_HOLIDAY }
     }
 } = require('timekeeper-data')
 const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
 
-module.exports = function (user, start, end, type, description, state = '') {
+/**
+ * @function
+ * This helps to create company specific events. Only Client's and Administrators can create this kind of events
+ * @param {string} user - User id
+ * @param {string} start - Event start date -> expected format = YYYY-MM-DD
+ * @param {string} end - Event end date -> expected format = YYYY-MM-DD
+ * @param {number} type - Event type
+ * @param {string} description - Brief description about the event
+ * @param {number} state - The state of the event. Pending/Accepted
+ */
+module.exports = function (user, start, end, type, description, state) {
     validate.string(user, 'user')
     validate.date(start)
     validate.date(end)
     validate.number(type, 'type')
     if (![WORK_DAY, WORK_HOLIDAY].includes(type)) throw new NotAllowedError(`Invalid event type ${type}`)
     validate.string(description, 'description')
-    if (!!state.trim()) validate.number(state, 'state')
+    if (typeof state !== 'undefined') validate.number(state, 'state')
 
     return (async () => {
         const _user = await User.findById(user).lean()
@@ -28,7 +38,7 @@ module.exports = function (user, start, end, type, description, state = '') {
 
         const { role } = _user
 
-        // if user does not have a higher level permission, let's set event state to pending...
+        // if user does not have a higher level permission, let's throw error
         if (![DEVELOPER, CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`User with id ${user} does not have permission to create company events`)
 
         const { company } = _user

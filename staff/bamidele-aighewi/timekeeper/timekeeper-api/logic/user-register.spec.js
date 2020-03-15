@@ -2,14 +2,14 @@ require('dotenv').config()
 
 const { expect } = require('chai')
 const { random } = Math
-const { mongoose, utils: { roles: { CLIENT } } } = require('timekeeper-data')
+const { mongoose, models: { User }, utils: { roles: { CLIENT } } } = require('timekeeper-data')
 const userRegister = require('./user-register')
 const bcrypt = require('bcryptjs')
 const { ContentError } = require('timekeeper-errors')
 
 const { env: { TEST_MONGODB_URL } } = process
 
-describe.only('userRegistration', () => {
+describe('userRegistration', () => {
     let name, surname, email, password, role
 
     before(() =>

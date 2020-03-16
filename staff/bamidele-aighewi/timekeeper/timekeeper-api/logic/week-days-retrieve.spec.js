@@ -8,12 +8,12 @@ const {
         roles: { CLIENT },
     }
 } = require('timekeeper-data')
-const weekDaysUpdate = require('./week-days-update')
+const weekDaysRetrieve = require('./week-days-retrieve')
 const { v4: uuid } = require('uuid')
 
 const { env: { TEST_MONGODB_URL } } = process
 
-describe('weekDaysUpdate', () => {
+describe('weekDaysRetrieve', () => {
     let user, company
 
     before(async () => {
@@ -35,13 +35,7 @@ describe('weekDaysUpdate', () => {
     })
 
     it('should succeed on creating a new Week Day', async () =>
-        weekDaysUpdate(user, {saturday: false, sunday: false})
-            .then(result => {
-                expect(result).not.to.exist
-                expect(result).to.be.undefined
-
-                return WeekDay.findOne({ company })
-            })
+        weekDaysRetrieve(user)
             .then(_weekday => {
                 expect(_weekday).to.exist
                 expect(_weekday.id.toString()).to.be.a('string')
@@ -53,50 +47,30 @@ describe('weekDaysUpdate', () => {
                 expect(typeof _weekday.friday).to.equal('boolean')
                 expect(typeof _weekday.saturday).to.equal('boolean')
                 expect(typeof _weekday.sunday).to.equal('boolean')
-
-                expect(_weekday.saturday).to.equal(false)
-                expect(_weekday.sunday).to.equal(false)
             })
     )
 
     it('should fail on non-string user parameter', () => {
-        const name = 'id'
+        const name = 'user'
         let target
 
         target = 1
-        expect(() => weekDaysUpdate(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+        expect(() => weekDaysRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
 
         target = false
-        expect(() => weekDaysUpdate(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+        expect(() => weekDaysRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
 
         target = null
-        expect(() => weekDaysUpdate(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+        expect(() => weekDaysRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
 
         target = undefined
-        expect(() => weekDaysUpdate(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+        expect(() => weekDaysRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
 
         target = {}
-        expect(() => weekDaysUpdate(target)).to.throw(TypeError, `${name} ${target} is not a string`)
+        expect(() => weekDaysRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
 
         target = []
-        expect(() => weekDaysUpdate(target)).to.throw(TypeError, `${name} ${target} is not a string`)
-    })
-
-    it('should fail on non object props parameter', () => {
-        const name = 'props'
-        let target
-
-        target = false
-        expect(() => weekDaysUpdate('ownerId', target)).to.throw(TypeError, `${name} ${target} is not a Object`)
-
-        target = null
-        expect(() => weekDaysUpdate('ownerId', target)).to.throw(TypeError, `${name} ${target} is not a Object`)
-
-        target = undefined
-        expect(() => weekDaysUpdate('ownerId', target)).to.throw(TypeError, `${name} ${target} is not a Object`)
-
-        target = 'hello world!'
-        expect(() => weekDaysUpdate('ownerId', target)).to.throw(TypeError, `${name} ${target} is not a Object`)
+        expect(() => weekDaysRetrieve(target)).to.throw(TypeError, `${name} ${target} is not a string`)
     })
 
     after(async () => {

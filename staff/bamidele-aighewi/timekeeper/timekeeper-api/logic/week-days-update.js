@@ -5,6 +5,7 @@ const { validateAndReturnUpdateDatas } = require('../utils')
 
 module.exports = (user, props) => {
     validate.string(user, 'id')
+    validate.object(props, 'props')
 
     const _weekDays = validateAndReturnUpdateDatas(props, [
         { field: 'monday', type: 'boolean', validateOpts: { acceptString: true } },

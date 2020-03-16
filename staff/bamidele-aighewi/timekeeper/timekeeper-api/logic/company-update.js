@@ -22,31 +22,6 @@ module.exports = (owner, props) => {
         { field: 'endTime', type: 'string' },
     ])
 
-    // const fields = editableFields.map(({ field }) => field)
-
-    // fieldsToChange.forEach(field => {
-    //     if (!fields.includes(field)) throw new Error(`Field ${field} is not editable`)
-    // })
-
-    // editableFields.forEach(({ field, type }) => {
-    //     const value = props[field]
-
-    //     if (typeof value !== 'undefined') {
-    //         if (type === 'string')
-    //             validate.string(value, field)
-    //         else if (type === 'email')
-    //             validate.email(value)
-    //         else if (type === 'url')
-    //             validate.url(value)
-    //         else if (type === 'cif')
-    //             validate.cif(value)
-
-    //         _company[field] = value
-    //     }
-    // })
-
-    // if (!Object.keys(_company)) throw new Error('No data received to modify')
-
     return (async () => {
         return User.findOne({ _id: owner, role: CLIENT }).lean()
             .then(user => {

@@ -3,6 +3,18 @@ const { models: { WeekDay, User, Company }, utils: { roles: { CLIENT, ADMINISTRA
 const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
 // const { v4: uuid } = require('uuid')
 
+/**
+ * @function
+ * To create company's week days
+ * @param {string} user User id
+ * @param {boolean} monday To configure this day as working day or not
+ * @param {boolean} tuesday To configure this day as working day or
+ * @param {boolean} wednesday To configure this day as working day or not
+ * @param {boolean} thursday To configure this day as working day or not
+ * @param {boolean} friday To configure this day as working day or not
+ * @param {boolean} saturday To configure this day as working day or not
+ * @param {boolean} sunday To configure this day as working day or not
+ */
 module.exports = function (user, monday, tuesday, wednesday, thursday, friday, saturday, sunday) {
     validate.string(user, 'user')
     validate.boolean(monday, 'monday')

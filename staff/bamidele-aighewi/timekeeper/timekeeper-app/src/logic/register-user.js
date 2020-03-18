@@ -1,16 +1,10 @@
-import { validate } from 'timekeeper-utils'
+import { userCreateValidate } from '../utils'
 const { NotAllowedError } = require('timekeeper-errors')
-
-//const { env: { REACT_APP_API_URL: API_URL } } = process
 
 const API_URL = process.env.REACT_APP_API_URL
 
 export default function (name, surname, email, password) {
-    validate.string(name, 'name')
-    validate.string(surname, 'surname')
-    validate.string(email, 'email')
-    validate.email(email)
-    validate.string(password, 'password')
+    userCreateValidate(name, surname, email, password)
 
     return (async () => {
         const response = await fetch(`${API_URL}/users`, {

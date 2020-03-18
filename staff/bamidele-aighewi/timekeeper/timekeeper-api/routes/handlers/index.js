@@ -13,4 +13,5 @@ module.exports = {
     eventCreate: require('./event-create'),
     eventCompanyCreate: require('./event-company-create'),
     eventSignInOut: require('./event-sign-in-out'),
+    clientCompanyCreate: require('./client-company-create'),
 }

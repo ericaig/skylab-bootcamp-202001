@@ -13,7 +13,8 @@ const {
     weekDaysUpdate,
     eventCreate,
     eventCompanyCreate,
-    eventSignInOut
+    eventSignInOut,
+    clientCompanyCreate
 } = require('./handlers')
 
 const { jwtVerifierMidWare } = require('../mid-wares')
@@ -33,6 +34,9 @@ router.get('/company', jwtVerifierMidWare, companyRetrieve)
 router.post('/company', [jwtVerifierMidWare, jsonBodyParser], createCompany)
 router.patch('/company', [jwtVerifierMidWare, jsonBodyParser], companyUpdate)
 router.delete('/company', jwtVerifierMidWare, companyDelete)
+
+/* CLIENT COMPANY ROUTES */
+router.post('/client', jsonBodyParser, clientCompanyCreate)
 
 /* WEEK DAYS ROUTES */
 router.get('/week-days', jwtVerifierMidWare, weekDaysRetrieve)

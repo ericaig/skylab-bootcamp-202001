@@ -1,7 +1,6 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
-import CssBaseline from '@material-ui/core/CssBaseline'
 import TextField from '@material-ui/core/TextField'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -12,15 +11,13 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
-// import Collapse from '@material-ui/lab/Collapse'
-import Alert from '@material-ui/lab/Alert'
 import { withRouter } from 'react-router-dom'
 import login from '../logic/login'
-// import { Context } from './ContextProvider'
+import Feedback from './Feedback'
 
 const useStyles = makeStyles(theme => ({
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(2),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -41,20 +38,7 @@ const useStyles = makeStyles(theme => ({
 export default withRouter(function ({ history }) {
     // const [state, setState] = useContext(Context)
     const classes = useStyles()
-    const [feedback, setFeedback] = useState()
-    const feedbackTimeout = undefined
-
-    function unsetFeedback(){
-        if (feedbackTimeout !== "undefined")
-            clearTimeout(feedbackTimeout)
-    }
-
-    function handleFeedback(message){
-        unsetFeedback()
-        setTimeout(() => {
-            
-        }, 5000);
-    }
+    const [feedback, setFeedback] = useState({ message: undefined, severity: undefined, watch: undefined })
 
     async function handleSubmit(event) {
         event.preventDefault()
@@ -67,55 +51,44 @@ export default withRouter(function ({ history }) {
         try {
             await login(email, password)
 
-            history.push('/register')
+            history.push('/cpanel')
         } catch ({ message }) {
-            setFeedback(message)
+            setFeedback({ message, severity: 'error', timeout: 10000, watch: Date.now() })
         }
     }
 
     return (
         <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">Sign in</Typography>
-                {/* <Typography component="h1" variant="h6">Sign in</Typography> */}
-                <form onSubmit={handleSubmit} className={classes.form} noValidate>
-                    <TextField variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus />
-                    <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
-                    <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
-                    
-                    <Alert severity="warning">This is a warning alert — check it out!</Alert>
-                    {/* <Collapse in={!!feedback}></Collapse> */}
-                    
-                    <Button type="submit" fullWidth variant="contained" size="large" color="primary" className={classes.submit}>
-                        Sign In
-                    </Button>
-                    <Grid container>
-                        <Grid item xs>
-                            <Link href="#" variant="body2">
-                                Forgot password?
-                            </Link>
+            <Box mb={8} color="text.primary">
+                <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">Sign in</Typography>
+                    <form onSubmit={handleSubmit} className={classes.form} noValidate>
+                        <TextField defaultValue="eric@aig.com" variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus />
+                        <TextField defaultValue="123" variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" />
+                        <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+
+                        <Feedback config={feedback} />
+
+                        <Button type="submit" fullWidth variant="contained" size="large" color="primary" className={classes.submit}>
+                            {"Sign In"}
+                        </Button>
+                        <Grid container>
+                            <Grid item xs>
+                                <Link href="/" variant="body2">
+                                    {"Forgot password?"}
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link href="/register" variant="body2">
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link href="/register" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </form>
-            </div>
-            <Box mt={8}>
-                <Typography variant="body2" color="textSecondary" align="center">
-                    {'Copyright © '}
-                    <Link color="inherit" href="/">
-                        Timekeeper
-                    </Link>{' '}
-                    {new Date().getFullYear()}
-                    {'.'}
-                </Typography>
+                    </form>
+                </div>
             </Box>
         </Container>
     )

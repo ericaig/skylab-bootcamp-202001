@@ -33,7 +33,7 @@ module.exports = {
     },
 
     email(target) {
-        if (!EMAIL_REGEX.test(target)) throw new ContentError(`${target} is not an e-mail`)
+        if (!EMAIL_REGEX.test(target)) throw new ContentError(`${target} is not a valid e-mail address`)
     },
 
     date(target, format = "YYYY-MM-DD") {
@@ -53,6 +53,6 @@ module.exports = {
     },
 
     cif(target, name) {
-        if (!isValidCif(target)) throw new ContentError(`${name} ${target} is not a valid CIF`)
+        if (!isValidCif(target)) throw new ContentError(`The company registration number "${target}" is not valid`)
     }
 }

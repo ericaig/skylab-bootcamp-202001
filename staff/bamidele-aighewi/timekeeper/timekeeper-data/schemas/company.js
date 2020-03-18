@@ -38,6 +38,6 @@ module.exports = new Schema({
     web: { type: String },
     startTime: { type: String },
     endTime: { type: String },
-    createdAt: { type: Date, required: true, default: Date.now },
+    createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date }
 })

@@ -1,12 +1,39 @@
 import React, { useEffect, useContext } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import Login from './Login'
 import Register from './Register'
-import Landing from './landing'
+import Landing from './Landing'
 import { Route, withRouter, Redirect } from 'react-router-dom'
 import { Context } from './ContextProvider'
+import Header from './Header'
+// import Footer from './Footer'
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
+import './App.sass'
+import { isLoggedIn } from '../logic'
+import CPanelHome from './cpanel/Home'
+
+const useStyles = makeStyles(theme => ({
+  app: {
+    backgroundColor: '#ffffff'
+  },
+  main: {
+    // paddingBottom: theme.spacing(3),
+    position: 'relative',
+    backgroundColor: theme.palette.grey[0],
+    color: theme.palette.common.white,
+  },
+}))
 
 export default withRouter(function ({ history }) {
-  const [state, setState] = useContext(Context)
+  const [state] = useContext(Context)
+  const classes = useStyles()
+
+  // const sections = [
+  //   { title: 'Technology', url: '/' },
+  //   { title: 'Design', url: '/' },
+  //   { title: 'Culture', url: '/' },
+  // ]
 
   function handleGoToLogin() {
     // history.push('/login')
@@ -32,16 +59,31 @@ export default withRouter(function ({ history }) {
 
   }
 
+  function handleGotoControlPanel() {
+    history.push('/cpanel')
+  }
+
   useEffect(() => {
 
   }, [])
 
   const { error } = state
 
-  return <div className="App">
-    <Route exact path="/" render={() => <Landing/>} />
-    <Route path="/register" render={() => <Register onSubmit={handleRegister} error={error} onGoToLogin={handleGoToLogin} onMount={handleMountRegister} />} />
-    <Route path="/login" render={() => <Login onSubmit={handleLogin} error={error} onGoToRegister={handleGoToRegister} onMount={handleMountLogin} />} />
-    {/* <Route path="/home" render={() => isLoggedIn() ? <Home /> : <Redirect to="/login" />} /> */}
-  </div>
+  return <>
+    {history.location.pathname !== '/cpanel' ?
+      <div className={classes.app}>
+        <Header handleGotoControlPanel={handleGotoControlPanel} />
+        <Paper className={classes.main} elevation={0} square>
+          <Divider />
+          <Route exact path="/" render={() => <Landing />} />
+          <Route path="/register" render={() => !isLoggedIn() ? <Register onSubmit={handleRegister} error={error} onGoToLogin={handleGoToLogin} onMount={handleMountRegister} /> : <Redirect to="/cpanel" />} />
+          <Route path="/login" render={() => !isLoggedIn() ? <Login onSubmit={handleLogin} error={error} onGoToRegister={handleGoToRegister} onMount={handleMountLogin} /> : <Redirect to="/cpanel" />} />
+          {/* <Route path="/home" render={() => isLoggedIn() ? <Home /> : <Redirect to="/login" />} /> */}
+        </Paper>
+        {/* <Footer title="Footer" description="Something here to give the footer a purpose!" /> */}
+      </div>
+      :
+      <Route path="/cpanel" render={() => isLoggedIn() ? <CPanelHome/> : <Redirect to="/" />} />
+    }
+  </>
 })

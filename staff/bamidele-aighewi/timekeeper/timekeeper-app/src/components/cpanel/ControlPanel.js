@@ -10,7 +10,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-
+import SettingsIcon from '@material-ui/icons/Settings';
 import MenuIcon from '@material-ui/icons/Menu'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -27,6 +27,7 @@ import HomeIcon from '@material-ui/icons/Home'
 import DateRangeIcon from '@material-ui/icons/DateRange'
 import AccessTimeIcon from '@material-ui/icons/AccessTime'
 import { useLocation } from 'react-router-dom'
+import EventIcon from '@material-ui/icons/Event';
 
 
 const drawerWidth = 240
@@ -73,21 +74,32 @@ export default function ({ children, container, handleLogout }) {
     const classes = useStyles()
     const theme = useTheme()
     const [mobileOpen, setMobileOpen] = useState(false)
+    const [openSubMenu, setOpenSubMenu] = useState(false)
 
     let location = useLocation();
 
-    function sideMenuOptions() {
+    function sideMenuOptions(section = '*') {
         const { pathname } = location
 
         const menus = [
-            { title: 'Dashboard', link: '/cpanel', icon: () => <HomeIcon />, isActive: false },
-            { title: 'Week days', link: '/cpanel/week-days', icon: () => <DateRangeIcon />, isActive: false },
-            { title: 'Signings', link: '/cpanel/signings', icon: () => <AccessTimeIcon />, isActive: false },
+            { title: 'Dashboard', section: 'main', link: '/cpanel', icon: () => <HomeIcon />, isActive: false },
+            { title: 'Signings', section: 'main', link: '/cpanel/signings', icon: () => <AccessTimeIcon />, isActive: false },
+            { title: 'Week days', section: 'company', link: '/cpanel/week-days', icon: () => <DateRangeIcon />, isActive: false },
+            { title: 'Calendar', section: 'company', link: '/cpanel/calendar', icon: () => <EventIcon />, isActive: false },
         ]
 
-        menus.forEach(menu => (menu.link === pathname && (menu.isActive = true)))
+        // let openCompanyMenu = false
 
-        return menus
+        const _menus = menus.filter(menu => {
+            (menu.link === pathname && (menu.isActive = true))
+            // if(menu.isActive && menu.section === 'company') openCompanyMenu = true
+
+            return menu.section === section || section === '*'
+        })
+
+        // setOpenSubMenu(openCompanyMenu)
+
+        return _menus
     }
 
     const handleDrawerToggle = () => {
@@ -105,9 +117,8 @@ export default function ({ children, container, handleLogout }) {
         setAnchorEl(null)
     }
 
-    const [openSubMenu, setOpenSubMenu] = useState(false)
 
-    const handleClick = () => {
+    const handleOpenCompanyMenu = () => {
         setOpenSubMenu(!openSubMenu)
     }
 
@@ -123,7 +134,7 @@ export default function ({ children, container, handleLogout }) {
 
             <Divider />
             <List>
-                {sideMenuOptions().map(({ title, icon: menuIcon, isActive, link }, index) => (
+                {sideMenuOptions('main').map(({ title, icon: menuIcon, isActive, link }, index) => (
                     <ListItem component="a" href={link} selected={isActive} key={index} button>
                         <ListItemIcon>{menuIcon()}</ListItemIcon>
                         <ListItemText primary={title} />
@@ -132,21 +143,21 @@ export default function ({ children, container, handleLogout }) {
             </List>
             <Divider />
             <List>
-                <ListItem button onClick={handleClick}>
+                <ListItem button onClick={handleOpenCompanyMenu}>
                     <ListItemIcon>
-                        <InboxIcon />
+                        <SettingsIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Inbox" />
+                    <ListItemText primary="Company" />
                     {openSubMenu ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse in={openSubMenu} timeout="auto" unmountOnExit>
                     <List component="div" disablePadding>
-                        <ListItem button className={classes.nested}>
-                            <ListItemIcon>
-                                <StarBorder />
-                            </ListItemIcon>
-                            <ListItemText primary="Starred" />
-                        </ListItem>
+                        {sideMenuOptions('company').map(({ title, icon: menuIcon, isActive, link }, index) => (
+                            <ListItem component="a" className={classes.nested} href={link} selected={isActive} key={index} button>
+                                <ListItemIcon>{menuIcon()}</ListItemIcon>
+                                <ListItemText primary={title} />
+                            </ListItem>
+                        ))}
                     </List>
                 </Collapse>
             </List>

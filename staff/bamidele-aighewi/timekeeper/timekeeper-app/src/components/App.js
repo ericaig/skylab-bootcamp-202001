@@ -94,6 +94,7 @@ export default withRouter(function ({ history }) {
           <Route path={url} exact>{"DASHBOARD"}</Route>
           <Route path={`${url}/week-days`}><WeekDays/></Route>
           <Route path={`${url}/signings`}>{"Signings"}</Route>
+          <Route path={`${url}/calendar`}>{"Calendar"}</Route>
         </ControlPanel>
         : <Redirect to="/login" />
     }} />

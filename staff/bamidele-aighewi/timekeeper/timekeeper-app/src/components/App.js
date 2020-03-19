@@ -11,7 +11,8 @@ import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import './App.sass'
 import { isLoggedIn, logout } from '../logic'
-import {ControlPanel, WeekDays} from './cpanel'
+import { ControlPanel, WeekDays, Calendar} from './cpanel'
+// import ErrorBoundary from './ErrorBoundary'
 
 const useStyles = makeStyles(theme => ({
   app: {
@@ -65,7 +66,8 @@ export default withRouter(function ({ history }) {
 
   function handleLogout() {
     logout()
-    window.location.reload()
+    history.push('/login')
+    // window.location.reload()
   }
 
   useEffect(() => {
@@ -94,7 +96,7 @@ export default withRouter(function ({ history }) {
           <Route path={url} exact>{"DASHBOARD"}</Route>
           <Route path={`${url}/week-days`}><WeekDays/></Route>
           <Route path={`${url}/signings`}>{"Signings"}</Route>
-          <Route path={`${url}/calendar`}>{"Calendar"}</Route>
+          <Route path={`${url}/calendar`}><Calendar/></Route>
         </ControlPanel>
         : <Redirect to="/login" />
     }} />

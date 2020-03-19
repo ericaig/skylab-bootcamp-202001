@@ -5,7 +5,6 @@ import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
 import IconButton from '@material-ui/core/IconButton'
-import InboxIcon from '@material-ui/icons/MoveToInbox'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -21,7 +20,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
-import StarBorder from '@material-ui/icons/StarBorder'
 import Collapse from '@material-ui/core/Collapse'
 import HomeIcon from '@material-ui/icons/Home'
 import DateRangeIcon from '@material-ui/icons/DateRange'
@@ -63,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         flexGrow: 1,
-        padding: theme.spacing(3),
+        padding: theme.spacing(2),
     },
     nested: {
         paddingLeft: theme.spacing(4),
@@ -147,7 +145,7 @@ export default function ({ children, container, handleLogout }) {
                     <ListItemIcon>
                         <SettingsIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Company" />
+                    <ListItemText primary="Settings" />
                     {openSubMenu ? <ExpandLess /> : <ExpandMore />}
                 </ListItem>
                 <Collapse in={openSubMenu} timeout="auto" unmountOnExit>

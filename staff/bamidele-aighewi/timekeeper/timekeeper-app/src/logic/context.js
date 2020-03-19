@@ -1,5 +1,4 @@
-// export default {
-module.exports = {
+export default {
     set token(token) {
         sessionStorage.token = token
     },

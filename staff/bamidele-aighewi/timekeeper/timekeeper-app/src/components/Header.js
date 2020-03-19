@@ -11,7 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import SettingsIcon from '@material-ui/icons/Settings'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import { isLoggedIn, logout } from '../logic'
+import { isLoggedIn } from '../logic'
 import Logo from './Logo'
 
 const useStyles = makeStyles(theme => ({
@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Header({ handleGotoControlPanel }) {
+export default function Header({ handleGotoControlPanel, handleLogout }) {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -57,11 +57,6 @@ export default function Header({ handleGotoControlPanel }) {
 
     function handleCloseDialogMenu() {
         setAnchorEl(null)
-    }
-
-    function handleLogout() {
-        logout()
-        window.location.reload()
     }
 
     return (

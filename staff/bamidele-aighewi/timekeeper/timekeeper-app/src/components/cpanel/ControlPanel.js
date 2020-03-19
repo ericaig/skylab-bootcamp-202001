@@ -1,5 +1,4 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Divider from '@material-ui/core/Divider'
@@ -11,7 +10,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-import MailIcon from '@material-ui/icons/Mail'
+
 import MenuIcon from '@material-ui/icons/Menu'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
@@ -20,6 +19,15 @@ import Logo from '../Logo'
 import AccountCircle from '@material-ui/icons/AccountCircle'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import StarBorder from '@material-ui/icons/StarBorder'
+import Collapse from '@material-ui/core/Collapse'
+import HomeIcon from '@material-ui/icons/Home'
+import DateRangeIcon from '@material-ui/icons/DateRange'
+import AccessTimeIcon from '@material-ui/icons/AccessTime'
+import { useLocation } from 'react-router-dom'
+
 
 const drawerWidth = 240
 
@@ -56,19 +64,37 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
+    nested: {
+        paddingLeft: theme.spacing(4),
+    },
 }))
 
-function ResponsiveDrawer(props) {
-    const { container } = props
+export default function ({ children, container, handleLogout }) {
     const classes = useStyles()
     const theme = useTheme()
-    const [mobileOpen, setMobileOpen] = React.useState(false)
+    const [mobileOpen, setMobileOpen] = useState(false)
+
+    let location = useLocation();
+
+    function sideMenuOptions() {
+        const { pathname } = location
+
+        const menus = [
+            { title: 'Dashboard', link: '/cpanel', icon: () => <HomeIcon />, isActive: false },
+            { title: 'Week days', link: '/cpanel/week-days', icon: () => <DateRangeIcon />, isActive: false },
+            { title: 'Signings', link: '/cpanel/signings', icon: () => <AccessTimeIcon />, isActive: false },
+        ]
+
+        menus.forEach(menu => (menu.link === pathname && (menu.isActive = true)))
+
+        return menus
+    }
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen)
     }
 
-    const [anchorEl, setAnchorEl] = React.useState(null)
+    const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
 
     const handleMenu = event => {
@@ -79,6 +105,16 @@ function ResponsiveDrawer(props) {
         setAnchorEl(null)
     }
 
+    const [openSubMenu, setOpenSubMenu] = useState(false)
+
+    const handleClick = () => {
+        setOpenSubMenu(!openSubMenu)
+    }
+
+    // useEffect(() => {
+    //     console.log(match)
+    // }, [])
+
     const drawer = (
         <div>
             <div className={classes.toolbar}>
@@ -87,21 +123,32 @@ function ResponsiveDrawer(props) {
 
             <Divider />
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
+                {sideMenuOptions().map(({ title, icon: menuIcon, isActive, link }, index) => (
+                    <ListItem component="a" href={link} selected={isActive} key={index} button>
+                        <ListItemIcon>{menuIcon()}</ListItemIcon>
+                        <ListItemText primary={title} />
                     </ListItem>
                 ))}
             </List>
             <Divider />
             <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
+                <ListItem button onClick={handleClick}>
+                    <ListItemIcon>
+                        <InboxIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Inbox" />
+                    {openSubMenu ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={openSubMenu} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        <ListItem button className={classes.nested}>
+                            <ListItemIcon>
+                                <StarBorder />
+                            </ListItemIcon>
+                            <ListItemText primary="Starred" />
+                        </ListItem>
+                    </List>
+                </Collapse>
             </List>
         </div>
     )
@@ -121,7 +168,7 @@ function ResponsiveDrawer(props) {
                         <MenuIcon />
                     </IconButton>
                     <Typography className={classes.title} variant="h6" noWrap>
-                        {"Responsive drawer"}
+                        {sideMenuOptions().map(({title, isActive}) => isActive && title)}
                     </Typography>
 
                     <div>
@@ -149,8 +196,9 @@ function ResponsiveDrawer(props) {
                             open={open}
                             onClose={handleClose}
                         >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem>
-                            <MenuItem onClick={handleClose}>My account</MenuItem>
+                            <MenuItem onClick={handleClose}>{"Profile"}</MenuItem>
+                            <MenuItem onClick={handleClose}>{"My account"}</MenuItem>
+                            <MenuItem onClick={handleLogout}>{"Logout"}</MenuItem>
                         </Menu>
                     </div>
                 </Toolbar>
@@ -187,41 +235,9 @@ function ResponsiveDrawer(props) {
                 </Hidden>
             </nav>
             <main className={classes.content}>
-                <div className={classes.toolbar} />
-                <Typography paragraph>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-                    ut labore et dolore magna aliqua. Rhoncus dolor purus non enim praesent elementum
-                    facilisis leo vel. Risus at ultrices mi tempus imperdiet. Semper risus in hendrerit
-                    gravida rutrum quisque non tellus. Convallis convallis tellus id interdum velit laoreet id
-                    donec ultrices. Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-                    adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra nibh cras.
-                    Metus vulputate eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo quis
-                    imperdiet massa tincidunt. Cras tincidunt lobortis feugiat vivamus at augue. At augue eget
-                    arcu dictum varius duis at consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem
-                    donec massa sapien faucibus et molestie ac.
-        </Typography>
-                <Typography paragraph>
-                    Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper eget nulla
-                    facilisi etiam dignissim diam. Pulvinar elementum integer enim neque volutpat ac
-                    tincidunt. Ornare suspendisse sed nisi lacus sed viverra tellus. Purus sit amet volutpat
-                    consequat mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-                    vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra accumsan in. In
-                    hendrerit gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem et
-                    tortor. Habitant morbi tristique senectus et. Adipiscing elit duis tristique sollicitudin
-                    nibh sit. Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra maecenas
-                    accumsan lacus vel facilisis. Nulla posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
+                {/* <div className={classes.toolbar} /> */}
+                {children}
             </main>
         </div>
     )
 }
-
-ResponsiveDrawer.propTypes = {
-    /**
-     * Injected by the documentation to work in an iframe.
-     * You won't need it on your project.
-     */
-    container: PropTypes.any,
-}
-
-export default ResponsiveDrawer

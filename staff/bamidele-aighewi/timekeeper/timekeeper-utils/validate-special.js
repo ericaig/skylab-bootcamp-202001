@@ -16,10 +16,11 @@ module.exports = {
 
         const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-        const isoWeekDay = moment(_date, dateFormat).isoWeekday()
+        momentDate = moment(_date, dateFormat)
+        const isoWeekDay = momentDate.isoWeekday()
         const textWeekDay = days[isoWeekDay - 1]
         const weekDayState = weekDays[textWeekDay]
 
-        if (weekDayState === false) throw new NotAllowedError(`Events are not allowed for ${textWeekDay.substring(0, 1).toUpperCase().concat(textWeekDay.substring(1))}s`)
+        if (weekDayState === false) throw new NotAllowedError(`Events are not allowed for ${textWeekDay.substring(0, 1).toUpperCase().concat(textWeekDay.substring(1))}s (${momentDate.format('DD/MM/YYYY')})`)
     }
 }

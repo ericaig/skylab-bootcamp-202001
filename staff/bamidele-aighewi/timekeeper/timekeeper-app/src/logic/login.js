@@ -6,7 +6,7 @@ import context from './context'
 
 const API_URL = process.env.REACT_APP_API_URL
 
-export default ((email, password) => {
+export default (function(email, password){
     validate.string(email, 'email')
     validate.email(email)
     validate.string(password, 'password')
@@ -23,9 +23,8 @@ export default ((email, password) => {
         if (status === 200) {
             const { token } = await response.json()
             
-            // this.token = token
-            context.token = token
-
+            this.token = token
+            
             return
         }
 
@@ -41,4 +40,4 @@ export default ((email, password) => {
 
         throw new Error('server error')
     })()
-})// .bind(context)
+}).bind(context)

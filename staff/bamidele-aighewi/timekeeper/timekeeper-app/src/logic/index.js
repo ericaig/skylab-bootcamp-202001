@@ -4,6 +4,8 @@ import login from './login'
 import retrieveUser from './retrieve-user'
 import isLoggedIn from './is-logged-in'
 import logout from './logout'
+import weekDaysUpdate from './week-days-update'
+import weekDaysRetrieve from './week-days-retrieve'
 
 export {
     registerUser,
@@ -11,5 +13,7 @@ export {
     login,
     retrieveUser,
     isLoggedIn,
-    logout
+    logout,
+    weekDaysUpdate,
+    weekDaysRetrieve,
 }

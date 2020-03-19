@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Alert from '@material-ui/lab/Alert'
 import Collapse from '@material-ui/core/Collapse'
 
-export default function ({ config: { message, severity, timeout = 3000, watch }, setFeedback: _setFeedback }) {
+export default function ({ config: { message, severity, timeout = 5000, watch }, setFeedback: _setFeedback }) {
     const [feedback, setFeedback] = useState(undefined)
     const [feedBackSeverity, setFeedBackSeverity] = useState('success')
-    let feedbackTimeout
+    let feedbackTimeout = useRef()
 
     function unsetFeedback() {
-        if (feedbackTimeout !== "undefined"){
-            clearTimeout(feedbackTimeout)
-        }
+        clearTimeout(feedbackTimeout.current)
+        // if (feedbackTimeout.current !== "undefined"){}
     }
 
     function handleFeedback(message, severity = 'success') {
@@ -19,7 +18,7 @@ export default function ({ config: { message, severity, timeout = 3000, watch },
         setFeedBackSeverity(severity)
         setFeedback(message)
 
-        feedbackTimeout = setTimeout(() => {
+        feedbackTimeout.current = setTimeout(() => {
             setFeedback()
             unsetFeedback()
             if (typeof _setFeedback === 'function') _setFeedback({ message: undefined, severity: undefined })
@@ -28,7 +27,9 @@ export default function ({ config: { message, severity, timeout = 3000, watch },
 
     useEffect(() => {
         handleFeedback(message, severity)
-
+        return () => {
+            unsetFeedback()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [watch])
 

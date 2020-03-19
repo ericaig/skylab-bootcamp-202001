@@ -1,5 +1,5 @@
 const { validate } = require('timekeeper-utils')
-const { models: { User, Company }, utils: { roles: { CLIENT } } } = require('timekeeper-data')
+const { models: { User, Company, WeekDay }, utils: { roles: { CLIENT } } } = require('timekeeper-data')
 const { NotAllowedError } = require('timekeeper-errors')
 const bcrypt = require('bcryptjs')
 const { v4: uuid } = require('uuid')
@@ -64,6 +64,10 @@ module.exports = (_client, _company) => {
                     user.company = id
 
                     return user.save()
+                }).then(()=>{
+                    const weekday = new WeekDay({ company: company.id, monday: true, tuesday: true, wednesday: true, thursday: true, friday: true, saturday: false, sunday: false, createdBy: user.id, updatedBy: user.id })
+
+                    return weekday.save()
                 })
         })
         .then(() => { })

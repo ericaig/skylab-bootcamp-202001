@@ -10,8 +10,8 @@ import Header from './Header'
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import './App.sass'
-import { isLoggedIn } from '../logic'
-import CPanelHome from './cpanel/Home'
+import { isLoggedIn, logout } from '../logic'
+import {ControlPanel, WeekDays} from './cpanel'
 
 const useStyles = makeStyles(theme => ({
   app: {
@@ -63,6 +63,11 @@ export default withRouter(function ({ history }) {
     history.push('/cpanel')
   }
 
+  function handleLogout() {
+    logout()
+    window.location.reload()
+  }
+
   useEffect(() => {
 
   }, [])
@@ -70,20 +75,28 @@ export default withRouter(function ({ history }) {
   const { error } = state
 
   return <>
-    {history.location.pathname !== '/cpanel' ?
+    <Route path="/">
       <div className={classes.app}>
-        <Header handleGotoControlPanel={handleGotoControlPanel} />
+        <Header handleLogout={handleLogout} handleGotoControlPanel={handleGotoControlPanel} />
         <Paper className={classes.main} elevation={0} square>
           <Divider />
           <Route exact path="/" render={() => <Landing />} />
           <Route path="/register" render={() => !isLoggedIn() ? <Register onSubmit={handleRegister} error={error} onGoToLogin={handleGoToLogin} onMount={handleMountRegister} /> : <Redirect to="/cpanel" />} />
           <Route path="/login" render={() => !isLoggedIn() ? <Login onSubmit={handleLogin} error={error} onGoToRegister={handleGoToRegister} onMount={handleMountLogin} /> : <Redirect to="/cpanel" />} />
-          {/* <Route path="/home" render={() => isLoggedIn() ? <Home /> : <Redirect to="/login" />} /> */}
         </Paper>
         {/* <Footer title="Footer" description="Something here to give the footer a purpose!" /> */}
       </div>
-      :
-      <Route path="/cpanel" render={() => isLoggedIn() ? <CPanelHome/> : <Redirect to="/" />} />
-    }
+    </Route>
+
+    <Route path="/cpanel" render={({ match: { url } }) => {
+      return isLoggedIn() ?
+        <ControlPanel handleLogout={handleLogout}>
+          <Route path={url} exact>{"DASHBOARD"}</Route>
+          <Route path={`${url}/week-days`}><WeekDays/></Route>
+          <Route path={`${url}/signings`}>{"Signings"}</Route>
+          <Route path={`${url}/calendar`}>{"Calendar"}</Route>
+        </ControlPanel>
+        : <Redirect to="/login" />
+    }} />
   </>
 })

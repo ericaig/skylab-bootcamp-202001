@@ -1,60 +1,56 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import './Calendar.sass'
-import {
-    Paper,
-    makeStyles,
-    Typography,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText
-} from '@material-ui/core'
+import { Paper, Typography, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
 import CalendarDialog from './CalendarDialog'
+import { weekDaysRetrieve } from '../../logic'
+import moment from 'moment'
 
-// const useStyles = makeStyles(theme => ({
-//     content: {
-//         flexGrow: 1,
-//         padding: theme.spacing(2),
-//     },
-// }))
+const styles = theme => ({
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(2),
+    },
+})
 
-export default class Calendar extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = { openAddEventDialog: false }
+class Calendar extends React.Component {
+    state = {
+        openAddEventDialog: false,
+        selectedDates: {
+            start: '',
+            end: ''
+        },
+        weekDays: { monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false },
+        feedback: { message: undefined, severity: undefined, watch: undefined }
     }
-
-    classes = {} //useStyles()
-    // [eventDates, setEventDates] = useState({ start: undefined, end: undefined })
-    // [openAddEventDialog, setOpenAddEventDialog] = useState(false)
 
     legends = [
         { title: 'Working days', color: 'action' },
         { title: 'Public holidays', color: 'action' }
     ]
 
-    handleOpenDialog = () => {
-        this.setState({ openAddEventDialog: true }) //setOpenAddEventDialog(true)
-        console.log('in here')
-    }
-
-    handleCloseDialog = () => {
-        this.setState({ openAddEventDialog: false }) //setOpenAddEventDialog(false)
-    }
-
-    handleDateSelect = (info) => {
-        console.log('selected ' + info.startStr + ' to ' + info.endStr)
+    handleOpenDialog = () => this.setState({ openAddEventDialog: true })
+    handleCloseDialog = () => this.setState({ openAddEventDialog: false })
+    handleDateSelect = ({ startStr: start, endStr: end }) => {
+        const _end = moment(end, 'YYYY-MM-DD').subtract(1, 'days').format('YYYY-MM-DD')
+        this.setState({ selectedDates: { start, end: _end } })
         this.handleOpenDialog()
-        try {
+    }
 
-        } catch (error) {
-            console.log(error)
+    handleRetrieveWeekDays = async () => {
+        try {
+            const _weekDays = await weekDaysRetrieve()
+            const weekDays = {}
+            Object.keys(this.state.weekDays).forEach(day => weekDays[day] = _weekDays[day])
+            this.setState({ weekDays })
+        } catch ({ message }) {
+            this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })
         }
     }
 
@@ -63,7 +59,7 @@ export default class Calendar extends React.Component {
         height: "parent",
         selectable: true,
         selectMirror: true,
-        selectOverlap: false,
+        // selectOverlap: false,
         header: {
             // left: 'prev,next today',
             left: '',
@@ -75,9 +71,10 @@ export default class Calendar extends React.Component {
             startTime: '10:00',
             endTime: '18:00',
         },
-        // dateClick:{(info) :> {,
-        //     console.log('clicked ' + info.dateStr)
-        // }}
+        // dateClick: (info) => {
+        //     console.log('clicked ', info.dateStr)
+        //     console.log('info ', info)
+        // },
         select: this.handleDateSelect,
         editable: true,
         // eventDragMinDistance
@@ -89,14 +86,21 @@ export default class Calendar extends React.Component {
         ]
     }
 
+    componentDidMount() {
+        this.handleRetrieveWeekDays()
+    }
+
     render() {
+        const { classes } = this.props;
+        const { selectedDates, openAddEventDialog, weekDays } = this.state
+
         return (
             <>
-                <Paper className={this.classes.content} elevation={0}>
+                <Paper className={classes.content} elevation={0}>
                     <FullCalendar {...this.fullCalendarOpts} />
                 </Paper>
 
-                <Paper className={this.classes.content} elevation={0}>
+                <Paper className={classes.content} elevation={0}>
                     <Typography variant="h6">Legend</Typography>
                     <List>
                         {this.legends.map(({ color, title }, index) =>
@@ -110,8 +114,14 @@ export default class Calendar extends React.Component {
                     </List>
                 </Paper>
 
-                <CalendarDialog openAddEventDialog={this.state.openAddEventDialog} handleCloseDialog={this.handleCloseDialog} />
+                <CalendarDialog selectedDates={selectedDates} weekDays={weekDays} openAddEventDialog={openAddEventDialog} handleCloseDialog={this.handleCloseDialog} />
             </>
         )
     }
 }
+
+Calendar.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Calendar)

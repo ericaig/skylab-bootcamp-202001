@@ -14,7 +14,10 @@ const {
     eventCreate,
     eventCompanyCreate,
     eventSignInOut,
-    clientCompanyCreate
+    clientCompanyCreate,
+    eventCompanyRetrieve,
+    eventsRetrieve,
+    dashboardAnalytics
 } = require('./handlers')
 
 const { jwtVerifierMidWare } = require('../mid-wares')
@@ -44,8 +47,13 @@ router.post('/week-days', [jwtVerifierMidWare, jsonBodyParser], weekDaysCreate)
 router.patch('/week-days', [jwtVerifierMidWare, jsonBodyParser], weekDaysUpdate)
 
 /* EVENT ROUTES */
+router.get('/events', jwtVerifierMidWare, eventsRetrieve)
 router.post('/events', [jwtVerifierMidWare, jsonBodyParser], eventCreate)
 router.post('/events-company', [jwtVerifierMidWare, jsonBodyParser], eventCompanyCreate)
 router.post('/events-sign-in-out', jwtVerifierMidWare, eventSignInOut)
+router.get('/events-company/:start/:end', jwtVerifierMidWare, eventCompanyRetrieve)
+
+/* DASHBOARD ANALYTICS */
+router.get('/dashboard-analytics', jwtVerifierMidWare, dashboardAnalytics)
 
 module.exports = router

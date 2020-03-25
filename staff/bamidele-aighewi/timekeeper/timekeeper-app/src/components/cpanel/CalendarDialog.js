@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Grid, makeStyles, Select, Box, Typography } from '@material-ui/core'
+import { Dialog, DialogTitle, DialogContent, DialogActions, FormControl, InputLabel, Button, Grid, TextField, Select, Box, Typography } from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
@@ -10,13 +10,11 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment'
 import { validateSpecial } from 'timekeeper-utils'
+import Feedback from '../Feedback'
 
 const useStyles = theme => ({
     chip: {
         margin: theme.spacing(0.5),
-    },
-    eventTypeSelect: {
-        minWidth: 150
     }
 })
 
@@ -26,17 +24,11 @@ class CalendarDialog extends React.Component {
         eventType: 0,
         start: '',
         end: '',
+        description: '',
         openEventType: false,
-        totalDaysSelected: { valid: 0, of: 0 }
+        totalDaysSelected: { valid: 0, of: 0 },
+        feedback: { message: undefined, severity: undefined, watch: undefined }
     }
-
-    // classes = useStyles();
-    // [eventType, setEventType] = useState('');
-    // [start, setStart] = useState('')
-    // [end, setEnd] = useState('')
-
-    // [openEventType, setOpenEventType] = useState(false);
-    // [totalDaysSelected, setTotalDaysSelected] = useState({ valid: 0, of: 0 });
 
     handleDateChange = (__start, __end) => {
         this.setState({
@@ -45,9 +37,11 @@ class CalendarDialog extends React.Component {
         }, this.handleCalculateDaysOfRange)
     }
 
-    handleChangeEventType = event => this.setState({ eventType: event.target.value })
-    handleOpenEventType = () => this.setState({ eventType: true })
-    handleCloseEventType = () => this.setState({ eventType: false })
+    handleChangeEventType = event => {
+        this.setState({ eventType: event.target.value, openEventType: false })
+    }
+    handleOpenEventType = () => this.setState({ openEventType: true })
+    handleCloseopenEventType = () => this.setState({ openEventType: false })
 
     handleCalculateDaysOfRange = () => {
         if (!this.state.start || !this.state.end) return
@@ -57,8 +51,6 @@ class CalendarDialog extends React.Component {
         const __start = moment(this.state.start, 'YYYY-MM-DD')
         let __end = moment(this.state.end, 'YYYY-MM-DD')
         let difference = moment(__end).diff(__start, 'days') //+ 1
-
-        console.log('difference...', difference)
 
         // if (difference === 0 && this.state.start === this.state.start) {
         //     __end = __start
@@ -76,23 +68,21 @@ class CalendarDialog extends React.Component {
             for (let i = 0; i < difference; i++) {
                 totalDays += (() => {
                     let count = 0
-                    if(i === 0){
+                    if (i === 0) {
                         // let's count the start
                         try {
                             validateSpecial.activeDayOfWeek(__start.format('YYYY-MM-DD'), this.props.weekDays)
                             count++
-                            console.log('after first ...')
                         } catch ({ message }) {
-                            console.log(message)
+                            // console.log(message)
                         }
                     }
 
                     try {
                         validateSpecial.activeDayOfWeek(__start.add(1, 'days').format('YYYY-MM-DD'), this.props.weekDays)
-                        console.log('after second ...')
                         count++
                     } catch ({ message }) {
-                        console.log(message)
+                        // console.log(message)
                     }
 
                     return count
@@ -110,16 +100,28 @@ class CalendarDialog extends React.Component {
             })()
         }
 
-        console.log('difference', difference)
-        console.log('totalDays', totalDays)
-        this.setState({ totalDaysSelected: { valid: totalDays, of: difference } })
+        // console.log('difference', difference)
+        // console.log('totalDays', totalDays)
+        this.setState({ totalDaysSelected: { valid: totalDays, of: (difference + 1) } })
     }
 
-    handleSaveEvent = () => {
-        this.props.handleCloseDialog()
+    handleDescriptionChange = event => this.setState({ description: event.target.value })
+
+    handleSaveEvent = async () => {
+        const { start, end, eventType, description } = this.state
+        
+        try {
+            const _start = moment(start).format('YYYY-MM-DD')
+            const _end = moment(end).format('YYYY-MM-DD')
+
+            await this.props.handleSaveEvent(_start, _end, eventType, description)
+            // this.setState({ feedback: { message: "Created event successfully", severity: 'success', watch: Date.now() } })
+        } catch ({ message }) {
+            this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })
+        }
     }
 
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
         const { start: startDate, end: endDate } = this.props.selectedDates
 
         if (startDate && endDate) {
@@ -130,7 +132,7 @@ class CalendarDialog extends React.Component {
     }
 
     render() {
-        const { start, end, totalDaysSelected, eventType, openEventType } = this.state
+        const { start, end, totalDaysSelected, eventType, description, feedback } = this.state
         const { openAddEventDialog, handleCloseDialog, weekDays, classes } = this.props
 
         return <>
@@ -182,28 +184,47 @@ class CalendarDialog extends React.Component {
                         <Chip size="small" className={classes.chip} color={weekDays.sunday ? 'primary' : 'default'} icon={weekDays.sunday ? <CheckCircleIcon /> : <CancelIcon />} label="Sun" disabled={!weekDays.sunday} clickable />
                     </Box>
 
-                    <Box mt={2}>
+                    <Box mt={3}>
                         {/* <Chip size="small" variant="outlined" label={`There ${totalDaysSelected.valid > 1 ? 'are' : 'is'} ${totalDaysSelected.valid} valid date of ${totalDaysSelected.of} day${totalDaysSelected.of > 1 ? 's' : ''} selected`} /> */}
                         <Typography variant="subtitle2">
-                            {`There ${totalDaysSelected.valid > 1 ? 'are' : 'is'} ${totalDaysSelected.valid} valid day${totalDaysSelected.valid > 1 ? 's' : ''} between the selected date range`}
+                            {`There ${totalDaysSelected.valid > 1 ? 'are' : 'is'} ${totalDaysSelected.valid} (of ${totalDaysSelected.of}) valid day${totalDaysSelected.valid > 1 ? 's' : ''} between the selected date range`}
                         </Typography>
                     </Box>
 
-                    <Box mt={2}>
-                        <Button variant="text" onClick={this.handleOpenEventType}>{"Event type"}</Button>
-                        <Select
-                            value={eventType}
-                            open={openEventType}
-                            onClose={this.handleCloseEventType}
-                            onOpen={this.handleOpenEventType}
-                            onChange={this.handleChangeEventType}
-                            className={classes.eventTypeSelect}
-                        >
-                            <MenuItem value={0}>{"..."}</MenuItem>
-                            <MenuItem value={1}>{"Work day"}</MenuItem>
-                            <MenuItem value={2}>{"Public holiday"}</MenuItem>
-                        </Select>
+                    <Box mt={3}>
+                        {/* <Button variant="text" onClick={this.handleOpenEventType}>{"Event type"}</Button> */}
+                        <FormControl>
+                            <InputLabel id="event-type">{"Event type"}</InputLabel>
+                            <Select
+                                labelId="event-type"
+                                // open={openEventType}
+                                // onClose={this.handleCloseEventType}
+                                // onOpen={this.handleOpenEventType}
+                                onChange={this.handleChangeEventType}
+                                value={eventType}
+                                style={{ width: 200 }}
+                            >
+                                <MenuItem value={0}>{"..."}</MenuItem>
+                                <MenuItem value={1}>{"Work day"}</MenuItem>
+                                <MenuItem value={2}>{"Public holiday"}</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Box>
+
+                    <Box mt={3}>
+                        <TextField
+                            fullWidth
+                            // id="outlined-multiline-static"
+                            label="Note"
+                            multiline
+                            rows="2"
+                            value={description}
+                            onChange={this.handleDescriptionChange}
+                            variant="outlined"
+                        />
+                    </Box>
+
+                    <Box mt={2}><Feedback config={feedback} /></Box>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleCloseDialog} color="primary">

@@ -6,7 +6,7 @@ module.exports = (req, res) => {
 
     try {
         weekDaysCreate(user, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
-            .then(() => res.status(200).end())
+            .then(() => res.status(201).end())
             .catch(error =>
                 res
                     .status(errorStatus(error))

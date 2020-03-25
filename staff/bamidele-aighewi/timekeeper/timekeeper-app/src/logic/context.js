@@ -7,6 +7,14 @@ export default {
         return sessionStorage.token
     },
 
+    set theme(theme) {
+        sessionStorage.theme = theme
+    },
+
+    get theme() {
+        return sessionStorage.theme
+    },
+
     clear() {
         // delete this.token
 

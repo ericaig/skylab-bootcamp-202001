@@ -1,12 +1,14 @@
-const { eventSignInOut } = require('../../logic')
+const { eventCompanyRetrieve } = require('../../logic')
 const { errorStatus } = require('timekeeper-errors')
 
 module.exports = (req, res) => {
-    const { payload: { sub: user } } = req
+    const { payload: { sub: userID }, params: { start, end }, query: { type, state } } = req
 
     try {
-        eventSignInOut(user)
-            .then(() => res.status(201).end())
+        eventCompanyRetrieve(userID, start, end, type, state)
+            .then(items =>
+                res.status(200).json(items)
+            )
             .catch(error =>
                 res
                     .status(errorStatus(error))

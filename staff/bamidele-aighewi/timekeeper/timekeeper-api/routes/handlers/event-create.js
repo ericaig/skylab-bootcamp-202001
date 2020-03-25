@@ -6,7 +6,7 @@ module.exports = (req, res) => {
 
     try {
         eventCreate(user, start, end, type, description, state)
-            .then(() => res.status(200).end())
+            .then(() => res.status(201).end())
             .catch(error =>
                 res
                     .status(errorStatus(error))

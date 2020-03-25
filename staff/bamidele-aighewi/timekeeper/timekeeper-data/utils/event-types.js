@@ -7,7 +7,7 @@
  */
 module.exports = {
     WORK_DAY: 1,
-    WORK_HOLIDAY: 2,
+    WORK_HOLIDAY: 2, // Public holiday
     USER_HOLIDAY: 3,
     USER_ABSENCE: 4,
     USER_SIGN_IN_OUT: 5

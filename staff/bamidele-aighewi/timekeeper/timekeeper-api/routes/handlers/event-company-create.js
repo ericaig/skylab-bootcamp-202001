@@ -1,12 +1,14 @@
 const { eventCompanyCreate } = require('../../logic')
 const { errorStatus } = require('timekeeper-errors')
+const { utils: { eventStates: { ACCEPTED } } } = require('timekeeper-data')
 
 module.exports = (req, res) => {
-    const { payload: { sub: user }, body: { start, end, type, description, state = '1' } } = req
+    const { payload: { sub: user }, body: { start, end, type, description } } = req
+    // , state = '1'
 
     try {
-        eventCompanyCreate(user, start, end, type, description, state)
-            .then(() => res.status(200).end())
+        eventCompanyCreate(user, start, end, type, description, ACCEPTED)
+            .then(() => res.status(201).end())
             .catch(error =>
                 res
                     .status(errorStatus(error))

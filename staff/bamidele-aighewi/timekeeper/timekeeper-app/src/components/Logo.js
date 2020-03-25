@@ -6,9 +6,9 @@ const useStyles = makeStyles(theme => ({
         width: '200px'
     },
 }))
-export default function() {
+export default function () {
     const classes = useStyles()
-    
+
     return <>
         <img alt="Timekeeper logo" src="/logo.png" className={classes.logo} />
     </>

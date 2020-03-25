@@ -14,4 +14,7 @@ module.exports = {
     eventCompanyCreate: require('./event-company-create'),
     eventSignInOut: require('./event-sign-in-out'),
     clientCompanyCreate: require('./client-company-create'),
+    eventCompanyRetrieve: require('./event-company-retrieve'),
+    eventsRetrieve: require('./events-retrieve'),
+    dashboardAnalytics: require('./dashboard-analytics'),
 }

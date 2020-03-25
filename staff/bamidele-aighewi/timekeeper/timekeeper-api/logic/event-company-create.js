@@ -57,20 +57,22 @@ module.exports = function (user, start, end, type, description, state) {
         sanitizer(_weekday)
 
         validateSpecial.activeDayOfWeek(start, _weekday)
-        // if (end !== start) validateSpecial.activeDayOfWeek(end, _weekday)
-        if (end !== start){
-            const startDate = moment(start)
-            const difference = moment(end).diff(startDate, 'days') + 1
-            for (let i = 0; i < difference; i++){
-                validateSpecial.activeDayOfWeek(startDate.add(1, 'days').format('YYYY-MM-DD'), _weekday)
-            }
-        }
+        validateSpecial.activeDayOfWeek(end, _weekday)
+        // if (end !== start){
+        //     const startDate = moment(start)
+        //     const difference = moment(end).diff(startDate, 'days') + 1
+
+        //     startDate.subtract(1, 'days').format('YYYY-MM-DD')
+        //     for (let i = 0; i < difference; i++){
+        //         validateSpecial.activeDayOfWeek(startDate.add(1, 'days').format('YYYY-MM-DD'), _weekday)
+        //     }
+        // }
 
         // let's look for overlapse
         // https://stackoverflow.com/a/26877645
         const overlaps = await Event.find({
             company,
-            type,
+            // type,
             start: { "$lte": new Date(end) },
             end: { "$gte": new Date(start) }
         }).lean()

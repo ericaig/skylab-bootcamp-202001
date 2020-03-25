@@ -6,7 +6,7 @@ module.exports = (req, res) => {
 
     try {
         createCompany(name, email, address, owner, web, cif, city, postalCode, startTime, endTime)
-            .then(() => res.status(200).end())
+            .then(() => res.status(201).end())
             .catch(({ message }) =>
                 res
                     .status(401)

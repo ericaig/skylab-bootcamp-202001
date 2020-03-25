@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Box, Divider, Paper, Grid, Chip, Button, Tooltip } from '@material-ui/core';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-import NewReleasesIcon from '@material-ui/icons/NewReleases';
-import Avatar from '@material-ui/core/Avatar';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import React, { useEffect, useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import { Typography, Box, Divider, Paper, Grid, Chip, Button, Tooltip } from '@material-ui/core'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import IconButton from '@material-ui/core/IconButton'
+import NewReleasesIcon from '@material-ui/icons/NewReleases'
+import Avatar from '@material-ui/core/Avatar'
+import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import RefreshIcon from '@material-ui/icons/Refresh'
 import { dashboardAnalytics } from '../../logic'
 import moment from 'moment'
+import SendInviteDialog from './SendInviteDialog'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -20,10 +21,10 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(2),
         // width: 300
     }
-}));
+}))
 
 export default function TypographyTheme() {
-    const classes = useStyles();
+    const classes = useStyles()
     const [analytics, setAnalytics] = useState({
         totalPendingEvents: 0,
         totalAbsences: 0,
@@ -32,6 +33,12 @@ export default function TypographyTheme() {
         inactiveUsers: 0,
         activities: []
     })
+
+    const [emailDialogOpen, setEmailDialogOpen] = useState(true)
+
+    function handleToggleEmailInviteDialog(visibility){
+        setEmailDialogOpen(visibility)
+    }
 
     async function handleRetrieveAnalytics() {
         try {
@@ -65,7 +72,7 @@ export default function TypographyTheme() {
 
         if (totalDifference) {
             const duration = moment.duration(totalDifference)
-            const days = duration.days(), hours = duration.hours(), minutes = duration.minutes(), seconds = duration.seconds();
+            const days = duration.days(), hours = duration.hours(), minutes = duration.minutes(), seconds = duration.seconds()
 
             if (days) activeTimeOutput.push(`${days}day${days > 1 ? 's' : ''}`)
             if (hours) activeTimeOutput.push(`${hours}hr${hours > 1 ? 's' : ''}`)
@@ -90,7 +97,7 @@ export default function TypographyTheme() {
         <Box mt={2} mb={3}>
             <Grid container direction="row" justify="space-between" alignItems="flex-start">
                 <Typography variant="h5" component="span">
-                    {"Hello, Eric Aig"}&nbsp;
+                    {"Hello, Eric Aig "}
                     <Typography variant="body2" component="span">{"Welcome to your control panel"}</Typography>
                 </Typography>
                 <Button onClick={handleRetrieveAnalytics} color="primary" startIcon={<RefreshIcon />}>{"Refresh"}</Button>
@@ -159,9 +166,10 @@ export default function TypographyTheme() {
                         <Typography variant="h5" component="h5" gutterBottom>
                             <Grid container direction="row" justify="space-between" alignItems="flex-start">
                                 <div>{`${analytics.totalWorkers} registered`}</div>
-                                <Button color="primary">
+                                <Button color="primary" onClick={() => handleToggleEmailInviteDialog(true)}>
                                     {"Invite"}
                                 </Button>
+                                <SendInviteDialog open={emailDialogOpen} handleClose={() => handleToggleEmailInviteDialog(false)} />
                             </Grid>
                         </Typography>
                     </Paper>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
@@ -7,30 +7,42 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { Typography, Box, Link } from '@material-ui/core'
+import { sendInviteLink } from '../../logic'
+import Feedback from '../Feedback'
 
-export default function FormDialog({ open, handleClose }) {
-    const [email, setEmail] = React.useState('')
+const APP_URL = process.env.REACT_APP_APP_URL
+
+
+export default function FormDialog({ open, handleClose, company, handleSnackbar }) {
+    const [email, setEmail] = useState('')
+    const [feedback, setFeedback] = useState({ message: undefined, severity: undefined, watch: undefined })
 
     function handleEmailChange({ target: { value: _email } }) {
         setEmail(_email)
     }
 
-    function handleSendInvitationLink(){
-
+    async function handleSendInvitationLink() {
+        try {
+            await sendInviteLink([email])
+            handleSnackbar('Invite link sent successfully', 'success')
+            handleClose()
+        } catch ({ message }) {
+            setFeedback({ message, severity: 'error', watch: Date.now() })
+        }
     }
 
     return (
         <div>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">{"Send invite link"}</DialogTitle>
+                <DialogTitle>{"Send invite link"}</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         {"Please enter a valid email address to send an invite. You can also copy and send the below link to whomever."}
 
                         <Box mt={1}>
-                            <Link href="https://material-ui.com/components/links/" onClick={(event) => event.preventDefault()}>
-                                {"https://material-ui.com/components/links/"}
-                            </Link>
+                            {company && <Link href={`${APP_URL}/invite/${company.invite}`} onClick={(event) => event.preventDefault()}>
+                                {`${APP_URL}/invite/${company.invite}`}
+                            </Link>}
                         </Box>
 
                         <Box mt={3}>
@@ -40,6 +52,8 @@ export default function FormDialog({ open, handleClose }) {
                         </Box>
                     </DialogContentText>
                     <TextField autoFocus margin="dense" value={email} onChange={handleEmailChange} label="Email Address" type="email" fullWidth />
+
+                    <Feedback config={feedback} />
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

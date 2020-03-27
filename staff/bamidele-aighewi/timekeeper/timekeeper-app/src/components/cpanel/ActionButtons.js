@@ -1,40 +1,82 @@
-import React from 'react';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications';
-import { IconButton } from '@material-ui/core';
+import React, { useState, useEffect } from 'react'
+import Button from '@material-ui/core/Button'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import SettingsApplicationsIcon from '@material-ui/icons/SettingsApplications'
+import { IconButton } from '@material-ui/core'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default function SimpleMenu() {
-    const [anchorEl, setAnchorEl] = React.useState(null);
+export default function ({ index: key, id, handleDelete, handleEdit }) {
+    const [anchorEl, setAnchorEl] = useState(null)
+    const [editIsDisabled, setEditIsDisabled] = useState(true)
+    const [deleteIsDisabled, setDeleteIsDisabled] = useState(true)
+    const [toggleDeleteDialog, setToggleDeleteDialog] = useState(false)
 
-    const handleClick = event => {
-        setAnchorEl(event.currentTarget);
-    };
+    const handleToggleDeleteDialog = visibility => setToggleDeleteDialog(visibility)
+    const handleOpenDropdown = event => setAnchorEl(event.currentTarget)
+    const handleCloseDropdown = () => setAnchorEl(null)
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const _handleDelete = () => {
+        handleDelete(id)
+    }
+
+    const _handleEdit = () => {
+        handleEdit(id)
+    }
+
+    useEffect(() => {
+        if (typeof handleEdit !== 'function') return
+        setEditIsDisabled(false)
+
+        if (typeof handleDelete !== 'function') return
+        setDeleteIsDisabled(false)
+
+        return () => {
+            setDeleteIsDisabled(true)
+            setEditIsDisabled(true)
+        }
+    }, [])
 
     return (
         <>
-            {/* <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                {"Open Menu"}
-            </Button> */}
-            <IconButton aria-label="Actions" aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+            <IconButton size={'small'} aria-label="Actions" aria-controls={`simple-menu-${key}`} aria-haspopup="true" onClick={handleOpenDropdown}>
                 <SettingsApplicationsIcon />
             </IconButton>
             <Menu
-                id="simple-menu"
+                id={`simple-menu-${key}`}
                 anchorEl={anchorEl}
-                keepMounted
                 open={Boolean(anchorEl)}
-                onClose={handleClose}
+                onClose={handleCloseDropdown}
             >
-                <MenuItem onClick={handleClose}>{"Profile"}</MenuItem>
-                <MenuItem onClick={handleClose}>{"My account"}</MenuItem>
-                <MenuItem onClick={handleClose}>{"Logout"}</MenuItem>
+                <MenuItem disabled={editIsDisabled} onClick={() => { handleCloseDropdown(); _handleEdit() }}>{"Edit"}</MenuItem>
+                <MenuItem disabled={deleteIsDisabled} onClick={() => { handleCloseDropdown(); handleToggleDeleteDialog(true) }}>{"Delete"}</MenuItem>
             </Menu>
+
+            <Dialog
+                open={toggleDeleteDialog}
+                onClose={() => handleToggleDeleteDialog(false)}
+                aria-labelledby={`alert-dialog-title-${key}`}
+                aria-describedby={`alert-dialog-description-${key}`}
+            >
+                <DialogTitle id={`alert-dialog-title-${key}`}>{"Confirm"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id={`alert-dialog-description-${key}`}>
+                        {"Are you sure you want to delete this?"}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => handleToggleDeleteDialog(false)} color="primary">
+                        {"No, I don't"}
+                    </Button>
+                    <Button onClick={() => handleToggleDeleteDialog(false)} color="primary" autoFocus>
+                        {"Yes, I agree"}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
-    );
+    )
 }

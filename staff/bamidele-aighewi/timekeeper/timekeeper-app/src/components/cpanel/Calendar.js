@@ -151,7 +151,10 @@ class Calendar extends React.Component {
 
     handleSaveEvent = async (start, end, type, description) => {
         // not using try/catch on purpose... This will be done where this fnc is being invoked.
-        await eventCompanyCreate(start, end, type, description)
+        const _start = moment(start).format('YYYY-MM-DD')
+        const _end = moment(end).format('YYYY-MM-DD')
+
+        await eventCompanyCreate(_start, _end, type, description)
         this.handleCloseDialog()
         this.handleRetrieveEvents(start, end)
     }

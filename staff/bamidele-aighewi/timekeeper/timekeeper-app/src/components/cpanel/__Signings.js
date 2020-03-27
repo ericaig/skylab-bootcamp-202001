@@ -8,16 +8,15 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import AddAlarmIcon from '@material-ui/icons/AddAlarm';
 import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
-import { eventsRetrieve, eventSignInOut } from '../../logic'
+import { weekDaysRetrieve, eventsRetrieve, eventSignInOut } from '../../logic'
 import { eventProperties } from '../../utils'
-import Feedback from '../Feedback'
 import moment from 'moment'
 import ActionButtons from './ActionButtons'
+import CalendarDialog from './CalendarDialog'
 
 const useStyles = theme => ({
     table: {
@@ -38,7 +37,13 @@ class Events extends React.Component {
             start: moment().startOf('week').format('MM/DD/YYYY'),
             end: null, //moment().endOf('week').format('MM/DD/YYYY')
         },
-        feedback: { message: undefined, severity: undefined, watch: undefined }
+        currentlyEditingEvent: undefined,
+        openAddEventDialog: false,
+        selectedDates: {
+            start: '',
+            end: ''
+        },
+        weekDays: { monday: false, tuesday: false, wednesday: false, thursday: false, friday: false, saturday: false, sunday: false },
     }
 
     debounce = (callback, timeout) => {
@@ -56,7 +61,7 @@ class Events extends React.Component {
         end = !!end ? new Date(end) : null
 
         const timeout = !start || !end ? 1000 : 0
-        
+
         this.debounce(() => {
             this.setState({ filters: { start, end } }, this.handleRetrieveEvents)
         }, timeout)
@@ -74,9 +79,10 @@ class Events extends React.Component {
 
         try {
             const events = await eventsRetrieve({ type: 5, start: _start, end: _end })
+            console.log(events)
             this.setState({ events })
         } catch ({ message }) {
-            this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })
+            this.props.handleSnackbar(message, 'error')
         }
     }
 
@@ -113,13 +119,39 @@ class Events extends React.Component {
         return output.join(' ')
     }
 
+    handleRetrieveWeekDays = async () => {
+        try {
+            const _weekDays = await weekDaysRetrieve()
+            const weekDays = {}
+            Object.keys(this.state.weekDays).forEach(day => weekDays[day] = _weekDays[day])
+            this.setState({ weekDays })
+        } catch ({ message }) {
+            this.props.handleSnackbar(message, 'error')
+        }
+    }
+
+    handleToggleEventDialog = visibility => {
+        this.setState({ openAddEventDialog: visibility }, () => {
+            if (!visibility) this.setState({ currentlyEditingEvent: undefined })
+        })
+    }
+
+    handleSaveEvent = () => {
+        console.log('handleSaveEvent')
+    }
+
+    handleDeleteResource = () => {
+
+    }
+
     componentDidMount() {
+        this.handleRetrieveWeekDays()
         this.handleRetrieveEvents()
     }
 
     render() {
         const { classes } = this.props
-        const { feedback, events, filters } = this.state
+        const { events, filters, selectedDates, weekDays, openAddEventDialog, currentlyEditingEvent } = this.state
 
         return <>
             <Grid
@@ -183,18 +215,32 @@ class Events extends React.Component {
             </Grid>
 
             <Box mt={4}>
+                {openAddEventDialog &&
+                    <CalendarDialog
+                        event={currentlyEditingEvent}
+                        handleSaveEvent={this.handleSaveEvent}
+                        selectedDates={selectedDates}
+                        weekDays={weekDays}
+                        openAddEventDialog={openAddEventDialog}
+                        handleCloseDialog={() => this.handleToggleEventDialog(false)}
+                        config={{
+                            startEditable: true,
+                            endEditable: true,
+                            eventEditable: false,
+                            stateEditable: false,
+                            stateSelector: true,
+                            typeEditable: false,
+                            types: [5],
+                            datePickerFormat: 'dd/MM/yyyy HH:mm:ss'
+                        }}
+                    />
+                }
+
                 <TableContainer elevation={0} component={Paper} variant="outlined">
-                    <Table className={classes.table} aria-label="simple table">
+                    <Table size={'small'} className={classes.table} aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                {/* <TableCell padding="checkbox">
-                                    <Checkbox
-                                        // indeterminate={numSelected > 0 && numSelected < rowCount}
-                                        // checked={rowCount > 0 && numSelected === rowCount}
-                                        // onChange={onSelectAllClick}
-                                        inputProps={{ 'aria-label': 'select all desserts' }}
-                                    />
-                                </TableCell> */}
+                                <TableCell component="th">{"User"}</TableCell>
                                 <TableCell component="th">{"Event"}</TableCell>
                                 <TableCell>{"Start"}</TableCell>
                                 <TableCell>{"End"}</TableCell>
@@ -205,16 +251,13 @@ class Events extends React.Component {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {events.map(({ id, type, state, description, start, end }) => (
-                                <TableRow key={id}>
-                                    {/* <TableCell padding="checkbox">
-                                        <Checkbox
-                                            // indeterminate={numSelected > 0 && numSelected < rowCount}
-                                            // checked={rowCount > 0 && numSelected === rowCount}
-                                            // onChange={onSelectAllClick}
-                                            inputProps={{ 'aria-label': 'select all desserts' }}
-                                        />
-                                    </TableCell> */}
+                            {events.map((event, index) => {
+                                const { id, type, state, description, start, end, user: { name, surname } } = event
+
+                                return <TableRow hover key={id}>
+                                    <TableCell component="th" scope="row">
+                                        {`${name} ${surname}`}
+                                    </TableCell>
                                     <TableCell component="th" scope="row">
                                         {this.handleRetrieveEventTypeName(type)}
                                     </TableCell>
@@ -228,14 +271,19 @@ class Events extends React.Component {
                                         </Typography>
                                     </TableCell>
                                     <TableCell>
-                                        {/* <ActionButtons/> */}
+                                        <ActionButtons
+                                            key={index}
+                                            handleDelete={this.handleDeleteResource}
+                                            handleEdit={() => {
+                                                this.setState({ currentlyEditingEvent: event }, () => this.handleToggleEventDialog(true))
+                                            }}
+                                        />
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            })}
                         </TableBody>
                     </Table>
                 </TableContainer>
-                <Box mt={2}><Feedback config={feedback} /></Box>
             </Box>
         </>
     }

@@ -11,6 +11,8 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import moment from 'moment'
 import { validateSpecial } from 'timekeeper-utils'
 import Feedback from '../Feedback'
+import { eventProperties } from '../../utils'
+// import { context } from '../../logic'
 
 const useStyles = theme => ({
     chip: {
@@ -18,14 +20,14 @@ const useStyles = theme => ({
     }
 })
 
-// export default function ({ selectedDates, weekDays, openAddEventDialog, handleCloseDialog }) {
 class CalendarDialog extends React.Component {
     state = {
         eventType: 0,
+        eventState: 0,
         start: '',
         end: '',
         description: '',
-        openEventType: false,
+        dialogTitle: 'Add event',
         totalDaysSelected: { valid: 0, of: 0 },
         feedback: { message: undefined, severity: undefined, watch: undefined }
     }
@@ -38,33 +40,26 @@ class CalendarDialog extends React.Component {
     }
 
     handleChangeEventType = event => {
-        this.setState({ eventType: event.target.value, openEventType: false })
+        this.setState({ eventType: event.target.value })
     }
-    handleOpenEventType = () => this.setState({ openEventType: true })
-    handleCloseopenEventType = () => this.setState({ openEventType: false })
+
+    handleChangeEventState = event => {
+        console.log('event.target.value', event.target.value)
+        this.setState({ eventState: event.target.value })
+    }
+    // handleOpenEventType = () => this.setState({ openEventType: true })
+    // handleCloseopenEventType = () => this.setState({ openEventType: false })
 
     handleCalculateDaysOfRange = () => {
         if (!this.state.start || !this.state.end) return
 
-        // const _start = moment(start + '00:00', 'YYYY-MM-DD HH:mm')
-        // let _end = moment(end + '23:59', 'YYYY-MM-DD HH:mm')
         const __start = moment(this.state.start, 'YYYY-MM-DD')
         let __end = moment(this.state.end, 'YYYY-MM-DD')
         let difference = moment(__end).diff(__start, 'days') //+ 1
 
-        // if (difference === 0 && this.state.start === this.state.start) {
-        //     __end = __start
-        //     difference = moment(__end.endOf('day')).diff(__start.startOf('day'), 'days')
-        // }
-
         let totalDays = 0
 
         if (difference > 0) {
-            // let i = 0
-            // do {
-            //     let dayIncrement = __start.add(1, 'days').format('YYYY-MM-DD')
-            // } while (dayIncrement !== );
-
             for (let i = 0; i < difference; i++) {
                 totalDays += (() => {
                     let count = 0
@@ -108,20 +103,33 @@ class CalendarDialog extends React.Component {
     handleDescriptionChange = event => this.setState({ description: event.target.value })
 
     handleSaveEvent = async () => {
-        const { start, end, eventType, description } = this.state
-        
-        try {
-            const _start = moment(start).format('YYYY-MM-DD')
-            const _end = moment(end).format('YYYY-MM-DD')
+        const { start, end, eventType, eventState, description } = this.state
+        const { id } = this.props.event
 
-            await this.props.handleSaveEvent(_start, _end, eventType, description)
+        // console.log(context)
+
+        try {
+            await this.props.handleSaveEvent(start, end, eventType, description, eventState, id)
             // this.setState({ feedback: { message: "Created event successfully", severity: 'success', watch: Date.now() } })
         } catch ({ message }) {
             this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })
         }
     }
 
-    UNSAFE_componentWillReceiveProps() {
+    get config() {
+        return Object.assign({
+            startEditable: true,
+            endEditable: true,
+            // eventEditable: true,
+            typeEditable: true,
+            stateEditable: false,
+            stateSelector: false,
+            types: [1, 2],
+            datePickerFormat: 'dd/MM/yyyy'
+        }, this.props.config || {})
+    }
+
+    componentWillReceiveProps() {
         const { start: startDate, end: endDate } = this.props.selectedDates
 
         if (startDate && endDate) {
@@ -131,15 +139,27 @@ class CalendarDialog extends React.Component {
         }
     }
 
+    componentDidMount() {
+        const { event } = this.props
+        console.log('did mount')
+        if (event) {
+            const { start, end, description, state } = event
+            this.setState({ dialogTitle: 'Edit event', eventType: event.type, eventState: event.state, start, end, description }, this.handleCalculateDaysOfRange)
+        }
+    }
+
+    componentWillUnmount() {
+        // this.props = {}
+        console.log('will unmount')
+    }
+
     render() {
-        const { start, end, totalDaysSelected, eventType, description, feedback } = this.state
+        const { start, end, totalDaysSelected, eventType, eventState, description, feedback, dialogTitle } = this.state
         const { openAddEventDialog, handleCloseDialog, weekDays, classes } = this.props
 
         return <>
             <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={openAddEventDialog}>
-                <DialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>
-                    {"Add event"}
-                </DialogTitle>
+                <DialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>{dialogTitle}</DialogTitle>
                 <DialogContent dividers>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Grid container justify="space-between">
@@ -147,7 +167,8 @@ class CalendarDialog extends React.Component {
                                 disableToolbar
                                 autoOk
                                 variant="inline"
-                                format="dd/MM/yyyy"
+                                format={this.config.datePickerFormat}
+                                disabled={!this.config.startEditable}
                                 margin="normal"
                                 id="start-date"
                                 label="Start"
@@ -161,7 +182,8 @@ class CalendarDialog extends React.Component {
                                 disableToolbar
                                 autoOk
                                 variant="inline"
-                                format="dd/MM/yyyy"
+                                format={this.config.datePickerFormat}
+                                disabled={!this.config.endEditable}
                                 margin="normal"
                                 id="end-date"
                                 label="End"
@@ -185,36 +207,55 @@ class CalendarDialog extends React.Component {
                     </Box>
 
                     <Box mt={3}>
-                        {/* <Chip size="small" variant="outlined" label={`There ${totalDaysSelected.valid > 1 ? 'are' : 'is'} ${totalDaysSelected.valid} valid date of ${totalDaysSelected.of} day${totalDaysSelected.of > 1 ? 's' : ''} selected`} /> */}
                         <Typography variant="subtitle2">
                             {`There ${totalDaysSelected.valid > 1 ? 'are' : 'is'} ${totalDaysSelected.valid} (of ${totalDaysSelected.of}) valid day${totalDaysSelected.valid > 1 ? 's' : ''} between the selected date range`}
                         </Typography>
                     </Box>
 
-                    <Box mt={3}>
-                        {/* <Button variant="text" onClick={this.handleOpenEventType}>{"Event type"}</Button> */}
-                        <FormControl>
-                            <InputLabel id="event-type">{"Event type"}</InputLabel>
-                            <Select
-                                labelId="event-type"
-                                // open={openEventType}
-                                // onClose={this.handleCloseEventType}
-                                // onOpen={this.handleOpenEventType}
-                                onChange={this.handleChangeEventType}
-                                value={eventType}
-                                style={{ width: 200 }}
-                            >
-                                <MenuItem value={0}>{"..."}</MenuItem>
-                                <MenuItem value={1}>{"Work day"}</MenuItem>
-                                <MenuItem value={2}>{"Public holiday"}</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Box>
+                    <Grid container justify="space-between">
+                        <Box mt={3}>
+                            <FormControl>
+                                <InputLabel id="event-type">{"Event type"}</InputLabel>
+                                <Select
+                                    labelId="event-type"
+                                    disabled={!this.config.typeEditable}
+                                    onChange={this.handleChangeEventType}
+                                    value={eventType}
+                                    style={{ width: 200 }}
+                                >
+                                    <MenuItem value={0}>{"..."}</MenuItem>
+
+                                    {eventProperties.types.names.map((type, index) => {
+                                        if (this.config.types.includes((index + 1)))
+                                            return <MenuItem key={index} value={index + 1}>{type}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </Box>
+
+                        <Box mt={3}>
+                            <FormControl>
+                                <InputLabel id="event-state">{"Event state"}</InputLabel>
+                                <Select
+                                    labelId="event-state"
+                                    disabled={!this.config.stateEditable}
+                                    onChange={this.handleChangeEventState}
+                                    value={eventState}
+                                    style={{ width: 200 }}
+                                >
+                                    <MenuItem value={0}>{"..."}</MenuItem>
+
+                                    {eventProperties.states.names.map((stateName, index) => {
+                                        return <MenuItem key={index} value={index + 1}>{stateName}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </Grid>
 
                     <Box mt={3}>
                         <TextField
                             fullWidth
-                            // id="outlined-multiline-static"
                             label="Note"
                             multiline
                             rows="2"

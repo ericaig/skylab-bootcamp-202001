@@ -17,4 +17,6 @@ module.exports = {
     eventCompanyRetrieve: require('./event-company-retrieve'),
     eventsRetrieve: require('./events-retrieve'),
     dashboardAnalytics: require('./dashboard-analytics'),
+    sendInviteLink: require('./send-invite-link'),
+    eventUpdate: require('./event-update'),
 }

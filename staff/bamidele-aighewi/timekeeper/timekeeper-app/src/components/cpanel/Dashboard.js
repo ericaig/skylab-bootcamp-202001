@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography, Box, Divider, Paper, Grid, Chip, Button, Tooltip } from '@material-ui/core'
+import { Typography, Box, Divider, Paper, Grid, Chip, Button, Tooltip, Backdrop, CircularProgress } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -11,7 +11,7 @@ import NewReleasesIcon from '@material-ui/icons/NewReleases'
 import Avatar from '@material-ui/core/Avatar'
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
 import RefreshIcon from '@material-ui/icons/Refresh'
-import { dashboardAnalytics } from '../../logic'
+import { dashboardAnalytics, isLoggedIn, retrieveCompany, retrieveUser, context } from '../../logic'
 import moment from 'moment'
 import SendInviteDialog from './SendInviteDialog'
 
@@ -20,10 +20,17 @@ const useStyles = makeStyles(theme => ({
         boxShadow: '0 0 14px 0 rgba(53,64,82,.05)',
         padding: theme.spacing(2),
         // width: 300
-    }
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: '#fff',
+    },
 }))
 
-export default function TypographyTheme() {
+export default function ({ handleLogout, handleSnackbar }) {
+    const [user, setUser] = useState()
+    const [company, setCompany] = useState()
+
     const classes = useStyles()
     const [analytics, setAnalytics] = useState({
         totalPendingEvents: 0,
@@ -34,15 +41,15 @@ export default function TypographyTheme() {
         activities: []
     })
 
-    const [emailDialogOpen, setEmailDialogOpen] = useState(true)
+    const [emailDialogOpen, setEmailDialogOpen] = useState(false)
 
-    function handleToggleEmailInviteDialog(visibility){
+    function handleToggleEmailInviteDialog(visibility) {
         setEmailDialogOpen(visibility)
     }
 
     async function handleRetrieveAnalytics() {
         try {
-            const analytics = await dashboardAnalytics({date: moment().startOf('day').format('YYYY-MM-DD')})
+            const analytics = await dashboardAnalytics({ date: moment().startOf('day').format('YYYY-MM-DD') })
             setAnalytics(analytics)
             // console.log(analytics)
         } catch ({ message }) {
@@ -53,12 +60,16 @@ export default function TypographyTheme() {
     function handleActivityEvents(events) {
         const activeTimeOutput = []
         let signinFirstTime = ''
+        let signinLastTime = ''
         let pendingEvent = {}
         let totalDifference = 0
 
-        events.forEach(event => {
-            const { start, end } = event
-            if (!signinFirstTime) signinFirstTime = moment(start).format('HH:mm')
+        events.forEach((event, index) => {
+            let { start, end } = event
+            signinFirstTime = moment(start).format('HH:mm')
+            if (!index && end) signinLastTime = moment(end).format('HH:mm')
+
+            if (!end) end = moment().toDate() // format('YYYY-MM-DD HH:mm:ss')
 
             if (start && end) {
                 const _start = moment(start)
@@ -80,24 +91,48 @@ export default function TypographyTheme() {
             if (!days && !hours && seconds) activeTimeOutput.push(`${seconds}s`)
         }
 
-        const hasPendingEvent = Object.keys(pendingEvent).length
+        let output = ''
 
-        if (hasPendingEvent) {
-            if (!signinFirstTime) signinFirstTime = moment(pendingEvent.start).format('HH:mm')
-        } else signinFirstTime = ''
+        if (signinFirstTime) {
+            output = `${signinFirstTime} - `
 
-        return `${!!signinFirstTime ? `${signinFirstTime} - in progress ` : ''}${activeTimeOutput.join(' ')}`
+            output += signinLastTime ? `${signinLastTime}` : 'in progress'
+            output = activeTimeOutput.length ? `${output} (${activeTimeOutput.join(' ')})` : output
+        }
+
+        return output
     }
 
     useEffect(() => {
-        handleRetrieveAnalytics()
+        if (isLoggedIn())
+            (async () => {
+                try {
+                    const _user = await retrieveUser()
+                    const _company = await retrieveCompany()
+                    if(Object.keys(_user).length && Object.keys(_company).length){
+                        setUser(_user)
+                        setCompany(_company)
+
+                        handleRetrieveAnalytics()
+                        return
+                    }
+                    handleLogout()
+                } catch ({ message }) {
+                    handleLogout()
+                }
+            })()
+        else handleLogout()
     }, [])
 
     return <>
+        {!user && <Backdrop className={classes.backdrop} open={true}>
+            <CircularProgress color="inherit" />
+        </Backdrop>}
+
         <Box mt={2} mb={3}>
             <Grid container direction="row" justify="space-between" alignItems="flex-start">
                 <Typography variant="h5" component="span">
-                    {"Hello, Eric Aig "}
+                    {user && `Hello, ${user.name} ${user.surname} `}
                     <Typography variant="body2" component="span">{"Welcome to your control panel"}</Typography>
                 </Typography>
                 <Button onClick={handleRetrieveAnalytics} color="primary" startIcon={<RefreshIcon />}>{"Refresh"}</Button>
@@ -107,7 +142,7 @@ export default function TypographyTheme() {
 
         <Box mt={3}>
             <Grid container spacing={6} direction="row" justify="space-between" alignItems="flex-start">
-                <Grid item lg={3} md={6} xs={12} spacing={1}>
+                <Grid item lg={3} md={6} xs={12}>
                     <Paper elevation={1} className={classes.card} variant="elevation">
                         <Grid container direction="row" justify="space-between" alignItems="flex-start">
                             <Typography variant="h6" color="textSecondary" component="h1" gutterBottom>
@@ -126,7 +161,7 @@ export default function TypographyTheme() {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item lg={3} md={6} xs={12} spacing={1}>
+                <Grid item lg={3} md={6} xs={12}>
                     <Paper elevation={1} className={classes.card} variant="elevation">
                         <Grid container direction="row" justify="space-between" alignItems="flex-start">
                             <Typography variant="h6" color="secondary" component="h1" gutterBottom>
@@ -140,7 +175,7 @@ export default function TypographyTheme() {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item lg={3} md={6} xs={12} spacing={1}>
+                <Grid item lg={3} md={6} xs={12}>
                     <Paper elevation={1} className={classes.card} variant="elevation">
                         <Grid container direction="row" justify="space-between" alignItems="flex-start">
                             <Typography variant="h6" color="textSecondary" component="h1" gutterBottom>
@@ -154,7 +189,7 @@ export default function TypographyTheme() {
                         </Typography>
                     </Paper>
                 </Grid>
-                <Grid item lg={3} md={6} xs={12} spacing={1}>
+                <Grid item lg={3} md={6} xs={12}>
                     <Paper elevation={1} className={classes.card} variant="elevation">
                         <Grid container direction="row" justify="space-between" alignItems="flex-start">
                             <Typography variant="h6" color="textSecondary" component="h1" gutterBottom>
@@ -169,7 +204,7 @@ export default function TypographyTheme() {
                                 <Button color="primary" onClick={() => handleToggleEmailInviteDialog(true)}>
                                     {"Invite"}
                                 </Button>
-                                <SendInviteDialog open={emailDialogOpen} handleClose={() => handleToggleEmailInviteDialog(false)} />
+                                <SendInviteDialog handleSnackbar={handleSnackbar} company={company} open={emailDialogOpen} handleClose={() => handleToggleEmailInviteDialog(false)} />
                             </Grid>
                         </Typography>
                     </Paper>

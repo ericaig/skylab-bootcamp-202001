@@ -27,9 +27,12 @@ module.exports = function (user, start, end, type, state) {
     if (typeof end !== 'undefined') validate.date(end)
 
     if (typeof type !== 'undefined') {
-        validate.number(type, 'type')
+        validate.type(type, 'type', Array)
+        type.forEach(item => {
+            if (![...Object.values(eventTypes)].includes(Number(item))) throw new NotAllowedError(`Invalid event type ${item}`)
+        });
 
-        if (![...Object.values(eventTypes)].includes(Number(type))) throw new NotAllowedError(`Invalid event type ${type}`)
+        // if (![...Object.values(eventTypes)].includes(Number(type))) throw new NotAllowedError(`Invalid event type ${type}`)
     }
 
     if (typeof state !== 'undefined') {
@@ -66,10 +69,10 @@ module.exports = function (user, start, end, type, state) {
 
         if (typeof start !== 'undefined') findParams.start = { "$gte": new Date(start) }
         if (typeof end !== 'undefined') findParams.end = { "$lte": new Date(end) }
-        if (typeof type !== 'undefined') findParams.type = type
+        if (typeof type !== 'undefined') findParams.type = { "$in": type }
         if (typeof state !== 'undefined') findParams.state = state
 
-        const events = await Event.find(findParams).sort('-start -end').lean()
+        const events = await Event.find(findParams).populate('user', 'name surname -_id').sort('-start -end').lean()
 
         return events.map(event => sanitizer(event))
     })()

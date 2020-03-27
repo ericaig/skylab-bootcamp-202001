@@ -26,6 +26,8 @@ module.exports = function (props, editableFields) {
                 validate.cif(value, field)
             else if (type === 'number')
                 validate.number(value, field)
+            else if (type === 'date')
+                validate.date(value)
             else if (type === 'boolean') {
                 const { acceptString } = validateOpts
                 if (!!acceptString && typeof value === 'string') validate.string(value, field)

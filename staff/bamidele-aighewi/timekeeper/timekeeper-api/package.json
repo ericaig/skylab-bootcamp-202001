@@ -22,6 +22,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
+    "nodemailer": "^6.4.6",
     "timekeeper-data": "file:../timekeeper-data",
     "timekeeper-errors": "file:../timekeeper-errors",
     "timekeeper-utils": "file:../timekeeper-utils",

@@ -28,8 +28,9 @@ export default (function (props = {}) {
     }
 
     if (typeof type !== 'undefined') {
-        validate.number(type, 'type')
-        queryParams.push(`type=${type}`)
+        validate.type(type, 'type', Array)
+
+        queryParams.push(`${type.map(item => `type[]=${item}`).join('&')}`)
     }
 
     if (typeof state !== 'undefined') {

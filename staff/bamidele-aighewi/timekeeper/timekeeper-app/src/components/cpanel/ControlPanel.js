@@ -26,8 +26,11 @@ import EventNoteIcon from '@material-ui/icons/EventNote';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
-import { FormControlLabel } from '@material-ui/core'
+import { FormControlLabel, Tooltip } from '@material-ui/core'
+import SignInOutWidget from './SignInOutWidget'
 import { context } from '../../logic'
+import Brightness7Icon from '@material-ui/icons/Brightness7';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
 
 const drawerWidth = 240
 
@@ -143,9 +146,10 @@ export default function ({ children, container, handleLogout }) {
         setAnchorEl(null)
     }
 
-    const handleThemeChanger = event => {
-        setDarkThemeActive(event.target.checked)
-        context.theme = event.target.checked ? 'dark' : 'light'
+    const handleThemeChanger = () => {
+        context.theme = !darkThemeActive ? 'dark' : 'light'
+        setDarkThemeActive(!darkThemeActive)
+
     }
 
     const handleRetrieveTheme = () => {
@@ -215,18 +219,18 @@ export default function ({ children, container, handleLogout }) {
                             {sideMenuOptions().map(({ title, isActive }) => isActive && title)}
                         </Typography>
 
+                        <SignInOutWidget />
 
-                        <FormControlLabel
-                            control={
-                                <Switch
-                                    checked={darkThemeActive}
-                                    onChange={handleThemeChanger}
-                                    color="default"
-                                />
-                            }
-                            label="Dark Vader"
-                            labelPlacement="top"
-                        />
+                        <Tooltip title="Toggle light/dark theme">
+                            <IconButton
+                                aria-label="theme changer"
+                                aria-haspopup="true"
+                                onClick={handleThemeChanger}
+                                color="inherit"
+                            >
+                                {darkThemeActive ? <Brightness4Icon /> : <Brightness7Icon />}
+                            </IconButton>
+                        </Tooltip>
                         <div>
                             <IconButton
                                 aria-label="account of current user"

@@ -12,7 +12,7 @@ import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore'
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
-import { weekDaysRetrieve, eventsRetrieve, eventSignInOut, eventUpdate, eventDelete } from '../../logic'
+import { weekDaysRetrieve, eventsRetrieve, eventUpdate, eventDelete } from '../../logic'
 import { eventProperties } from '../../utils'
 import moment from 'moment'
 import ActionButtons from './ActionButtons'
@@ -35,7 +35,7 @@ class Events extends React.Component {
     state = {
         events: [],
         filters: {
-            start: moment().startOf('week').format('MM/DD/YYYY'),
+            start: moment().startOf('month').format('MM/DD/YYYY'),
             end: null, //moment().endOf('week').format('DD/MM/YYYY')
         },
         currentlyEditingEvent: undefined,
@@ -87,14 +87,14 @@ class Events extends React.Component {
         }
     }
 
-    handleEventSignInOut = async () => {
-        try {
-            await eventSignInOut()
-            await this.handleRetrieveEvents()
-        } catch ({ message }) {
-            this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })
-        }
-    }
+    // handleEventSignInOut = async () => {
+    //     try {
+    //         await eventSignInOut()
+    //         await this.handleRetrieveEvents()
+    //     } catch ({ message }) {
+    //         this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })
+    //     }
+    // }
 
     handleCalculateTimeDifference = (start, end) => {
         if (!start && !end) return ''
@@ -137,7 +137,7 @@ class Events extends React.Component {
         })
     }
 
-    handleSaveEvent = async (start, end, type, description, state, eventId) => {
+    handleSaveEvent = async (start, end, type, description, state, event) => {
         // not using try/catch on purpose... This will be done where this fnc is being invoked.
         let dateFormat = 'YYYY-MM-DD'
 
@@ -146,7 +146,7 @@ class Events extends React.Component {
         const _start = moment(start).format(dateFormat)
         const _end = moment(end).format(dateFormat)
 
-        await eventUpdate(eventId, { start: _start, end: _end, type, description, state })
+        await eventUpdate(event.id, { start: _start, end: _end, type, description, state })
         this.handleToggleEventDialog(false)
         this.handleRetrieveEvents()
 
@@ -225,11 +225,11 @@ class Events extends React.Component {
                             <RefreshIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Sign in/out">
+                    {/* <Tooltip title="Sign in/out">
                         <IconButton color="primary" aria-label="Refresh" onClick={this.handleEventSignInOut}>
                             <SettingsBackupRestoreIcon />
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                 </div>
             </Grid>
 
@@ -279,7 +279,7 @@ class Events extends React.Component {
                                     {tableConfig.difference && <TableCell>{this.handleCalculateTimeDifference(start, end)}</TableCell>}
                                     <TableCell>{description}</TableCell>
                                     <TableCell>
-                                        <Typography style={{ color: state === 2 ? '#155724' : '#721c24'}}>
+                                        <Typography style={{ color: state === 2 ? '#155724' : '#383d41'}}>
                                             {this.handleRetrieveEventStateName(state)}
                                         </Typography>
                                     </TableCell>

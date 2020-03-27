@@ -3,6 +3,8 @@ import IconButton from '@material-ui/core/IconButton'
 import TimerIcon from '@material-ui/icons/Timer'
 import TimerOffIcon from '@material-ui/icons/TimerOff'
 import { Tooltip, Typography } from '@material-ui/core'
+import { eventsRetrieve, eventSignInOut } from '../../logic'
+import moment from 'moment'
 
 export default function () {
     const [timerRunning, setTimerRunning] = useState(false)
@@ -16,11 +18,22 @@ export default function () {
         if (timerId !== 'undefined') clearInterval(timerId)
     }
 
-    function handleSignInOut() {
+    function handleToggleSignInOutProcess() {
         const _timerRunning = !timerRunning
 
         setTimerIconButtonTooltip(_timerRunning ? 'Sign out' : 'Sign in')
         setTimerRunning(_timerRunning)
+
+        if (!_timerRunning) setTimer({ hour: 0, minute: 0, second: 0 })
+    }
+
+    async function handleSignInOut() {
+        try {
+            await eventSignInOut()
+            handleToggleSignInOutProcess()
+        } catch ({message}) {
+            console.log(message)
+        }
     }
 
     function handleStartTimer() {
@@ -42,11 +55,35 @@ export default function () {
     }
 
     useEffect(() => {
+        (async () => {
+            try {
+                const [event] = await eventsRetrieve({
+                    start: moment().startOf('day').format('YYYY-MM-DD HH:mm:ss'),
+                    type: [5]
+                })
+                
+                if(!('end' in event)){
+                    const start = moment(event.start)
+                    const end = moment()
+                    const duration = moment.duration(end.diff(start))
+                    setTimer({hour: duration.hours(), minute: duration.minutes(), second: duration.seconds()})
+                    handleToggleSignInOutProcess()
+                }
+            } catch ({ message }) {
+                console.log(message)
+            }
+        })()
+        console.log('first useeffect')
+    }, [])
+
+    useEffect(() => {
+        clearTimer()
         if (timerRunning) setTimerId(setInterval(handleStartTimer, 1000))
 
         return () => {
             clearTimer()
         }
+
     }, [timerRunning, timer])
 
     return <>

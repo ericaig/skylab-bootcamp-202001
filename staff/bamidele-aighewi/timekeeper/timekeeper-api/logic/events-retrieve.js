@@ -67,6 +67,8 @@ module.exports = function (user, start, end, type, state) {
 
         const findParams = { company }
 
+        if (role === WORKER) findParams.user = user
+
         if (typeof start !== 'undefined') findParams.start = { "$gte": new Date(start) }
         if (typeof end !== 'undefined') findParams.end = { "$lte": new Date(end) }
         if (typeof type !== 'undefined') findParams.type = { "$in": type }

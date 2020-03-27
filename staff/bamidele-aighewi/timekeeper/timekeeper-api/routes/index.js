@@ -19,7 +19,8 @@ const {
     eventsRetrieve,
     dashboardAnalytics,
     sendInviteLink,
-    eventUpdate
+    eventUpdate,
+    eventDelete
 } = require('./handlers')
 
 const { jwtVerifierMidWare } = require('../mid-wares')
@@ -51,6 +52,7 @@ router.patch('/week-days', [jwtVerifierMidWare, jsonBodyParser], weekDaysUpdate)
 /* EVENT ROUTES */
 router.get('/events', jwtVerifierMidWare, eventsRetrieve)
 router.post('/events', [jwtVerifierMidWare, jsonBodyParser], eventCreate)
+router.delete('/events/:id', jwtVerifierMidWare, eventDelete)
 router.patch('/events/:id', [jwtVerifierMidWare, jsonBodyParser], eventUpdate)
 router.post('/events-company', [jwtVerifierMidWare, jsonBodyParser], eventCompanyCreate)
 router.post('/events-sign-in-out', jwtVerifierMidWare, eventSignInOut)

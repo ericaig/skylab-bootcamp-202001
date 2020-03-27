@@ -12,7 +12,7 @@ import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore'
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
-import { weekDaysRetrieve, eventsRetrieve, eventSignInOut, eventUpdate } from '../../logic'
+import { weekDaysRetrieve, eventsRetrieve, eventSignInOut, eventUpdate, eventDelete } from '../../logic'
 import { eventProperties } from '../../utils'
 import moment from 'moment'
 import ActionButtons from './ActionButtons'
@@ -153,8 +153,14 @@ class Events extends React.Component {
         this.props.handleSnackbar('Event updated successfully', 'success')
     }
 
-    handleDeleteResource = () => {
-
+    handleDeleteResource = async ({id}) => {
+        try {
+            await eventDelete(id)
+            this.handleRetrieveEvents()
+            this.props.handleSnackbar('Event deleted successfully', 'success')
+        } catch ({message}) {
+            this.props.handleSnackbar(message, 'error')
+        }
     }
 
     componentDidMount() {
@@ -241,7 +247,8 @@ class Events extends React.Component {
                 }
 
                 <TableContainer elevation={0} component={Paper} variant="outlined">
-                    <Table size={'small'} className={classes.table} aria-label="simple table">
+                    <Table size={'small'} className={classes.table} aria-label="events table">
+                        {!events.length && <caption>{"No events found"}</caption>}
                         <TableHead>
                             <TableRow>
                                 {tableConfig.name && <TableCell component="th">{"User"}</TableCell>}
@@ -272,7 +279,7 @@ class Events extends React.Component {
                                     {tableConfig.difference && <TableCell>{this.handleCalculateTimeDifference(start, end)}</TableCell>}
                                     <TableCell>{description}</TableCell>
                                     <TableCell>
-                                        <Typography className={classes.success}>
+                                        <Typography style={{ color: state === 2 ? '#155724' : '#721c24'}}>
                                             {this.handleRetrieveEventStateName(state)}
                                         </Typography>
                                     </TableCell>
@@ -280,6 +287,7 @@ class Events extends React.Component {
                                         <TableCell>
                                             <ActionButtons
                                                 index={index}
+                                                resource={event}
                                                 handleDelete={tableConfig.canDelete && this.handleDeleteResource}
                                                 handleEdit={tableConfig.canEdit && (() => {
                                                     this.setState({ currentlyEditingEvent: event }, () => this.handleToggleEventDialog(true))

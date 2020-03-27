@@ -19,4 +19,5 @@ module.exports = {
     dashboardAnalytics: require('./dashboard-analytics'),
     sendInviteLink: require('./send-invite-link'),
     eventUpdate: require('./event-update'),
+    eventDelete: require('./event-delete'),
 }

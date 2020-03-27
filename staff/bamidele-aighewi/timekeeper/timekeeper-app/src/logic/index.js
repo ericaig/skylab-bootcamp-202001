@@ -14,6 +14,7 @@ import dashboardAnalytics from './dashboard-analytics'
 import sendInviteLink from './send-invite-link'
 import retrieveCompany from './retrieve-company'
 import eventUpdate from './event-update'
+import eventDelete from './event-delete'
 import context from './context'
 
 export {
@@ -33,5 +34,6 @@ export {
     sendInviteLink,
     retrieveCompany,
     eventUpdate,
+    eventDelete,
     context
 }

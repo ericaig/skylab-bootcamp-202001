@@ -10,7 +10,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export default function ({ index: key, id, handleDelete, handleEdit }) {
+export default function ({ index: key, resource, handleDelete, handleEdit }) {
     const [anchorEl, setAnchorEl] = useState(null)
     const [editIsDisabled, setEditIsDisabled] = useState(true)
     const [deleteIsDisabled, setDeleteIsDisabled] = useState(true)
@@ -21,11 +21,12 @@ export default function ({ index: key, id, handleDelete, handleEdit }) {
     const handleCloseDropdown = () => setAnchorEl(null)
 
     const _handleDelete = () => {
-        handleDelete(id)
+        handleToggleDeleteDialog(false)
+        handleDelete(resource)
     }
 
     const _handleEdit = () => {
-        handleEdit(id)
+        handleEdit()
     }
 
     useEffect(() => {
@@ -43,11 +44,11 @@ export default function ({ index: key, id, handleDelete, handleEdit }) {
 
     return (
         <>
-            <IconButton size={'small'} aria-label="Actions" aria-controls={`simple-menu-${key}`} aria-haspopup="true" onClick={handleOpenDropdown}>
+            <IconButton size={'small'} aria-label="Actions" aria-controls={`action-btns-${key}`} aria-haspopup="true" onClick={handleOpenDropdown}>
                 <SettingsApplicationsIcon />
             </IconButton>
             <Menu
-                id={`simple-menu-${key}`}
+                id={`action-btns-${key}`}
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleCloseDropdown}
@@ -72,7 +73,7 @@ export default function ({ index: key, id, handleDelete, handleEdit }) {
                     <Button onClick={() => handleToggleDeleteDialog(false)} color="primary">
                         {"No, I don't"}
                     </Button>
-                    <Button onClick={() => handleToggleDeleteDialog(false)} color="primary" autoFocus>
+                    <Button onClick={_handleDelete} color="primary" autoFocus>
                         {"Yes, I agree"}
                     </Button>
                 </DialogActions>

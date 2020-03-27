@@ -104,12 +104,10 @@ class CalendarDialog extends React.Component {
 
     handleSaveEvent = async () => {
         const { start, end, eventType, eventState, description } = this.state
-        const { id } = this.props.event
-
-        // console.log(context)
+        const { event = {} } = this.props
 
         try {
-            await this.props.handleSaveEvent(start, end, eventType, description, eventState, id)
+            await this.props.handleSaveEvent(start, end, eventType, description, eventState, event)
             // this.setState({ feedback: { message: "Created event successfully", severity: 'success', watch: Date.now() } })
         } catch ({ message }) {
             this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })

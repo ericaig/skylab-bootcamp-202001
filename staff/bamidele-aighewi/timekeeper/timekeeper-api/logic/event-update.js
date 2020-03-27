@@ -71,6 +71,7 @@ module.exports = (user, eventId, props) => {
         const findEventParams = {
             company,
             user,
+            _id: { "$nin": [eventId] },
             type: _event.type,
             start: { "$lte": new Date(_event.end) },
             end: { "$gte": new Date(_event.start) }

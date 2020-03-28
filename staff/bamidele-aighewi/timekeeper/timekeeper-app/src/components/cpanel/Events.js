@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
+// import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
@@ -17,11 +17,21 @@ import { eventProperties } from '../../utils'
 import moment from 'moment'
 import ActionButtons from './ActionButtons'
 import CalendarDialog from './CalendarDialog'
+import { green, grey } from '@material-ui/core/colors';
 
 const useStyles = theme => ({
-    table: {
-        minWidth: 650,
+    visibleAtMdUp:{
+        display: 'none',
+        [theme.breakpoints.up('md')]: {
+            display: 'table-cell',
+        }
     },
+    // invisibleAtMdDown: {
+    //     display: 'table-cell',
+    //     [theme.breakpoints.down('md')]: {
+    //         display: 'none',
+    //     }
+    // },
     buttonRm: {
         marginRight: theme.spacing(2),
     },
@@ -80,7 +90,6 @@ class Events extends React.Component {
 
         try {
             const events = await eventsRetrieve({ type: this.props.tableConfig.filters.types, start: _start, end: _end })
-            console.log(events)
             this.setState({ events })
         } catch ({ message }) {
             this.props.handleSnackbar(message, 'error')
@@ -247,17 +256,17 @@ class Events extends React.Component {
                 }
 
                 <TableContainer elevation={0} component={Paper} variant="outlined">
-                    <Table size={'small'} className={classes.table} aria-label="events table">
+                    <Table size={'small'} aria-label="events table">
                         {!events.length && <caption>{"No events found"}</caption>}
                         <TableHead>
                             <TableRow>
                                 {tableConfig.name && <TableCell component="th">{"User"}</TableCell>}
-                                <TableCell component="th">{"Event"}</TableCell>
+                                <TableCell className={classes.visibleAtMdUp} component="th">{"Event"}</TableCell>
                                 <TableCell>{"Start"}</TableCell>
-                                <TableCell>{"End"}</TableCell>
+                                <TableCell className={classes.visibleAtMdUp}>{"End"}</TableCell>
                                 {tableConfig.difference && <TableCell>{"Difference"}</TableCell>}
-                                <TableCell>{"Note"}</TableCell>
-                                <TableCell>{"State"}</TableCell>
+                                <TableCell className={classes.visibleAtMdUp}>{"Note"}</TableCell>
+                                <TableCell className={classes.visibleAtMdUp}>{"State"}</TableCell>
                                 {(tableConfig.canDelete || tableConfig.canEdit) && <TableCell></TableCell>}
                             </TableRow>
                         </TableHead>
@@ -271,15 +280,15 @@ class Events extends React.Component {
                                             {user && `${user.name} ${user.surname}`}
                                         </TableCell>
                                     }
-                                    <TableCell component="th" scope="row">
+                                    <TableCell className={classes.visibleAtMdUp} component="th" scope="row">
                                         {this.handleRetrieveEventTypeName(type)}
                                     </TableCell>
                                     <TableCell>{start && moment(start).format(tableConfig.datesFormat)}</TableCell>
-                                    <TableCell>{end ? moment(end).format(tableConfig.datesFormat) : 'in progress'}</TableCell>
+                                    <TableCell className={classes.visibleAtMdUp}>{end ? moment(end).format(tableConfig.datesFormat) : 'in progress'}</TableCell>
                                     {tableConfig.difference && <TableCell>{this.handleCalculateTimeDifference(start, end)}</TableCell>}
-                                    <TableCell>{description}</TableCell>
-                                    <TableCell>
-                                        <Typography style={{ color: state === 2 ? '#155724' : '#383d41'}}>
+                                    <TableCell className={classes.visibleAtMdUp}>{description}</TableCell>
+                                    <TableCell className={classes.visibleAtMdUp}>
+                                        <Typography style={{ color: state === 2 ? green : grey}}>
                                             {this.handleRetrieveEventStateName(state)}
                                         </Typography>
                                     </TableCell>

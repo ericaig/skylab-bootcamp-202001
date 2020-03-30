@@ -7,6 +7,7 @@ import logout from './logout'
 import weekDaysUpdate from './week-days-update'
 import weekDaysRetrieve from './week-days-retrieve'
 import eventCompanyCreate from './event-company-create'
+import eventCreate from './event-create'
 import eventCompanyRetrieve from './event-company-retrieve'
 import eventsRetrieve from './events-retrieve'
 import eventSignInOut from './event-sign-in-out'
@@ -45,5 +46,6 @@ export {
     companyUpdate,
     retrieveUsers,
     updateUser,
+    eventCreate,
     context
 }

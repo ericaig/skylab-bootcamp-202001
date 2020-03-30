@@ -18,7 +18,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
 import { useHistory } from "react-router-dom";
-import { retrieveUser, updateUser } from "../../logic";
+import { retrieveUser, updateUser, context } from "../../logic";
 import { userProperties } from "../../utils";
 
 
@@ -65,6 +65,7 @@ export default function ({ handleSnackbar }) {
     });
 
     const [user, setUser] = useState({})
+    const [loggedInUser, setLoggedInUser] = useState({})
 
     const handleShowOldPassword = () => setValues({ ...values, showOldPassword: !values.showOldPassword })
     const handleMouseDownOldPassword = event => event.preventDefault()
@@ -72,9 +73,12 @@ export default function ({ handleSnackbar }) {
     const handleMouseDownPassword = event => event.preventDefault()
 
     const handleRetrieveUser = async () => {
+        // if (typeof userID === 'undefined') setIsSameUser(true)
+
         try {
             const _user = await retrieveUser(userID)
             setUser(_user)
+            // setIsSameUser(context.user.id === _user.id)
         } catch ({ message }) {
             handleSnackbar(message, 'error')
         }
@@ -88,8 +92,7 @@ export default function ({ handleSnackbar }) {
 
             if (!_user.oldPassword) delete _user.oldPassword
             if (!_user.password) delete _user.password
-
-            console.log('TO UPDATE', _user)
+            // if (isSameUser) delete _user.role
 
             await updateUser(_user, userID)
             handleSnackbar('User updated successfully', 'success')
@@ -103,7 +106,10 @@ export default function ({ handleSnackbar }) {
     const handleInputChange = prop => event => setUser({ ...user, [prop]: event.target.value })
 
     useEffect(() => {
-        handleRetrieveUser()
+        (async()=>{
+            await handleRetrieveUser()
+            setLoggedInUser(await retrieveUser())
+        })()
     }, [])
 
     return <>
@@ -193,7 +199,7 @@ export default function ({ handleSnackbar }) {
                                         id="user-role"
                                         value={user.role}
                                         onChange={handleInputChange('role')}
-                                        disabled={user.role === 2}
+                                        disabled={[2, 4].includes(loggedInUser.role)}
                                     >
                                         {/* <MenuItem value={0}>{"..."}</MenuItem> */}
                                         {/* <MenuItem value={1} disabled>{"Developer"}</MenuItem> */}

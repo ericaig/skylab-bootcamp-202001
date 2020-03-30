@@ -49,9 +49,11 @@ module.exports = function (user, start, end, type, state) {
 
         const { role } = _user
 
-        // if (![CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`User with id ${user} does not have permission to create week days`)
-
-        if (role === WORKER && ![USER_ABSENCE, USER_HOLIDAY, USER_SIGN_IN_OUT].includes(type)) throw new NotAllowedError(`User with id ${user} does not have permission to view events of the specified type`)
+        if(role === WORKER){
+            type.forEach(item=>{
+                if (![USER_ABSENCE, USER_HOLIDAY, USER_SIGN_IN_OUT].includes(Number(item))) throw new NotAllowedError(`User with id ${user} does not have permission to view events of the specified type`)
+            })
+        }
 
         const { company } = _user
 

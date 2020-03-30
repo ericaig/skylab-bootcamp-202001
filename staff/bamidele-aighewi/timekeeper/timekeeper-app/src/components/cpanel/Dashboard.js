@@ -153,7 +153,7 @@ export default function ({ handleLogout, handleSnackbar }) {
                         <Typography variant="h5" component="h5" gutterBottom>
                             <Grid container direction="row" justify="space-between" alignItems="flex-start">
                                 <div>{analytics.totalPendingEvents}</div>
-                                <Button href="#text-buttons" color="primary">
+                                <Button href="cpanel/events" color="primary">
                                     {"View"}
                                 </Button>
                             </Grid>
@@ -184,7 +184,7 @@ export default function ({ handleLogout, handleSnackbar }) {
                             <Chip size="small" color="primary" label="Annual" />
                         </Grid>
                         <Typography variant="h5" component="h5" gutterBottom>
-                            {`${analytics.totalHolidays} days`}
+                            {analytics.totalHolidays}
                         </Typography>
                     </Paper>
                 </Grid>

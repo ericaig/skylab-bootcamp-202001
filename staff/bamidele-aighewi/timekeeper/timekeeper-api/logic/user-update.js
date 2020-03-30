@@ -24,6 +24,7 @@ module.exports = (user, props, subUserId) => {
         if (!userSearch) throw new NotFoundError(`User with id ${user} not found`)
 
         const { role } = _user
+        const currentUserRole = userSearch.role
 
         if (typeof subUserId !== 'undefined' && ![CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`User with id ${user} does not have permission to update resource`)
 
@@ -51,6 +52,8 @@ module.exports = (user, props, subUserId) => {
 
             delete _user.oldPassword
         }
+
+        if (![CLIENT, ADMINISTRATOR].includes(currentUserRole)) delete _user.role
 
         return userSearch.updateOne(_user).then(() => { })
     })()

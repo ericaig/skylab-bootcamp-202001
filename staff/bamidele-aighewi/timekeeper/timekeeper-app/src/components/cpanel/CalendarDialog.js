@@ -12,7 +12,7 @@ import moment from 'moment'
 import { validateSpecial } from 'timekeeper-utils'
 import Feedback from '../Feedback'
 import { eventProperties } from '../../utils'
-// import { context } from '../../logic'
+import { context } from '../../logic'
 
 const useStyles = theme => ({
     chip: {
@@ -24,8 +24,8 @@ class CalendarDialog extends React.Component {
     state = {
         eventType: 0,
         eventState: 0,
-        start: '',
-        end: '',
+        start: new Date,
+        end: new Date,
         description: '',
         dialogTitle: 'Add event',
         totalDaysSelected: { valid: 0, of: 0 },
@@ -109,7 +109,9 @@ class CalendarDialog extends React.Component {
         try {
             await this.props.handleSaveEvent(start, end, eventType, description, eventState, event)
             // this.setState({ feedback: { message: "Created event successfully", severity: 'success', watch: Date.now() } })
-        } catch ({ message }) {
+        } catch (error) {
+            console.log(error)
+            const { message } = error
             this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })
         }
     }
@@ -139,9 +141,9 @@ class CalendarDialog extends React.Component {
 
     componentDidMount() {
         const { event } = this.props
-        console.log('did mount')
+        
         if (event) {
-            const { start, end, description, state } = event
+            const { start, end, description } = event
             this.setState({ dialogTitle: 'Edit event', eventType: event.type, eventState: event.state, start, end, description }, this.handleCalculateDaysOfRange)
         }
     }

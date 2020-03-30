@@ -5,13 +5,14 @@ import Register from './Register'
 import Landing from './Landing'
 import { Route, withRouter, Redirect } from 'react-router-dom'
 import Header from './Header'
+import WorkerCreate from './WorkerCreate'
 // import Footer from './Footer'
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import './App.sass'
 import { isLoggedIn, logout, retrieveUser, retrieveCompany, context } from '../logic'
 // import session from '../logic/context'
-import { ControlPanel, WeekDays, Calendar, Events, Dashboard } from './cpanel'
+import { ControlPanel, WeekDays, Calendar, Events, Dashboard, Profile, Company, Users } from './cpanel'
 // import ErrorBoundary from './ErrorBoundary'
 // import { Context } from './ContextProvider'
 import Snackbar from '@material-ui/core/Snackbar';
@@ -63,10 +64,14 @@ export default withRouter(function ({ history, location }) {
     history.push('/cpanel')
   }
 
+  function handleGotoProfilePage() {
+    history.push('/cpanel/profile')
+  }
+
   function handleLogout() {
-    logout()
-    history.push('/login')
-    // window.location.reload()
+    // logout()
+    // history.push('/login')
+    console.log('SHOULD LOGOUT')
   }
 
   function handleToggleSnackbar(visibility) {
@@ -104,6 +109,7 @@ export default withRouter(function ({ history, location }) {
           if (Object.keys(_user).length && Object.keys(_company).length) {
             context.user = _user
             context.company = _company
+            console.log('_company', _company)
             return
           }
           handleLogout()
@@ -123,12 +129,13 @@ export default withRouter(function ({ history, location }) {
 
     <Route path="/">
       <div className={classes.app}>
-        <Header handleLogout={handleLogout} handleGotoControlPanel={handleGotoControlPanel} />
+        <Header handleLogout={handleLogout} handleGotoProfilePage={handleGotoProfilePage} handleGotoControlPanel={handleGotoControlPanel} />
         <Paper className={classes.main} elevation={0} square>
           <Divider />
           <Route exact path="/" render={() => <Landing />} />
           <Route path="/register" render={() => !isLoggedIn() ? <Register onSubmit={handleRegister} onGoToLogin={handleGoToLogin} onMount={handleMountRegister} /> : <Redirect to="/cpanel" />} />
           <Route path="/login" render={() => !isLoggedIn() ? <Login onSubmit={handleLogin} onGoToRegister={handleGoToRegister} onMount={handleMountLogin} /> : <Redirect to="/cpanel" />} />
+          <Route path="/invite/:token"><WorkerCreate /></Route>
         </Paper>
         {/* <Footer title="Footer" description="Something here to give the footer a purpose!" /> */}
       </div>
@@ -136,10 +143,14 @@ export default withRouter(function ({ history, location }) {
 
     <Route path="/cpanel" render={({ match: { url } }) => {
       return isLoggedIn() ?
-        <ControlPanel handleLogout={handleLogout}>
-          <Route path={url} handleLogout={handleLogout} exact><Dashboard handleSnackbar={handleSnackbar} /></Route>
+        <ControlPanel handleSnackbar={handleSnackbar} handleLogout={handleLogout}>
+          <Route path={url} exact><Dashboard handleLogout={handleLogout} handleSnackbar={handleSnackbar} /></Route>
           <Route path={`${url}/week-days`}><WeekDays /></Route>
-          {/* <Route path={`${url}/signings`}><Signings handleSnackbar={handleSnackbar} /></Route> */}
+          <Route path={`${url}/calendar`}><Calendar /></Route>
+          <Route path={`${url}/users`} exact><Users handleSnackbar={handleSnackbar} /></Route>
+          <Route path={`${url}/company`} exact><Company handleSnackbar={handleSnackbar} /></Route>
+          <Route path={`${url}/profile`}><Profile handleSnackbar={handleSnackbar} /></Route>
+          <Route path={`${url}/user/:id`}><Profile handleSnackbar={handleSnackbar} /></Route>
           <Route path={`${url}/signings`}>
             <Events
               handleSnackbar={handleSnackbar}
@@ -165,7 +176,6 @@ export default withRouter(function ({ history, location }) {
               }}
             />
           </Route>
-          <Route path={`${url}/calendar`}><Calendar /></Route>
           <Route path={`${url}/events`}>
             <Events
               handleSnackbar={handleSnackbar}

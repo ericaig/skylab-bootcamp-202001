@@ -1,23 +1,31 @@
 const { validate } = require('timekeeper-utils')
-const { models: { Company }, utils: { sanitizer } } = require('timekeeper-data')
+const { models: { Company, User }, utils: { sanitizer } } = require('timekeeper-data')
 const { NotFoundError } = require('timekeeper-errors')
 
-module.exports = owner => {
-    validate.string(owner, 'owner')
+module.exports = user => {
+    validate.string(user, 'owner')
 
     return (async () => {
-        const company = await Company.findOne({ owner })
+        let _user = await User.findById(user)
+
+        if (!_user) throw new NotFoundError(`User with id ${user} not found`)
+
+        // sanitizer(_user)
+
+        const { company } = _user
+
+        validate.string(company.toString(), 'company')
+
+        const _company = await Company.findById(company)
             .populate({
                 path: 'owner',
                 select: 'name surname email'
             })
             .lean()
 
-        if (!company) throw new NotFoundError(`Company with owner id ${owner} does not exist`)
+        if (!_company) throw new NotFoundError(`Company with id ${company} not found`)
 
-        sanitizer(company)
-        sanitizer(company.owner)
-
-        return company
+        sanitizer(_company.owner)
+        return sanitizer(_company)
     })()
 }

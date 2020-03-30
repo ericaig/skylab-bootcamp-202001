@@ -6,7 +6,7 @@ import { Tooltip, Typography } from '@material-ui/core'
 import { eventsRetrieve, eventSignInOut } from '../../logic'
 import moment from 'moment'
 
-export default function () {
+export default function ({ handleSnackbar }) {
     const [timerRunning, setTimerRunning] = useState(false)
     const [timerIconButtonTooltip, setTimerIconButtonTooltip] = useState('Sign in')
     const [timer, setTimer] = useState({ hour: 0, minute: 0, second: 0 })
@@ -31,8 +31,8 @@ export default function () {
         try {
             await eventSignInOut()
             handleToggleSignInOutProcess()
-        } catch ({message}) {
-            console.log(message)
+        } catch ({ message }) {
+            handleSnackbar(message, 'error')
         }
     }
 
@@ -61,19 +61,20 @@ export default function () {
                     start: moment().startOf('day').format('YYYY-MM-DD HH:mm:ss'),
                     type: [5]
                 })
-                
-                if(!('end' in event)){
+
+                if (!event) return
+
+                if (!('end' in event)) {
                     const start = moment(event.start)
                     const end = moment()
                     const duration = moment.duration(end.diff(start))
-                    setTimer({hour: duration.hours(), minute: duration.minutes(), second: duration.seconds()})
+                    setTimer({ hour: duration.hours(), minute: duration.minutes(), second: duration.seconds() })
                     handleToggleSignInOutProcess()
                 }
             } catch ({ message }) {
-                console.log(message)
+                handleSnackbar(message, 'error')
             }
         })()
-        console.log('first useeffect')
     }, [])
 
     useEffect(() => {

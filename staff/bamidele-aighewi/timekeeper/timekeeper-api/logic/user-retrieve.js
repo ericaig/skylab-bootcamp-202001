@@ -1,19 +1,37 @@
+const { models: { User, Company }, utils: { roles: { CLIENT, ADMINISTRATOR } } } = require('timekeeper-data')
 const { validate } = require('timekeeper-utils')
-const { models: { User } } = require('timekeeper-data')
 const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
 
-module.exports = id => {
-    validate.string(id, 'id')
+module.exports = (user, subUserId) => {
+    validate.string(user, 'user')
+    if (typeof subUserId !== 'undefined') validate.string(subUserId, 'subUserId')
 
-    return User.findById(id)
-        .then(user => {
-            if (!user) throw new NotFoundError(`user with id ${id} does not exist`)
+    return (async () => {
+        let _user = await User.findById(user)
 
-            if (user.deactivated) throw new NotAllowedError(`user with id ${id} is deactivated`)
+        if (!_user) throw new NotFoundError(`User with id ${user} not found`)
 
-            user.retrieved = new Date
+        // sanitizer(_user)
 
-            return user.save()
-        })
-        .then(({ name, surname, email, company, role }) => ({ name, surname, email, company, role }))
+        const { role } = _user
+
+        if (typeof subUserId !== 'undefined' && ![CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`User with id ${user} does not have permission to view resource`)
+
+        const { company } = _user
+
+        validate.string(company.toString(), 'company')
+
+        const _company = await Company.findById(company)//.lean()
+
+        if (!_company) throw new NotFoundError(`Company with id ${company} not found`)
+
+        if (typeof subUserId !== 'undefined') {
+            _user = await User.findOne({ company, _id: subUserId })
+            if (!_user) throw new NotFoundError(`User with id ${subUserId} not found`)
+        }
+
+        _user.retrieved = new Date
+
+        return _user.save().then(({ name, surname, email, company, role }) => ({ name, surname, email, company, role }))
+    })()
 }

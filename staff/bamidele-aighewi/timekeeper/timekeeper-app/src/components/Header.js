@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
@@ -41,9 +41,9 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default function Header({ handleGotoControlPanel, handleLogout }) {
+export default function Header({ handleGotoControlPanel, handleGotoProfilePage, handleLogout }) {
     const classes = useStyles()
-    const [anchorEl, setAnchorEl] = React.useState(null)
+    const [anchorEl, setAnchorEl] = useState(null)
 
     // const sections = [
     //     { title: 'Technology', url: '/' },
@@ -63,7 +63,7 @@ export default function Header({ handleGotoControlPanel, handleLogout }) {
         <section className={classes.header}>
             <Toolbar>
                 {/* <Button size="small">Subscribe</Button> */}
-                <Logo/>
+                <Logo />
                 <Typography
                     component="h2"
                     variant="h5"
@@ -94,13 +94,19 @@ export default function Header({ handleGotoControlPanel, handleLogout }) {
                                     open={Boolean(anchorEl)}
                                     onClose={handleCloseDialogMenu}
                                 >
-                                    <MenuItem onClick={handleGotoControlPanel}>
+                                    <MenuItem onClick={() => {
+                                        handleCloseDialogMenu()
+                                        handleGotoControlPanel()
+                                    }}>
                                         <ListItemIcon>
                                             <SettingsIcon fontSize="small" />
                                         </ListItemIcon>
                                         <Typography variant="inherit">{"Control panel"}</Typography>
                                     </MenuItem>
-                                    <MenuItem onClick={handleCloseDialogMenu}>
+                                    <MenuItem onClick={() => {
+                                        handleCloseDialogMenu()
+                                        handleGotoProfilePage()
+                                    }}>
                                         <ListItemIcon>
                                             <AccountCircleIcon fontSize="small" />
                                         </ListItemIcon>

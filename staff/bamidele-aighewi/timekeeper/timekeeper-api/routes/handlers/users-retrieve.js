@@ -1,13 +1,13 @@
-const { retrieveUser } = require('../../logic')
-const { errorStatus } = require('timekeeper-errors')
+const { usersRetrieve } = require('../../logic')
+const { NotFoundError, NotAllowedError } = require('timekeeper-errors')
 
 module.exports = (req, res) => {
-    const { payload: { sub: userId }, query: { id } } = req
+    const { payload: { sub: id } } = req
 
     try {
-        retrieveUser(userId, id)
-            .then(user =>
-                res.status(200).json(user)
+        usersRetrieve(id)
+            .then(users =>
+                res.status(200).json(users)
             )
             .catch(error =>
                 res

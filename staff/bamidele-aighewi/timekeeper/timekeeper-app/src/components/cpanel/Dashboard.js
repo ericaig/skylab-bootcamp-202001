@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography, Box, Divider, Paper, Grid, Chip, Button, Tooltip, Backdrop, CircularProgress } from '@material-ui/core'
+import { Typography, Box, Divider, Paper, Grid, Chip, Button, Tooltip, Backdrop, CircularProgress, LinearProgress } from '@material-ui/core'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -53,7 +53,7 @@ export default function ({ handleLogout, handleSnackbar }) {
             setAnalytics(analytics)
             // console.log(analytics)
         } catch ({ message }) {
-            console.log(message)
+            handleSnackbar(message, 'error')
         }
     }
 
@@ -118,16 +118,15 @@ export default function ({ handleLogout, handleSnackbar }) {
                     }
                     handleLogout()
                 } catch ({ message }) {
-                    handleLogout()
+                    handleSnackbar(message, 'error')
+                    // handleLogout()
                 }
             })()
         else handleLogout()
     }, [])
 
     return <>
-        {!user && <Backdrop className={classes.backdrop} open={true}>
-            <CircularProgress color="inherit" />
-        </Backdrop>}
+        {!user && <LinearProgress />}
 
         <Box mt={2} mb={3}>
             <Grid container direction="row" justify="space-between" alignItems="flex-start">

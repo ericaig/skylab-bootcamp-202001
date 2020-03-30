@@ -20,7 +20,9 @@ const {
     dashboardAnalytics,
     sendInviteLink,
     eventUpdate,
-    eventDelete
+    eventDelete,
+    usersRetrieve,
+    userUpdate
 } = require('./handlers')
 
 const { jwtVerifierMidWare } = require('../mid-wares')
@@ -31,8 +33,10 @@ const router = new Router()
 
 /* USER ROUTES */
 router.post('/users', jsonBodyParser, registerUser)
+router.patch('/user', [jwtVerifierMidWare, jsonBodyParser], userUpdate)
 router.post('/users/auth', jsonBodyParser, authenticateUser)
 router.get('/users', jwtVerifierMidWare, retrieveUser)
+router.get('/all-users', jwtVerifierMidWare, usersRetrieve)
 router.post('/users/:inviteToken/invite', jsonBodyParser, workerRegister)
 
 /* COMPANY ROUTES */

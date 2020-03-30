@@ -17,6 +17,7 @@ import { ControlPanel, WeekDays, Calendar, Events, Dashboard, Profile, Company, 
 // import { Context } from './ContextProvider'
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
+import ThemeProvider from './ThemeProvider'
 
 const useStyles = makeStyles(theme => ({
   app: {
@@ -33,6 +34,7 @@ const useStyles = makeStyles(theme => ({
 export default withRouter(function ({ history, location }) {
   const classes = useStyles()
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
+  const [loggedInUser, setLoggedInUser] = useState({})
   // const [session, setSession] = useState({})
   // const [state, setState] = useContext(Context)
 
@@ -69,9 +71,8 @@ export default withRouter(function ({ history, location }) {
   }
 
   function handleLogout() {
-    // logout()
-    // history.push('/login')
-    console.log('SHOULD LOGOUT')
+    logout()
+    history.push('/login')
   }
 
   function handleToggleSnackbar(visibility) {
@@ -83,23 +84,6 @@ export default withRouter(function ({ history, location }) {
     handleToggleSnackbar(true)
   }
 
-  // async function handleRetrieveSessionDatas() {
-  //   if (!isLoggedIn()) return
-
-  //   try {
-  //     const user = await retrieveUser()
-  //     const company = await retrieveCompany()
-  //     context.user = user
-  //     context.company = company
-  //     // console.log('context', context)
-  //     // session = { ...session, user, company }
-  //     // console.log(user, company)
-  //   } catch ({ message }) {
-  //     console.log(message)
-  //     handleLogout()
-  //   }
-  // }
-
   useEffect(() => {
     if (isLoggedIn()) {
       (async () => {
@@ -109,7 +93,8 @@ export default withRouter(function ({ history, location }) {
           if (Object.keys(_user).length && Object.keys(_company).length) {
             context.user = _user
             context.company = _company
-            console.log('_company', _company)
+            setLoggedInUser(_user)
+            // console.log('context', context)
             return
           }
           handleLogout()
@@ -121,15 +106,20 @@ export default withRouter(function ({ history, location }) {
   }, [])
 
   return <>
+    {/* SNACKBAR */}
+
     <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'right' }} open={snackbar.open} autoHideDuration={6000} onClose={() => handleToggleSnackbar(false)}>
       <Alert elevation={0} variant="filled" onClose={() => handleToggleSnackbar(false)} severity={snackbar.severity}>
         {snackbar.message}
       </Alert>
     </Snackbar>
 
+    {/* PUBLIC */}
+
     <Route path="/">
       <div className={classes.app}>
         <Header handleLogout={handleLogout} handleGotoProfilePage={handleGotoProfilePage} handleGotoControlPanel={handleGotoControlPanel} />
+
         <Paper className={classes.main} elevation={0} square>
           <Divider />
           <Route exact path="/" render={() => <Landing />} />
@@ -137,72 +127,77 @@ export default withRouter(function ({ history, location }) {
           <Route path="/login" render={() => !isLoggedIn() ? <Login onSubmit={handleLogin} onGoToRegister={handleGoToRegister} onMount={handleMountLogin} /> : <Redirect to="/cpanel" />} />
           <Route path="/invite/:token"><WorkerCreate /></Route>
         </Paper>
-        {/* <Footer title="Footer" description="Something here to give the footer a purpose!" /> */}
       </div>
     </Route>
 
-    <Route path="/cpanel" render={({ match: { url } }) => {
-      return isLoggedIn() ?
-        <ControlPanel handleSnackbar={handleSnackbar} handleLogout={handleLogout}>
-          <Route path={url} exact><Dashboard handleLogout={handleLogout} handleSnackbar={handleSnackbar} /></Route>
-          <Route path={`${url}/week-days`}><WeekDays /></Route>
-          <Route path={`${url}/calendar`}><Calendar /></Route>
-          <Route path={`${url}/users`} exact><Users handleSnackbar={handleSnackbar} /></Route>
-          <Route path={`${url}/company`} exact><Company handleSnackbar={handleSnackbar} /></Route>
-          <Route path={`${url}/profile`}><Profile handleSnackbar={handleSnackbar} /></Route>
-          <Route path={`${url}/user/:id`}><Profile handleSnackbar={handleSnackbar} /></Route>
-          <Route path={`${url}/signings`}>
-            <Events
-              handleSnackbar={handleSnackbar}
-              tableConfig={{
-                name: true,
-                difference: true,
-                canDelete: true,
-                canEdit: true,
-                datesFormat: 'DD/MM/YYYY HH:mm:ss',
-                filters: {
-                  types: [5]
-                }
-              }}
-              calendarDialogConfig={{
-                startEditable: true,
-                endEditable: true,
-                // eventEditable: false,
-                stateEditable: false,
-                stateSelector: true,
-                typeEditable: false,
-                types: [5],
-                datePickerFormat: 'dd/MM/yyyy HH:mm:ss'
-              }}
-            />
-          </Route>
-          <Route path={`${url}/events`}>
-            <Events
-              handleSnackbar={handleSnackbar}
-              tableConfig={{
-                name: true,
-                difference: false,
-                canDelete: true,
-                canEdit: true,
-                datesFormat: 'DD/MM/YYYY',
-                filters: {
-                  types: [1, 2, 3, 4]
-                }
-              }}
-              calendarDialogConfig={{
-                startEditable: true,
-                endEditable: true,
-                // eventEditable: true,
-                stateEditable: true,
-                stateSelector: true,
-                typeEditable: true,
-                types: [1, 2, 3, 4],
-                datePickerFormat: 'dd/MM/yyyy'
-              }}
-            />
-          </Route>
-        </ControlPanel>
-        : <Redirect to="/login" />
-    }} />
+    {/* CONTROL PANEL */}
+
+    <ThemeProvider>
+      <Route path="/cpanel" render={({ match: { url } }) => {
+        return isLoggedIn() ?
+          <ControlPanel handleSnackbar={handleSnackbar} handleLogout={handleLogout}>
+            <Route path={url} exact><Dashboard handleLogout={handleLogout} handleSnackbar={handleSnackbar} /></Route>
+            <Route path={`${url}/week-days`}><WeekDays /></Route>
+            <Route path={`${url}/calendar`}><Calendar /></Route>
+            <Route path={`${url}/users`} exact><Users handleSnackbar={handleSnackbar} /></Route>
+            <Route path={`${url}/company`} exact><Company handleSnackbar={handleSnackbar} /></Route>
+            <Route path={`${url}/profile`}><Profile handleSnackbar={handleSnackbar} /></Route>
+            <Route path={`${url}/user/:id`}><Profile handleSnackbar={handleSnackbar} /></Route>
+            <Route path={`${url}/signings`}>
+              <Events
+                handleSnackbar={handleSnackbar}
+                tableConfig={{
+                  name: true,
+                  difference: true,
+                  canDelete: true,
+                  canEdit: true,
+                  datesFormat: 'DD/MM/YYYY HH:mm:ss',
+                  filters: {
+                    types: [5]
+                  }
+                }}
+                calendarDialogConfig={{
+                  startEditable: true,
+                  endEditable: true,
+                  // eventEditable: false,
+                  // stateEditable: false,
+                  stateEditable: [2, 3].includes(loggedInUser.role),
+                  stateSelector: true,
+                  typeEditable: false,
+                  types: [5],
+                  datePickerFormat: 'dd/MM/yyyy HH:mm:ss'
+                }}
+              />
+            </Route>
+            <Route path={`${url}/events`}>
+              <Events
+                handleSnackbar={handleSnackbar}
+                tableConfig={{
+                  name: true,
+                  difference: false,
+                  canDelete: true,
+                  canEdit: true,
+                  datesFormat: 'DD/MM/YYYY',
+                  filters: {
+                    types: ([2, 3].includes(loggedInUser.role) ? [1, 2, 3, 4] : [3, 4]),
+                  }
+                }}
+                calendarDialogConfig={{
+                  startEditable: true,
+                  endEditable: true,
+                  // eventEditable: true,
+                  //stateEditable: true,
+                  stateEditable: [2, 3].includes(loggedInUser.role),
+                  stateSelector: true,
+                  typeEditable: true,
+                  types: ([2, 3].includes(loggedInUser.role) ? [1, 2, 3, 4] : [3, 4]),
+                  datePickerFormat: 'dd/MM/yyyy'
+                }}
+              />
+            </Route>
+          </ControlPanel>
+          : <Redirect to="/login" />
+      }} />
+    </ThemeProvider>
   </>
 })

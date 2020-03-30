@@ -13,9 +13,9 @@ module.exports = function (user) {
 
         sanitizer(_user)
 
-        const { role } = _user
+        // const { role } = _user
 
-        if (![CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`User with id ${user} does not have permission to create week days`)
+        // if (![CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`User with id ${user} does not have permission to view week days`)
 
         const { company } = _user
 

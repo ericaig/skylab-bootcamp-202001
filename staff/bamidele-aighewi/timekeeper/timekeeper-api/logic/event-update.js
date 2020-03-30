@@ -61,8 +61,8 @@ module.exports = (user, eventId, props) => {
         const { PENDING } = eventStates
         const { CLIENT, ADMINISTRATOR, WORKER } = roles
 
-        if ([WORK_DAY, WORK_HOLIDAY].includes(type) && ![CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`User ${user} does not have permission to modify the event ${eventId}`)
-        if (![WORK_DAY, WORK_HOLIDAY].includes(type) && role === WORKER && user !== eventUser) throw new NotAllowedError(`User ${user} does not have permission to modify the event ${eventId}`)
+        if ([WORK_DAY, WORK_HOLIDAY].includes(type) && ![CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`--->User ${user} does not have permission to modify the event ${eventId}`)
+        if (![WORK_DAY, WORK_HOLIDAY].includes(type) && role === WORKER && user !== eventUser.toString()) throw new NotAllowedError(`<---User ${user} does not have permission to modify the event ${eventId}`)
 
         debugger
 

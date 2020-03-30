@@ -53,10 +53,10 @@ module.exports = function (user, props = {}) {
         const totalPendingEvents = await Event.find({ company, state: PENDING }).count()
 
         /* ABSENCES */
-        const totalAbsences = await Event.find({ company, state: USER_ABSENCE }).count()
+        const totalAbsences = await Event.find({ company, type: USER_ABSENCE }).count()
 
         /* HOLIDAYS */
-        const totalHolidays = await Event.find({ company, state: USER_HOLIDAY }).count()
+        const totalHolidays = await Event.find({ company, type: USER_HOLIDAY }).count()
 
         /* WORKERS */
         const totalWorkers = await User.find({ company, role: WORKER }).count()

@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import Container from '@material-ui/core/Container'
 import { withRouter } from 'react-router-dom'
-import login from '../logic/login'
+import { login, retrieveUser } from '../logic'
 import Feedback from './Feedback'
 
 const useStyles = makeStyles(theme => ({
@@ -50,8 +50,12 @@ export default withRouter(function ({ history }) {
 
         try {
             await login(email, password)
+            const { role } = await retrieveUser()
 
-            history.push('/cpanel')
+            if ([2, 3].includes(role))
+                history.push('/cpanel')
+            else
+                history.push('/cpanel/signings')
         } catch ({ message }) {
             setFeedback({ message, severity: 'error', timeout: 10000, watch: Date.now() })
         }

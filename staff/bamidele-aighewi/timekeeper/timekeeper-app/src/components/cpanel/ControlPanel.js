@@ -28,7 +28,7 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import { FormControlLabel, Tooltip } from '@material-ui/core'
 import SignInOutWidget from './SignInOutWidget'
-import { context } from '../../logic'
+import { context, retrieveUser } from '../../logic'
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
@@ -95,6 +95,7 @@ export default function ({ children, container, handleLogout, handleSnackbar }) 
     let history = useHistory()
     const [mobileOpen, setMobileOpen] = useState(false)
     const [darkThemeActive, setDarkThemeActive] = useState(false)
+    const [loggedInUser, setLoggedInUser] = useState({})
 
     let location = useLocation();
 
@@ -127,15 +128,18 @@ export default function ({ children, container, handleLogout, handleSnackbar }) 
     function sideMenuOptions(section = '*') {
         const { pathname } = location
 
+        const { role } = loggedInUser
+        const isHigherLevelUser = [2, 3].includes(role)
+
         const menus = [
-            { title: 'Dashboard', section: 'main', link: '/cpanel', icon: () => <HomeIcon />, isActive: false },
-            { title: 'Signings', section: 'main', link: '/cpanel/signings', icon: () => <AccessTimeIcon />, isActive: false },
-            { title: 'Events', section: 'main', link: '/cpanel/events', icon: () => <EventNoteIcon />, isActive: false },
-            { title: 'Users', section: 'main', link: '/cpanel/users', icon: () => <GroupIcon />, isActive: false },
-            { title: 'Week days', section: 'company', link: '/cpanel/week-days', icon: () => <DateRangeIcon />, isActive: false },
-            { title: 'Calendar', section: 'company', link: '/cpanel/calendar', icon: () => <EventIcon />, isActive: false },
-            { title: 'Profile', section: 'profile', link: '/cpanel/profile', icon: () => <AccountCircleIcon />, isActive: false },
-            { title: 'Company', section: 'profile', link: '/cpanel/company', icon: () => <LocationCityIcon />, isActive: false },
+            { title: 'Dashboard', section: 'main', link: '/cpanel', icon: () => <HomeIcon />, isActive: false, shouldShow: isHigherLevelUser },
+            { title: 'Signings', section: 'main', link: '/cpanel/signings', icon: () => <AccessTimeIcon />, isActive: false, shouldShow: true },
+            { title: 'Events', section: 'main', link: '/cpanel/events', icon: () => <EventNoteIcon />, isActive: false, shouldShow: true },
+            { title: 'Users', section: 'main', link: '/cpanel/users', icon: () => <GroupIcon />, isActive: false, shouldShow: isHigherLevelUser },
+            { title: 'Week days', section: 'company', link: '/cpanel/week-days', icon: () => <DateRangeIcon />, isActive: false, shouldShow: isHigherLevelUser },
+            { title: 'Calendar', section: 'company', link: '/cpanel/calendar', icon: () => <EventIcon />, isActive: false, shouldShow: isHigherLevelUser },
+            { title: 'Profile', section: 'profile', link: '/cpanel/profile', icon: () => <AccountCircleIcon />, isActive: false, shouldShow: true },
+            { title: 'Company', section: 'profile', link: '/cpanel/company', icon: () => <LocationCityIcon />, isActive: false, shouldShow: isHigherLevelUser },
         ]
 
         // let openCompanyMenu = false
@@ -144,7 +148,7 @@ export default function ({ children, container, handleLogout, handleSnackbar }) 
             (menu.link === pathname && (menu.isActive = true))
             // if(menu.isActive && menu.section === 'company') openCompanyMenu = true
 
-            return menu.section === section || section === '*'
+            return (menu.section === section || section === '*') && menu.shouldShow
         })
 
         // setOpenSubMenu(openCompanyMenu)
@@ -180,17 +184,24 @@ export default function ({ children, container, handleLogout, handleSnackbar }) 
     // const handleOpenCompanyMenu = () => {setOpenSubMenu(!openSubMenu)}
 
     useEffect(() => {
-        handleRetrieveTheme()
+        ; (async () => {
+            handleRetrieveTheme()
+            setLoggedInUser(await retrieveUser())
+        })()
     }, [])
 
-    const drawer = (
-        <div>
+    const drawer = () => {
+        const main = sideMenuOptions('main')
+        const company = sideMenuOptions('company')
+        const profile = sideMenuOptions('profile')
+
+        return <div>
             <div className={classes.toolbar}><Logo /></div>
-            <RenderMenuItems items={sideMenuOptions('main')} />
-            <RenderMenuItems items={sideMenuOptions('company')} />
-            <RenderMenuItems items={sideMenuOptions('profile')} />
+            {main.length ? <RenderMenuItems items={main} /> : ''}
+            {company.length ? <RenderMenuItems items={company} /> : ''}
+            {profile.length ? <RenderMenuItems items={profile} /> : ''}
         </div>
-    )
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -273,7 +284,7 @@ export default function ({ children, container, handleLogout, handleSnackbar }) 
                                 keepMounted: true, // Better open performance on mobile.
                             }}
                         >
-                            {drawer}
+                            {drawer()}
                         </Drawer>
                     </Hidden>
                     <Hidden xsDown implementation="css">
@@ -284,7 +295,7 @@ export default function ({ children, container, handleLogout, handleSnackbar }) 
                             variant="permanent"
                             open
                         >
-                            {drawer}
+                            {drawer()}
                         </Drawer>
                     </Hidden>
                 </nav>

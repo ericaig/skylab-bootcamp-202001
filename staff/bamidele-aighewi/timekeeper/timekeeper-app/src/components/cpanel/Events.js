@@ -10,9 +10,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 // import SettingsBackupRestoreIcon from '@material-ui/icons/SettingsBackupRestore';
 import RefreshIcon from '@material-ui/icons/Refresh';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
-import { weekDaysRetrieve, eventsRetrieve, eventUpdate, eventDelete } from '../../logic'
+import { weekDaysRetrieve, eventsRetrieve, eventCreate, eventUpdate, eventDelete } from '../../logic'
 import { eventProperties } from '../../utils'
 import moment from 'moment'
 import ActionButtons from './ActionButtons'
@@ -20,18 +21,12 @@ import CalendarDialog from './CalendarDialog'
 import { green, grey } from '@material-ui/core/colors';
 
 const useStyles = theme => ({
-    visibleAtMdUp:{
+    visibleAtMdUp: {
         display: 'none',
         [theme.breakpoints.up('md')]: {
             display: 'table-cell',
         }
     },
-    // invisibleAtMdDown: {
-    //     display: 'table-cell',
-    //     [theme.breakpoints.down('md')]: {
-    //         display: 'none',
-    //     }
-    // },
     buttonRm: {
         marginRight: theme.spacing(2),
     },
@@ -96,15 +91,6 @@ class Events extends React.Component {
         }
     }
 
-    // handleEventSignInOut = async () => {
-    //     try {
-    //         await eventSignInOut()
-    //         await this.handleRetrieveEvents()
-    //     } catch ({ message }) {
-    //         this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })
-    //     }
-    // }
-
     handleCalculateTimeDifference = (start, end) => {
         if (!start && !end) return ''
 
@@ -146,30 +132,48 @@ class Events extends React.Component {
         })
     }
 
+    handleCreateEvent = async (start, end, type, description, state) => {
+        await eventCreate(start, end, type, description, state)
+    }
+
+    handleEditEvent = async (start, end, type, description, state, event) => {
+        await eventUpdate(event.id, { start, end, type, description, state })
+    }
+
     handleSaveEvent = async (start, end, type, description, state, event) => {
         // not using try/catch on purpose... This will be done where this fnc is being invoked.
+
         let dateFormat = 'YYYY-MM-DD'
 
         if (type === 5) dateFormat = 'YYYY-MM-DD HH:mm:ss'
 
         const _start = moment(start).format(dateFormat)
         const _end = moment(end).format(dateFormat)
+        const createNew = typeof event === 'undefined' || !Object.keys(event).length
 
-        await eventUpdate(event.id, { start: _start, end: _end, type, description, state })
+        if (createNew)
+            await this.handleCreateEvent(_start, _end, type, description, state)
+        else
+            await this.handleEditEvent(_start, _end, type, description, state, event)
+
         this.handleToggleEventDialog(false)
         this.handleRetrieveEvents()
 
-        this.props.handleSnackbar('Event updated successfully', 'success')
+        this.props.handleSnackbar(`Event ${createNew ? 'created' : 'updated'} successfully`, 'success')
     }
 
-    handleDeleteResource = async ({id}) => {
+    handleDeleteResource = async ({ id }) => {
         try {
             await eventDelete(id)
             this.handleRetrieveEvents()
             this.props.handleSnackbar('Event deleted successfully', 'success')
-        } catch ({message}) {
+        } catch ({ message }) {
             this.props.handleSnackbar(message, 'error')
         }
+    }
+
+    handleAddEvent = () => {
+        this.setState({ currentlyEditingEvent: undefined }, () => this.handleToggleEventDialog(true))
     }
 
     componentDidMount() {
@@ -229,16 +233,8 @@ class Events extends React.Component {
                     </MuiPickersUtilsProvider>
                 </div>
                 <div>
-                    <Tooltip title="Refresh">
-                        <IconButton color="primary" aria-label="Refresh" onClick={this.handleRetrieveEvents}>
-                            <RefreshIcon />
-                        </IconButton>
-                    </Tooltip>
-                    {/* <Tooltip title="Sign in/out">
-                        <IconButton color="primary" aria-label="Refresh" onClick={this.handleEventSignInOut}>
-                            <SettingsBackupRestoreIcon />
-                        </IconButton>
-                    </Tooltip> */}
+                    <Button className={classes.buttonRm} onClick={this.handleRetrieveEvents} variant="outlined" startIcon={<RefreshIcon />}>{"Refresh"}</Button>
+                    <Button onClick={this.handleAddEvent} variant="outlined" startIcon={<AddCircleOutlineIcon />}>{"Add event"}</Button>
                 </div>
             </Grid>
 
@@ -288,7 +284,7 @@ class Events extends React.Component {
                                     {tableConfig.difference && <TableCell>{this.handleCalculateTimeDifference(start, end)}</TableCell>}
                                     <TableCell className={classes.visibleAtMdUp}>{description}</TableCell>
                                     <TableCell className={classes.visibleAtMdUp}>
-                                        <Typography style={{ color: state === 2 ? green : grey}}>
+                                        <Typography style={{ color: state === 2 ? green : grey }}>
                                             {this.handleRetrieveEventStateName(state)}
                                         </Typography>
                                     </TableCell>

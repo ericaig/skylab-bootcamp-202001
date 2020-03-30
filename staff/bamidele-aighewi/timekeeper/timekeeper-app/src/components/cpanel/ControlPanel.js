@@ -31,6 +31,10 @@ import SignInOutWidget from './SignInOutWidget'
 import { context } from '../../logic'
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { useHistory } from "react-router-dom";
+import LocationCityIcon from '@material-ui/icons/LocationCity';
+import GroupIcon from '@material-ui/icons/Group';
 
 const drawerWidth = 240
 
@@ -72,9 +76,23 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export default function ({ children, container, handleLogout }) {
+function RenderMenuItems({ items }) {
+    return <>
+        <Divider />
+        <List>
+            {items.map(({ title, icon: menuIcon, isActive, link }, index) => (
+                <ListItem component="a" href={link} selected={isActive} key={index} button>
+                    <ListItemIcon>{menuIcon()}</ListItemIcon>
+                    <ListItemText primary={title} />
+                </ListItem>
+            ))}
+        </List>
+    </>
+}
+
+export default function ({ children, container, handleLogout, handleSnackbar }) {
     const classes = useStyles()
-    // const theme = useTheme()
+    let history = useHistory()
     const [mobileOpen, setMobileOpen] = useState(false)
     const [darkThemeActive, setDarkThemeActive] = useState(false)
 
@@ -113,8 +131,11 @@ export default function ({ children, container, handleLogout }) {
             { title: 'Dashboard', section: 'main', link: '/cpanel', icon: () => <HomeIcon />, isActive: false },
             { title: 'Signings', section: 'main', link: '/cpanel/signings', icon: () => <AccessTimeIcon />, isActive: false },
             { title: 'Events', section: 'main', link: '/cpanel/events', icon: () => <EventNoteIcon />, isActive: false },
+            { title: 'Users', section: 'main', link: '/cpanel/users', icon: () => <GroupIcon />, isActive: false },
             { title: 'Week days', section: 'company', link: '/cpanel/week-days', icon: () => <DateRangeIcon />, isActive: false },
             { title: 'Calendar', section: 'company', link: '/cpanel/calendar', icon: () => <EventIcon />, isActive: false },
+            { title: 'Profile', section: 'profile', link: '/cpanel/profile', icon: () => <AccountCircleIcon />, isActive: false },
+            { title: 'Company', section: 'profile', link: '/cpanel/company', icon: () => <LocationCityIcon />, isActive: false },
         ]
 
         // let openCompanyMenu = false
@@ -164,39 +185,10 @@ export default function ({ children, container, handleLogout }) {
 
     const drawer = (
         <div>
-            <div className={classes.toolbar}>
-                <Logo />
-            </div>
-
-            <Divider />
-            <List>
-                {sideMenuOptions('main').map(({ title, icon: menuIcon, isActive, link }, index) => (
-                    <ListItem component="a" href={link} selected={isActive} key={index} button>
-                        <ListItemIcon>{menuIcon()}</ListItemIcon>
-                        <ListItemText primary={title} />
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {/* <ListItem button onClick={handleOpenCompanyMenu}>
-                    <ListItemIcon>
-                        <SettingsIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Settings" />
-                    {openSubMenu ? <ExpandLess /> : <ExpandMore />}
-                </ListItem>
-                <Collapse in={openSubMenu} timeout="auto" unmountOnExit>
-                    <List component="div" disablePadding> */}
-                {sideMenuOptions('company').map(({ title, icon: menuIcon, isActive, link }, index) => (
-                    <ListItem component="a" href={link} selected={isActive} key={index} button>
-                        <ListItemIcon>{menuIcon()}</ListItemIcon>
-                        <ListItemText primary={title} />
-                    </ListItem>
-                ))}
-                {/* </List>
-                </Collapse> */}
-            </List>
+            <div className={classes.toolbar}><Logo /></div>
+            <RenderMenuItems items={sideMenuOptions('main')} />
+            <RenderMenuItems items={sideMenuOptions('company')} />
+            <RenderMenuItems items={sideMenuOptions('profile')} />
         </div>
     )
 
@@ -219,7 +211,7 @@ export default function ({ children, container, handleLogout }) {
                             {sideMenuOptions().map(({ title, isActive }) => isActive && title)}
                         </Typography>
 
-                        <SignInOutWidget />
+                        <SignInOutWidget handleSnackbar={handleSnackbar} />
 
                         <Tooltip title="Toggle light/dark theme">
                             <IconButton
@@ -256,8 +248,10 @@ export default function ({ children, container, handleLogout }) {
                                 open={open}
                                 onClose={handleClose}
                             >
-                                <MenuItem onClick={handleClose}>{"Profile"}</MenuItem>
-                                <MenuItem onClick={handleClose}>{"My account"}</MenuItem>
+                                <MenuItem onClick={() => {
+                                    handleClose();
+                                    history.push('/cpanel/profile')
+                                }}>{"Profile"}</MenuItem>
                                 <MenuItem onClick={handleLogout}>{"Logout"}</MenuItem>
                             </Menu>
                         </div>

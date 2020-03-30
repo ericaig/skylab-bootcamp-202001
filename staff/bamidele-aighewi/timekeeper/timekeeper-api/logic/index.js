@@ -2,6 +2,7 @@ module.exports = {
     registerUser: require('./user-register'),
     authenticateUser: require('./user-authenticate'),
     retrieveUser: require('./user-retrieve'),
+    userUpdate: require('./user-update'),
     createCompany: require('./company-create'),
     companyRetrieve: require('./company-retrieve'),
     companyUpdate: require('./company-update'),
@@ -20,4 +21,5 @@ module.exports = {
     sendInviteLink: require('./send-invite-link'),
     eventUpdate: require('./event-update'),
     eventDelete: require('./event-delete'),
+    usersRetrieve: require('./users-retrieve'),
 }

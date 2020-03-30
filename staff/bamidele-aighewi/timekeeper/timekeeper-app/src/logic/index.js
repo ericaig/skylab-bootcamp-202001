@@ -15,6 +15,11 @@ import sendInviteLink from './send-invite-link'
 import retrieveCompany from './retrieve-company'
 import eventUpdate from './event-update'
 import eventDelete from './event-delete'
+import workerRegister from './worker-register'
+import companyRetrieve from './company-retrieve'
+import companyUpdate from './company-update'
+import retrieveUsers from './retrieve-users'
+import updateUser from './update-user'
 import context from './context'
 
 export {
@@ -35,5 +40,10 @@ export {
     retrieveCompany,
     eventUpdate,
     eventDelete,
+    workerRegister,
+    companyRetrieve,
+    companyUpdate,
+    retrieveUsers,
+    updateUser,
     context
 }

@@ -1,28 +1,35 @@
-import { serverResponse } from '../utils'
 import context from './context'
-import {validate} from 'timekeeper-utils'
-
-//const { env: { REACT_APP_API_URL: API_URL } } = process
+import { serverResponse } from '../utils'
+const { validate } = require('timekeeper-utils')
 
 const API_URL = process.env.REACT_APP_API_URL
 
-export default (function (id) {
+/**
+ * @function
+ * To update user's details
+  * @param {object} props Properties of user to update
+ */
+export default (function (props, id) {
     let queryParams = []
+    
+    validate.object(props, 'props')
 
-    if(typeof id !== 'undefined'){
+    if (typeof id !== 'undefined') {
         validate.string(id, 'id')
         queryParams.push(`id=${id}`)
     }
 
     queryParams = queryParams.join('&')
     if (!!queryParams) queryParams = `?${queryParams}`
-
+    
     return (async () => {
-        const response = await fetch(`${API_URL}/users${queryParams}`, {
+        const response = await fetch(`${API_URL}/user${queryParams}`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${this.token}`
-            }
+            },
+            body: JSON.stringify(props)
         })
 
         return await serverResponse(response)

@@ -8,6 +8,7 @@
     "debug": "node debug .",
     "watch": "nodemon .",
     "test": "npx mocha logic utils",
+    "test-watch": "npx mocha --watch logic utils",
     "test-debug": "npx mocha debug logic utils"
   },
   "keywords": [],

@@ -3,6 +3,22 @@ const { models: { Company, User }, utils: { roles: { CLIENT } } } = require('tim
 const { NotAllowedError } = require('timekeeper-errors')
 const { v4: uuid } = require('uuid')
 
+/**
+ * @function
+ * This creates a new company 
+ * @param {string} name name of the company
+ * @param {string} email email of the company
+ * @param {string} address address / location of the company
+ * @param {string} owner owner id of the company
+ * @param {string} web the company's web page url
+ * @param {string} cif cif of the company
+ * @param {string} city city the company is situated in
+ * @param {string} postalCode postalCode of the company
+ * @param {string} startTime startTime of the company
+ * @param {string} endTime endTime of the company
+ * @returns a promise with no callback value
+ * @throws error
+ */
 module.exports = function (name, email, address, owner, web, cif, city, postalCode, startTime, endTime) {
     validate.string(name, 'name')
     validate.email(email)

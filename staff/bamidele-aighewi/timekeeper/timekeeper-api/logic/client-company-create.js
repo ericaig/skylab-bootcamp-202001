@@ -4,9 +4,32 @@ const { NotAllowedError } = require('timekeeper-errors')
 const bcrypt = require('bcryptjs')
 const { v4: uuid } = require('uuid')
 
+/**
+ * @function
+ * This creates a new client user and company
+ * @param {object} _client an object containing the client's details
+ * @param {string} _client.name name of the client
+ * @param {string} _client.email client's email
+ * @param {string} _client.password client's password
+ * @param {object} _company an object containing the company's details
+ * @param {string} _company.name the company's name
+ * @param {string} _company.email the company's email address
+ * @param {string} _company.web the company's web page url
+ * @param {string} _company.cif cif of the company
+ * @param {string} _company.city city the company is situated in
+ * @param {string} _company.postalCode postalCode of the company
+ * @param {string} _company.startTime startTime of the company
+ * @param {string} _company.endTime endTime of the company
+ * @returns a promise with no callback value
+ * @throws error
+ */
 module.exports = (_client, _company) => {
+    validate.object(_client, 'ClientObj')
+    validate.object(_company, 'CompanyObj')
+
     let { name, surname, email, password } = _client
     let { name: companyName, email: companyEmail, address, web, cif, city, postalCode, startTime = '08:00', endTime = '17:00' } = _company
+    
 
     // client
     validate.string(name, 'Name')

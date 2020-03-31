@@ -8,7 +8,7 @@ const { mongoose, utils: { roles: { CLIENT } } } = require('timekeeper-data')
 const { v4: uuid } = require('uuid')
 
 describe('companyRetrieve', () => {
-    let owner, company
+    let owner, companys
 
     before(async () => {
         await mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -22,7 +22,12 @@ describe('companyRetrieve', () => {
     describe('when user already exists', () => {
         beforeEach(() =>
             Company.create({ invite: uuid(), name: 'Company-name', email: 'Company-email@mail.com', address: 'Company-address', owner, web: 'http://company.url', cif: 'P0080665C', city: 'Company-city', postalCode: '08560', startTime: '08:00', endTime: '17:00' })
-                .then(({ id }) => company = id)
+                .then(({ id }) =>
+                    company = id
+                )
+                .then(id =>
+                    User.findOneAndUpdate({ _id: owner }, { company: id })
+                )
         )
 
         it('should succeed on correct and valid and right data', () =>

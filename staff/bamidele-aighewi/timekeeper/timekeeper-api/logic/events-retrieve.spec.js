@@ -107,49 +107,49 @@ describe('eventsRetrieve', () => {
         expect(() => unitFunction(target)).to.throw(TypeError, `${name} ${target} is not a string`)
     })
 
-    it('should fail on invalid date start parameter', () => {
-        let target
+    // it('should fail on invalid date start parameter', () => {
+    //     let target
 
-        target = "a string"
-        expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = "a string"
+    //     expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = false
-        expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = false
+    //     expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = null
-        expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = null
+    //     expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = (() => { })
-        expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = (() => { })
+    //     expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = {}
-        expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = {}
+    //     expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = []
-        expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
-    })
+    //     target = []
+    //     expect(() => unitFunction('a8s7dfa', target)).to.throw(TypeError, `${target} is not a valid date`)
+    // })
 
-    it('should fail on invalid date end parameter', () => {
-        let target
+    // it('should fail on invalid date end parameter', () => {
+    //     let target
 
-        target = "a string"
-        expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = "a string"
+    //     expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = false
-        expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = false
+    //     expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = null
-        expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = null
+    //     expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = (() => { })
-        expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = (() => { })
+    //     expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = {}
-        expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
+    //     target = {}
+    //     expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
 
-        target = []
-        expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
-    })
+    //     target = []
+    //     expect(() => unitFunction('a8s7dfa', '2020-03-31', target)).to.throw(TypeError, `${target} is not a valid date`)
+    // })
 
     it('should fail on non integer type parameter', () => {
         const name = 'type'

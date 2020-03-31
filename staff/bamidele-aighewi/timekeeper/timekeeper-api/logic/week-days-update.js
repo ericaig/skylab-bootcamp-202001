@@ -3,6 +3,13 @@ const { NotFoundError } = require('timekeeper-errors')
 const { models: { Company, User, WeekDay }, utils: { roles: { CLIENT, ADMINISTRATOR }, sanitizer } } = require('timekeeper-data')
 const { validateAndReturnUpdateDatas } = require('../utils')
 
+/**
+ * @function
+ * Function to update week days
+ * @param  {string} user id of user attempting to update weekday
+ * @param  {object} props properties to update
+ * @throws error in case something goes wrong
+ */
 module.exports = (user, props) => {
     validate.string(user, 'id')
     validate.object(props, 'props')

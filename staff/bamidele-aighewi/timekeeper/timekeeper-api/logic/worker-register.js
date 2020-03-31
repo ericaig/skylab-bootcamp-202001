@@ -3,6 +3,16 @@ const { models: { User, Company }, utils: { roles: { WORKER } } } = require('tim
 const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
 const bcrypt = require('bcryptjs')
 
+/**
+ * @function
+ * Function to create a new user
+ * @param  {string} invite company invite token
+ * @param  {string} name name of the user to create
+ * @param  {string} surname surname of the user to create
+ * @param  {email} email email of the user to create
+ * @param  {string} password password of the user to create
+ * @throws error in case something goes wrong
+ */
 module.exports = (invite, name, surname, email, password) => {
     validate.string(invite, 'invite')
     validate.string(name, 'name')

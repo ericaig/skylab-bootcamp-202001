@@ -26,7 +26,7 @@ module.exports = (user, props, subUserId) => {
         const { role } = _user
         const currentUserRole = userSearch.role
 
-        if (typeof subUserId !== 'undefined' && ![CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`User with id ${user} does not have permission to update resource`)
+        if (typeof subUserId !== 'undefined' && ![CLIENT, ADMINISTRATOR].includes(currentUserRole)) throw new NotAllowedError(`User with id ${user} does not have permission to update resource`)
 
         const { company } = userSearch
 

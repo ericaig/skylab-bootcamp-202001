@@ -23,8 +23,8 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime'
 import { useLocation } from 'react-router-dom'
 import EventIcon from '@material-ui/icons/Event';
 import EventNoteIcon from '@material-ui/icons/EventNote';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
+// import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Switch from '@material-ui/core/Switch';
 import { FormControlLabel, Tooltip } from '@material-ui/core'
 import SignInOutWidget from './SignInOutWidget'
@@ -35,6 +35,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { useHistory } from "react-router-dom";
 import LocationCityIcon from '@material-ui/icons/LocationCity';
 import GroupIcon from '@material-ui/icons/Group';
+import ThemeProvider from './ThemeProvider'
 
 const drawerWidth = 240
 
@@ -98,32 +99,6 @@ export default function ({ children, container, handleLogout, handleSnackbar }) 
     const [loggedInUser, setLoggedInUser] = useState({})
 
     let location = useLocation();
-
-    // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
-    const theme = useMemo(
-        () =>
-            createMuiTheme({
-                palette: {
-                    type: darkThemeActive ? 'dark' : 'light',
-                },
-                typography: {
-                    fontFamily: [
-                        '-apple-system',
-                        'BlinkMacSystemFont',
-                        '"Segoe UI"',
-                        'Roboto',
-                        '"Helvetica Neue"',
-                        'Arial',
-                        'sans-serif',
-                        '"Apple Color Emoji"',
-                        '"Segoe UI Emoji"',
-                        '"Segoe UI Symbol"',
-                    ].join(','),
-                },
-            }),
-        [darkThemeActive],
-    );
 
     function sideMenuOptions(section = '*') {
         const { pathname } = location
@@ -196,7 +171,7 @@ export default function ({ children, container, handleLogout, handleSnackbar }) 
         const profile = sideMenuOptions('profile')
 
         return <div>
-            <div className={classes.toolbar}><Logo /></div>
+            <div className={classes.toolbar}><Logo darkMode={darkThemeActive} /></div>
             {main.length ? <RenderMenuItems items={main} /> : ''}
             {company.length ? <RenderMenuItems items={company} /> : ''}
             {profile.length ? <RenderMenuItems items={profile} /> : ''}
@@ -204,7 +179,7 @@ export default function ({ children, container, handleLogout, handleSnackbar }) 
     }
 
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider darkThemeActive={darkThemeActive}>
             <div className={classes.root}>
                 <CssBaseline />
                 <AppBar position="fixed" className={classes.appBar}>

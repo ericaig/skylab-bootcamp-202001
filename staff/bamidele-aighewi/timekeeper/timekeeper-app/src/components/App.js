@@ -17,7 +17,6 @@ import { ControlPanel, WeekDays, Calendar, Events, Dashboard, Profile, Company, 
 // import { Context } from './ContextProvider'
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
-import ThemeProvider from './ThemeProvider'
 
 const useStyles = makeStyles(theme => ({
   app: {
@@ -132,72 +131,70 @@ export default withRouter(function ({ history, location }) {
 
     {/* CONTROL PANEL */}
 
-    <ThemeProvider>
-      <Route path="/cpanel" render={({ match: { url } }) => {
-        return isLoggedIn() ?
-          <ControlPanel handleSnackbar={handleSnackbar} handleLogout={handleLogout}>
-            <Route path={url} exact><Dashboard handleLogout={handleLogout} handleSnackbar={handleSnackbar} /></Route>
-            <Route path={`${url}/week-days`}><WeekDays /></Route>
-            <Route path={`${url}/calendar`}><Calendar /></Route>
-            <Route path={`${url}/users`} exact><Users handleSnackbar={handleSnackbar} /></Route>
-            <Route path={`${url}/company`} exact><Company handleSnackbar={handleSnackbar} /></Route>
-            <Route path={`${url}/profile`}><Profile handleSnackbar={handleSnackbar} /></Route>
-            <Route path={`${url}/user/:id`}><Profile handleSnackbar={handleSnackbar} /></Route>
-            <Route path={`${url}/signings`}>
-              <Events
-                handleSnackbar={handleSnackbar}
-                tableConfig={{
-                  name: true,
-                  difference: true,
-                  canDelete: true,
-                  canEdit: true,
-                  datesFormat: 'DD/MM/YYYY HH:mm:ss',
-                  filters: {
-                    types: [5]
-                  }
-                }}
-                calendarDialogConfig={{
-                  startEditable: true,
-                  endEditable: true,
-                  // eventEditable: false,
-                  // stateEditable: false,
-                  stateEditable: [2, 3].includes(loggedInUser.role),
-                  stateSelector: true,
-                  typeEditable: false,
-                  types: [5],
-                  datePickerFormat: 'dd/MM/yyyy HH:mm:ss'
-                }}
-              />
-            </Route>
-            <Route path={`${url}/events`}>
-              <Events
-                handleSnackbar={handleSnackbar}
-                tableConfig={{
-                  name: true,
-                  difference: false,
-                  canDelete: true,
-                  canEdit: true,
-                  datesFormat: 'DD/MM/YYYY',
-                  filters: {
-                    types: ([2, 3].includes(loggedInUser.role) ? [1, 2, 3, 4] : [3, 4]),
-                  }
-                }}
-                calendarDialogConfig={{
-                  startEditable: true,
-                  endEditable: true,
-                  // eventEditable: true,
-                  //stateEditable: true,
-                  stateEditable: [2, 3].includes(loggedInUser.role),
-                  stateSelector: true,
-                  typeEditable: true,
+    <Route path="/cpanel" render={({ match: { url } }) => {
+      return isLoggedIn() ?
+        <ControlPanel handleSnackbar={handleSnackbar} handleLogout={handleLogout}>
+          <Route path={url} exact><Dashboard handleLogout={handleLogout} handleSnackbar={handleSnackbar} /></Route>
+          <Route path={`${url}/week-days`}><WeekDays /></Route>
+          <Route path={`${url}/calendar`}><Calendar /></Route>
+          <Route path={`${url}/users`} exact><Users handleSnackbar={handleSnackbar} /></Route>
+          <Route path={`${url}/company`} exact><Company handleSnackbar={handleSnackbar} /></Route>
+          <Route path={`${url}/profile`}><Profile handleSnackbar={handleSnackbar} /></Route>
+          <Route path={`${url}/user/:id`}><Profile handleSnackbar={handleSnackbar} /></Route>
+          <Route path={`${url}/signings`}>
+            <Events
+              handleSnackbar={handleSnackbar}
+              tableConfig={{
+                name: true,
+                difference: true,
+                canDelete: true,
+                canEdit: true,
+                datesFormat: 'DD/MM/YYYY HH:mm:ss',
+                filters: {
+                  types: [5]
+                }
+              }}
+              calendarDialogConfig={{
+                startEditable: true,
+                endEditable: true,
+                // eventEditable: false,
+                // stateEditable: false,
+                stateEditable: [2, 3].includes(loggedInUser.role),
+                stateSelector: true,
+                typeEditable: false,
+                types: [5],
+                datePickerFormat: 'dd/MM/yyyy HH:mm:ss'
+              }}
+            />
+          </Route>
+          <Route path={`${url}/events`}>
+            <Events
+              handleSnackbar={handleSnackbar}
+              tableConfig={{
+                name: true,
+                difference: false,
+                canDelete: true,
+                canEdit: true,
+                datesFormat: 'DD/MM/YYYY',
+                filters: {
                   types: ([2, 3].includes(loggedInUser.role) ? [1, 2, 3, 4] : [3, 4]),
-                  datePickerFormat: 'dd/MM/yyyy'
-                }}
-              />
-            </Route>
-          </ControlPanel>
-          : <Redirect to="/login" />
-      }} />
-    </ThemeProvider>
+                }
+              }}
+              calendarDialogConfig={{
+                startEditable: true,
+                endEditable: true,
+                // eventEditable: true,
+                //stateEditable: true,
+                stateEditable: [2, 3].includes(loggedInUser.role),
+                stateSelector: true,
+                typeEditable: true,
+                types: ([2, 3].includes(loggedInUser.role) ? [1, 2, 3, 4] : [3, 4]),
+                datePickerFormat: 'dd/MM/yyyy'
+              }}
+            />
+          </Route>
+        </ControlPanel>
+        : <Redirect to="/login" />
+    }} />
   </>
 })

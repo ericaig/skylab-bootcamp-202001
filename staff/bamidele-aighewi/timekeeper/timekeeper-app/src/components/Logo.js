@@ -6,10 +6,10 @@ const useStyles = makeStyles(theme => ({
         width: '200px'
     },
 }))
-export default function () {
+export default function ({darkMode}) {
     const classes = useStyles()
 
     return <>
-        <img alt="Timekeeper logo" src="/logo.png" className={classes.logo} />
+        <img alt="Timekeeper logo" src={darkMode ? '/logo-dark.png' : '/logo.png'} className={classes.logo} />
     </>
 }

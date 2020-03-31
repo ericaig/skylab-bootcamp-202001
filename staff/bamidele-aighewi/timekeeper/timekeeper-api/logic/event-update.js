@@ -4,7 +4,8 @@ const {
     models: { Company, User, Event },
     utils: { roles, eventTypes, eventStates, sanitizer }
 } = require('timekeeper-data')
-const { validateAndReturnUpdateDatas } = require('../utils')
+const { validateAndReturnUpdateDatas, eventProperties, mailer } = require('../utils')
+const moment = require('moment')
 
 module.exports = (user, eventId, props) => {
     validate.string(user, 'userId')
@@ -55,16 +56,14 @@ module.exports = (user, eventId, props) => {
             if (!Object.values(eventStates).includes(Number(_event.state))) throw new NotAllowedError(`Invalid event state ${_event.state}`)
         }
 
-        const { type, user: eventUser } = event
+        const { type, user: eventUserId } = event
         const { role } = _user
         const { WORK_DAY, WORK_HOLIDAY, USER_SIGN_IN_OUT } = eventTypes
         const { PENDING } = eventStates
         const { CLIENT, ADMINISTRATOR, WORKER } = roles
 
         if ([WORK_DAY, WORK_HOLIDAY].includes(type) && ![CLIENT, ADMINISTRATOR].includes(role)) throw new NotAllowedError(`--->User ${user} does not have permission to modify the event ${eventId}`)
-        if (![WORK_DAY, WORK_HOLIDAY].includes(type) && role === WORKER && user !== eventUser.toString()) throw new NotAllowedError(`<---User ${user} does not have permission to modify the event ${eventId}`)
-
-        debugger
+        if (![WORK_DAY, WORK_HOLIDAY].includes(type) && role === WORKER && user !== eventUserId.toString()) throw new NotAllowedError(`<---User ${user} does not have permission to modify the event ${eventId}`)
 
         // let's look for overlapse
         // https://stackoverflow.com/a/26877645
@@ -88,6 +87,13 @@ module.exports = (user, eventId, props) => {
             delete _event.state
         } else if (type !== USER_SIGN_IN_OUT && role === WORKER) {
             _event.state = PENDING
+        }
+
+        if (role !== WORKER && user !== eventUserId.toString() && event.state !== _event.state) {
+            const eventUser = await User.findById(eventUserId).lean()
+            if (!eventUser) throw new NotFoundError(`The owner ${eventUserId} of this event doesn't exist`)
+
+            await mailer(eventUser.email, 'Update to an event', `Your event that ranges from ${moment(new Date(_event.start)).format('DD/MM/YYYY H:mm')} to ${moment(new Date(_event.end)).format('DD/MM/YYYY H:mm')} has been set to '${eventProperties.states.names[_event.state - 1]}'<br/><br/>>> ${_event.description || event.description}`)
         }
 
         _event.updatedAt = Date.now()

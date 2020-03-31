@@ -1,15 +1,16 @@
+
 require('dotenv').config()
 
-const nodemailer = require('nodemailer')
 const { validate } = require('timekeeper-utils')
 const {
     models: { User, Company },
     utils: { roles: { CLIENT, ADMINISTRATOR }, sanitizer }
 } = require('timekeeper-data')
 const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
-const { sendInviteLinkTemplate} = require('../utils')
-const { env: { SMTP_USERNAME, SMTP_PASSWORD, SMTP_PORT, SMTP_HOST, SMTP_FROM_NAME, SMTP_FROM_MAIL, APP_NAME, APP_URL } } = process
+const { sendInviteLinkTemplate, mailer } = require('../utils')
 const moment = require('moment')
+
+const { env: { APP_NAME, APP_URL } } = process
 
 /**
  * @function
@@ -41,26 +42,12 @@ module.exports = function (user, emails) {
 
         if (!_company) throw new NotFoundError(`Company with id ${company} not found`)
 
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: SMTP_HOST,
-            port: SMTP_PORT,
-            secure: false, // true for 465, false for other ports
-            auth: { user: SMTP_USERNAME, pass: SMTP_PASSWORD }
-        });
-
-        // send mail with defined transport object
-        await transporter.sendMail({
-            from: `"${SMTP_FROM_NAME}" <${SMTP_FROM_MAIL}>`, // sender address
-            to: emails.join(', '), // list of receivers
-            subject: `${_company.name}`, // Subject line
-            html: `${sendInviteLinkTemplate({
-                company_name: _company.name,
-                app_url: APP_URL,
-                app_name: APP_NAME,
-                invite_link: `${APP_URL}/invite/${_company.invite}`,
-                current_year: `${moment().format('YYYY')}`,
-            })}` // html body
-        })
+        await mailer(emails, _company.name, `${sendInviteLinkTemplate({
+            company_name: _company.name,
+            app_url: APP_URL,
+            app_name: APP_NAME,
+            invite_link: `${APP_URL}/invite/${_company.invite}`,
+            current_year: `${moment().format('YYYY')}`,
+        })}`)
     })()
 }

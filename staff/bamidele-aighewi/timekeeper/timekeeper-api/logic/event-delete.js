@@ -5,6 +5,13 @@ const {
 } = require('timekeeper-data')
 const { NotFoundError, NotAllowedError } = require('timekeeper-errors')
 
+/**
+ * @function
+ * Function to delete an event from db
+ * @param  {string} user user id required to fetch company id
+ * @param  {string} eventId id of event to delete
+ * @throws error in case something goes wrong
+ */
 module.exports = (user, eventId) => {
     validate.string(user, 'user')
     validate.string(eventId, 'eventId')

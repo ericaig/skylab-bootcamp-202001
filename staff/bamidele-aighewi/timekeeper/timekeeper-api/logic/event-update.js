@@ -7,6 +7,14 @@ const {
 const { validateAndReturnUpdateDatas, eventProperties, mailer } = require('../utils')
 const moment = require('moment')
 
+/**
+ * @function
+ * Function to update an event
+ * @param  {string} user user id required to fetch company id
+ * @param  {string} eventId Id of the event to update
+ * @param  {object} props properties of the event to update
+ * @throws error if something goes wrong
+ */
 module.exports = (user, eventId, props) => {
     validate.string(user, 'userId')
     validate.string(eventId, 'eventId')

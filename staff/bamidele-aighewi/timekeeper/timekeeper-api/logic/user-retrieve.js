@@ -1,7 +1,13 @@
 const { models: { User, Company }, utils: { roles: { CLIENT, ADMINISTRATOR } } } = require('timekeeper-data')
 const { validate } = require('timekeeper-utils')
 const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
-
+/**
+ * @function
+ * Function to retrieve user information
+ * @param  {string} user id of user making the request to retrieve their user object or of another user 
+ * @param  {string} subUserId id of user `user` is trying to retrieve
+ * @throws error in case something goes wrong
+ */
 module.exports = (user, subUserId) => {
     validate.string(user, 'user')
     if (typeof subUserId !== 'undefined') validate.string(subUserId, 'subUserId')

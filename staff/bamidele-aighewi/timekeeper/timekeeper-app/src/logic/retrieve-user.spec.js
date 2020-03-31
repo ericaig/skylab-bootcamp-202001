@@ -2,7 +2,7 @@ const { random } = Math
 const { retrieveUser } = require('.')
 const { mongoose, models: { User } } = require('timekeeper-data')
 const jwt = require('jsonwebtoken')
-import context from './context'
+const context = require('./context')
 
 const { env: {
     REACT_APP_TEST_MONGODB_URL: TEST_MONGODB_URL,

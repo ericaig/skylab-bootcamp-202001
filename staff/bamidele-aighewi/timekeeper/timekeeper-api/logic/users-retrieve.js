@@ -3,6 +3,12 @@ const { models: { User, Company }, utils: { roles: { CLIENT, ADMINISTRATOR }, sa
 const { NotAllowedError, NotFoundError } = require('timekeeper-errors')
 // const { v4: uuid } = require('uuid')
 
+/**
+ * @function
+ * Function to retrieve all users
+ * @param  {string} user id of user making the request to retrieve all users from their company
+ * @throws error in case something goes wrong
+ */
 module.exports = function (user) {
     validate.string(user, 'user')
 

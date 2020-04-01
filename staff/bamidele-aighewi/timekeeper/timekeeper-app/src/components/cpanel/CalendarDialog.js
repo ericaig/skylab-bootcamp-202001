@@ -13,6 +13,7 @@ import { validateSpecial } from 'timekeeper-utils'
 import Feedback from '../Feedback'
 import { eventProperties } from '../../utils'
 import { context } from '../../logic'
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const useStyles = theme => ({
     chip: {
@@ -29,6 +30,7 @@ class CalendarDialog extends React.Component {
         description: '',
         dialogTitle: 'Add event',
         totalDaysSelected: { valid: 0, of: 0 },
+        showLinearProgress: false,
         feedback: { message: undefined, severity: undefined, watch: undefined }
     }
 
@@ -107,12 +109,14 @@ class CalendarDialog extends React.Component {
         const { event = {} } = this.props
 
         try {
+            this.setState({ showLinearProgress: true })
+
             await this.props.handleSaveEvent(start, end, eventType, description, eventState, event)
             // this.setState({ feedback: { message: "Created event successfully", severity: 'success', watch: Date.now() } })
         } catch (error) {
             console.log(error)
             const { message } = error
-            this.setState({ feedback: { message, severity: 'error', watch: Date.now() } })
+            this.setState({ feedback: { message, severity: 'error', watch: Date.now() }, showLinearProgress: false })
         }
     }
 
@@ -141,7 +145,7 @@ class CalendarDialog extends React.Component {
 
     componentDidMount() {
         const { event } = this.props
-        
+
         if (event) {
             const { start, end, description } = event
             this.setState({ dialogTitle: 'Edit event', eventType: event.type, eventState: event.state, start, end, description }, this.handleCalculateDaysOfRange)
@@ -151,16 +155,18 @@ class CalendarDialog extends React.Component {
     componentWillUnmount() {
         // this.props = {}
         console.log('will unmount')
+        this.setState({ showLinearProgress: false })
     }
 
     render() {
-        const { start, end, totalDaysSelected, eventType, eventState, description, feedback, dialogTitle } = this.state
+        const { start, end, totalDaysSelected, eventType, eventState, description, feedback, dialogTitle, showLinearProgress } = this.state
         const { openAddEventDialog, handleCloseDialog, weekDays, classes } = this.props
 
         return <>
             <Dialog onClose={handleCloseDialog} aria-labelledby="customized-dialog-title" open={openAddEventDialog}>
                 <DialogTitle id="customized-dialog-title" onClose={handleCloseDialog}>{dialogTitle}</DialogTitle>
                 <DialogContent dividers>
+                    {showLinearProgress && <LinearProgress />}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <Grid container justify="space-between">
                             <KeyboardDatePicker

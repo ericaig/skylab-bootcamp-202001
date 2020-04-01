@@ -167,15 +167,14 @@ export default withRouter(function ({ history }) {
                             <>
                                 <Typography component="h1" variant="h6">{"Enter client's details"}</Typography>
                                 <form onSubmit={handleClientSubmit} className={classes.form} noValidate>
-                                    <TextField defaultValue="Eric" size="small" variant="outlined" margin="normal" required fullWidth id="name" label="Name" name="name" autoFocus />
-                                    <TextField defaultValue="Aig" size="small" variant="outlined" margin="normal" required fullWidth id="surname" label="Surname" name="surname" />
-                                    <TextField defaultValue="eric@aig.com" size="small" variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
+                                    <TextField size="small" variant="outlined" margin="normal" required fullWidth id="name" label="Name" name="name" autoFocus />
+                                    <TextField size="small" variant="outlined" margin="normal" required fullWidth id="surname" label="Surname" name="surname" />
+                                    <TextField size="small" variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" />
                                     <FormControl size="small" variant="outlined" margin="normal" required fullWidth>
                                         <InputLabel htmlFor="password">{"Password"}</InputLabel>
                                         <OutlinedInput
                                             id="password"
                                             name="password"
-                                            defaultValue="123"
                                             type={values.showPassword ? 'text' : 'password'}
                                             endAdornment={
                                                 <InputAdornment position="end">
@@ -223,8 +222,8 @@ export default withRouter(function ({ history }) {
                                 </Tooltip>
                                 <Typography component="h1" variant="h6">{"Enter company's details"}</Typography>
                                 <form onSubmit={handleCompanySubmit} className={classes.form} noValidate>
-                                    <TextField defaultValue="Timekeeper Coorp." size="small" variant="outlined" margin="normal" required fullWidth id="companyName" label="Name" name="companyName" autoFocus />
-                                    <TextField defaultValue="A89075451" size="small" variant="outlined" margin="normal" required fullWidth id="cif" label="CIF" name="cif" />
+                                    <TextField size="small" variant="outlined" margin="normal" required fullWidth id="companyName" label="Name" name="companyName" autoFocus />
+                                    <TextField size="small" variant="outlined" margin="normal" required fullWidth id="cif" label="CIF" name="cif" />
                                     <TextField
                                         InputLabelProps={{
                                             shrink: values.companyEmailLabelShrink,
@@ -232,10 +231,10 @@ export default withRouter(function ({ history }) {
                                         size="small" variant="outlined" margin="normal" required fullWidth id="companyEmail" label="Email Address" name="companyEmail" autoComplete="email" />
                                     <FormControlLabel control={<Checkbox onChange={copyClientEmail} color="primary" />} label="Same as my personal email" />
 
-                                    <TextField defaultValue="http://ericaig.com" size="small" variant="outlined" margin="normal" fullWidth id="web" label="Home page URL" name="web" />
-                                    <TextField defaultValue="C/ Sant Jordi" size="small" variant="outlined" margin="normal" fullWidth id="address" label="Address" name="address" />
-                                    <TextField defaultValue="Manlleu" size="small" variant="outlined" margin="normal" required fullWidth id="city" label="City" name="city" />
-                                    <TextField defaultValue="08560" size="small" variant="outlined" margin="normal" required fullWidth id="postalCode" label="Postal Code" name="postalCode" />
+                                    <TextField size="small" variant="outlined" margin="normal" fullWidth id="web" label="Home page URL" name="web" />
+                                    <TextField size="small" variant="outlined" margin="normal" fullWidth id="address" label="Address" name="address" />
+                                    <TextField size="small" variant="outlined" margin="normal" required fullWidth id="city" label="City" name="city" />
+                                    <TextField size="small" variant="outlined" margin="normal" required fullWidth id="postalCode" label="Postal Code" name="postalCode" />
 
                                     <Feedback config={feedback} />
 

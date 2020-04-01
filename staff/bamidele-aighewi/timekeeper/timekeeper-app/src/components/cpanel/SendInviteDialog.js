@@ -9,12 +9,14 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { Typography, Box, Link } from '@material-ui/core'
 import { sendInviteLink } from '../../logic'
 import Feedback from '../Feedback'
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 const APP_URL = process.env.REACT_APP_APP_URL
 
 
 export default function FormDialog({ open, handleClose, company, handleSnackbar }) {
     const [email, setEmail] = useState('')
+    const [showLinearProgress, setShowLinearProgress] = useState(false)
     const [feedback, setFeedback] = useState({ message: undefined, severity: undefined, watch: undefined })
 
     function handleEmailChange({ target: { value: _email } }) {
@@ -23,10 +25,13 @@ export default function FormDialog({ open, handleClose, company, handleSnackbar 
 
     async function handleSendInvitationLink() {
         try {
+            setShowLinearProgress(true)
             await sendInviteLink([email])
             handleSnackbar('Invite link sent successfully', 'success')
             handleClose()
+            setShowLinearProgress(false)
         } catch ({ message }) {
+            setShowLinearProgress(false)
             setFeedback({ message, severity: 'error', watch: Date.now() })
         }
     }
@@ -36,6 +41,7 @@ export default function FormDialog({ open, handleClose, company, handleSnackbar 
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle>{"Send invite link"}</DialogTitle>
                 <DialogContent>
+                    {showLinearProgress && <LinearProgress />}
                     <DialogContentText>
                         {"Please enter a valid email address to send an invite. You can also copy and send the below link to whomever."}
 

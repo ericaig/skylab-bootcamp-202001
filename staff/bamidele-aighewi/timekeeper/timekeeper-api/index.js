@@ -17,7 +17,7 @@ const router = require('./routes')
 mongoose.set('useFindAndModify', false)
 mongoose.set('useCreateIndex', true)
 
-mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
 
         const logger = winston.createLogger({

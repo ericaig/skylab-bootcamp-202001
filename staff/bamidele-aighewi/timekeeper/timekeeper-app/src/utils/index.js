@@ -1,10 +1,10 @@
-import userCreateValidate from './user-create-validate'
-import companyCreateValidate from './company-create-validate'
-import serverResponse from './server-response'
-import eventProperties from './event-properties'
-import userProperties from './user-properties'
+const userCreateValidate = require('./user-create-validate')
+const companyCreateValidate = require('./company-create-validate')
+const serverResponse = require('./server-response')
+const eventProperties = require('./event-properties')
+const userProperties = require('./user-properties')
 
-export {
+module.exports = {
     userCreateValidate,
     companyCreateValidate,
     serverResponse,

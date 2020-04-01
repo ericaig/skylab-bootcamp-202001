@@ -1,10 +1,13 @@
-import context from './context'
-import { serverResponse } from '../utils'
-import { validate } from 'timekeeper-utils'
-
+// const context = require('./context')
+// import { serverResponse } from '../utils'
+// import { validate } from 'timekeeper-utils'
+const context = require('./context')
+const { serverResponse } = require('../utils')
+const { validate } = require('timekeeper-utils')
+const fetch = require("node-fetch")
 const API_URL = process.env.REACT_APP_API_URL
 
-export default (function (start, end, type, state) {
+module.exports = (function (start, end, type, state) {
     let queryParams = []
 
     validate.date(start)

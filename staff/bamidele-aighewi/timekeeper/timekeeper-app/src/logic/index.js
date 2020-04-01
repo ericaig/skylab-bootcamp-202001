@@ -1,29 +1,29 @@
-import clientCompanyCreate from './client-company-create'
-import registerUser from './register-user'
-import login from './login'
-import retrieveUser from './retrieve-user'
-import isLoggedIn from './is-logged-in'
-import logout from './logout'
-import weekDaysUpdate from './week-days-update'
-import weekDaysRetrieve from './week-days-retrieve'
-import eventCompanyCreate from './event-company-create'
-import eventCreate from './event-create'
-import eventCompanyRetrieve from './event-company-retrieve'
-import eventsRetrieve from './events-retrieve'
-import eventSignInOut from './event-sign-in-out'
-import dashboardAnalytics from './dashboard-analytics'
-import sendInviteLink from './send-invite-link'
-import retrieveCompany from './retrieve-company'
-import eventUpdate from './event-update'
-import eventDelete from './event-delete'
-import workerRegister from './worker-register'
-import companyRetrieve from './company-retrieve'
-import companyUpdate from './company-update'
-import retrieveUsers from './retrieve-users'
-import updateUser from './update-user'
-import context from './context'
+const clientCompanyCreate = require('./client-company-create')
+const registerUser = require('./register-user')
+const login = require('./login')
+const retrieveUser = require('./retrieve-user')
+const isLoggedIn = require('./is-logged-in')
+const logout = require('./logout')
+const weekDaysUpdate = require('./week-days-update')
+const weekDaysRetrieve = require('./week-days-retrieve')
+const eventCompanyCreate = require('./event-company-create')
+const eventCreate = require('./event-create')
+const eventCompanyRetrieve = require('./event-company-retrieve')
+const eventsRetrieve = require('./events-retrieve')
+const eventSignInOut = require('./event-sign-in-out')
+const dashboardAnalytics = require('./dashboard-analytics')
+const sendInviteLink = require('./send-invite-link')
+const retrieveCompany = require('./retrieve-company')
+const eventUpdate = require('./event-update')
+const eventDelete = require('./event-delete')
+const workerRegister = require('./worker-register')
+const companyRetrieve = require('./company-retrieve')
+const companyUpdate = require('./company-update')
+const retrieveUsers = require('./retrieve-users')
+const updateUser = require('./update-user')
+const context = require('./context')
 
-export {
+module.exports =  {
     registerUser,
     clientCompanyCreate,
     login,

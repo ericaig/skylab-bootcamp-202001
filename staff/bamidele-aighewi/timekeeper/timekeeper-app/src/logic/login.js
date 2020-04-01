@@ -1,12 +1,12 @@
-import { validate } from 'timekeeper-utils'
-import { NotAllowedError } from 'timekeeper-errors'
-import context from './context'
-
+const { validate } = require('timekeeper-utils')
+const { NotAllowedError } = require('timekeeper-errors')
+const context = require('./context')
+const fetch = require("node-fetch")
 //const { env: { REACT_APP_API_URL: API_URL } } = process
 
 const API_URL = process.env.REACT_APP_API_URL
 
-export default (function(email, password){
+module.exports = (function(email, password){
     validate.string(email, 'email')
     validate.email(email)
     validate.string(password, 'password')

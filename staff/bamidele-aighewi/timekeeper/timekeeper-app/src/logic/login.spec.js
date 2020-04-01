@@ -1,17 +1,20 @@
 const { random } = Math
-const { mongoose, models: { User } } = require('timekeeper-data')
+const { expect } = require('chai')
+const { mongoose, models: { User }, utils: { roles: { CLIENT } } } = require('timekeeper-data')
 const { login } = require('.')
 const bcrypt = require('bcryptjs')
 const context = require('./context')
-// import context from './context'
+// const context = require('./context')
 
-const { env: { REACT_APP_TEST_MONGODB_URL: TEST_MONGODB_URL } } = process
+// const { env: { REACT_APP_TEST_MONGODB_URL: TEST_MONGODB_URL } } = process
+const TEST_MONGODB_URL = 'mongodb://localhost:27017/test-timekeeper'
 
 describe('login', () => {
-    beforeAll(() =>
-        mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
-            .then(() => User.deleteMany())
-    )
+    beforeAll(async () => {
+        debugger
+        await mongoose.connect(TEST_MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+        await User.deleteMany()
+    })
 
     let name, surname, email, password
 
@@ -28,7 +31,7 @@ describe('login', () => {
         beforeEach(async () => {
             const _password = await bcrypt.hash(password, 10)
 
-            await User.create({ name, surname, email, password: _password })
+            await User.create({ name, surname, email, password: _password, role: CLIENT })
                 .then(user => _id = user.id)
         })
 
@@ -37,12 +40,12 @@ describe('login', () => {
                 .then(() => {
                     const { token } = context
 
-                    expect(typeof token).toBe('string')
-                    expect(token.length).toBeGreaterThan(0)
+                    expect(typeof token).to.be.a('string')
+                    expect(token.length).to.be.greaterThan(0)
 
                     const { sub } = JSON.parse(atob(token.split('.')[1]))
 
-                    expect(sub).toBe(_id)
+                    expect(sub).to.equal(_id)
                 })
         )
     })

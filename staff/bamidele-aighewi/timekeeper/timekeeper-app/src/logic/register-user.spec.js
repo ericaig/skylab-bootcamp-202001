@@ -1,5 +1,5 @@
 // const registerUser = require('./register-user')
-import registerUser from './register-user'
+const registerUser = require('./register-user')
 const { random } = Math
 const { mongoose, models: { User } } = require('timekeeper-data')
 const bcrypt = require('bcryptjs')

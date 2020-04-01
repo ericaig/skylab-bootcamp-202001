@@ -1,6 +1,7 @@
-import { NotAllowedError } from "timekeeper-errors";
-import { context } from '../logic'
-export default async function (response) {
+const { NotAllowedError } = require("timekeeper-errors")
+const { context } = require('../logic')
+
+module.exports = async function (response) {
     const { status } = response
 
     // debugger

@@ -1,7 +1,9 @@
-import context from './context'
-import { serverResponse } from '../utils'
+// const context = require('./context')
+// import { serverResponse } from '../utils'
+const context = require('./context')
+const { serverResponse } = require('../utils')
 const { validate } = require('timekeeper-utils')
-
+const fetch = require("node-fetch")
 const API_URL = process.env.REACT_APP_API_URL
 
 /**
@@ -9,7 +11,7 @@ const API_URL = process.env.REACT_APP_API_URL
  * To delete an event
  * @param {string} eventId ID of Event to delete
  */
-export default (function (eventId) {
+module.exports = (function (eventId) {
     validate.string(eventId, 'eventId')
 
     return (async () => {

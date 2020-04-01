@@ -1,7 +1,7 @@
-import context from './context'
-import { serverResponse } from '../utils'
+const context = require('./context')
+const { serverResponse } = require('../utils')
 const { validate } = require('timekeeper-utils')
-
+const fetch = require("node-fetch")
 const API_URL = process.env.REACT_APP_API_URL
 
 /**
@@ -9,7 +9,7 @@ const API_URL = process.env.REACT_APP_API_URL
  * To update user's details
   * @param {object} props Properties of user to update
  */
-export default (function (props, id) {
+module.exports = (function (props, id) {
     let queryParams = []
     
     validate.object(props, 'props')

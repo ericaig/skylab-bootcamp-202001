@@ -1,7 +1,7 @@
-import context from './context'
-import { serverResponse } from '../utils'
+const context = require('./context')
+const { serverResponse } = require('../utils')
 const { validate } = require('timekeeper-utils')
-
+const fetch = require("node-fetch")
 const API_URL = process.env.REACT_APP_API_URL
 
 /**
@@ -16,7 +16,7 @@ const API_URL = process.env.REACT_APP_API_URL
  * @param {boolean} saturday To configure this day as working day or not
  * @param {boolean} sunday To configure this day as working day or not
  */
-export default (function (monday, tuesday, wednesday, thursday, friday, saturday, sunday) {
+module.exports = (function (monday, tuesday, wednesday, thursday, friday, saturday, sunday) {
     validate.boolean(monday, 'monday')
     validate.boolean(tuesday, 'tuesday')
     validate.boolean(wednesday, 'wednesday')

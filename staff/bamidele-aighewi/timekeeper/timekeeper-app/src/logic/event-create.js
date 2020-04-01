@@ -1,6 +1,8 @@
-import context from './context'
-import { serverResponse } from '../utils'
-
+// const context = require('./context')
+// import { serverResponse } from '../utils'
+const context = require('./context')
+const { serverResponse } = require('../utils')
+const fetch = require("node-fetch")
 const { validate } = require('timekeeper-utils')
 const API_URL = process.env.REACT_APP_API_URL
 
@@ -13,7 +15,7 @@ const API_URL = process.env.REACT_APP_API_URL
  * @param {string} description - Brief description about the event
  * @param {string} state - Event's state
  */
-export default (function (start, end, type, description, state) {
+module.exports = (function (start, end, type, description, state) {
     validate.date(start)
     validate.date(end)
     validate.number(type, 'type')

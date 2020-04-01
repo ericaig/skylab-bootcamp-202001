@@ -7,8 +7,10 @@
     "start": "node .",
     "debug": "node debug .",
     "watch": "nodemon .",
-    "test": "npx mocha logic utils",
-    "test-debug": "npx mocha debug logic utils"
+    "test": "npx mocha logic utils --timeout 10000",
+    "test-watch": "npx mocha --watch logic utils --timeout 10000",
+    "test-debug": "npx mocha debug logic utils --timeout 10000",
+    "test:coverage": "npx nyc --reporter=html --reporter=text mocha logic/*.spec.js --timeout 10000"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +34,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "mocha": "^7.1.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "nyc": "^15.0.0"
   }
 }

@@ -2,12 +2,20 @@ const { validate } = require('timekeeper-utils')
 const { models: { Company, User }, utils: { sanitizer } } = require('timekeeper-data')
 const { NotFoundError } = require('timekeeper-errors')
 
+/**
+ * @function
+ * This creates a new company 
+ * @param {string} user user id to detect the company to retrieve
+ * @returns a promise company details
+ * @throws error
+ */
+
 module.exports = user => {
     validate.string(user, 'owner')
 
     return (async () => {
-        let _user = await User.findById(user)
-
+        let _user = await User.findById(user).lean()
+        
         if (!_user) throw new NotFoundError(`User with id ${user} not found`)
 
         // sanitizer(_user)

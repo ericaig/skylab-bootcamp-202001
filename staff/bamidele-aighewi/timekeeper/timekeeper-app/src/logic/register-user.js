@@ -1,9 +1,9 @@
-import { userCreateValidate } from '../utils'
+const { userCreateValidate } = require('../utils')
 const { NotAllowedError } = require('timekeeper-errors')
-
+const fetch = require("node-fetch")
 const API_URL = process.env.REACT_APP_API_URL
 
-export default function (name, surname, email, password) {
+module.exports = function (name, surname, email, password) {
     userCreateValidate(name, surname, email, password)
 
     return (async () => {

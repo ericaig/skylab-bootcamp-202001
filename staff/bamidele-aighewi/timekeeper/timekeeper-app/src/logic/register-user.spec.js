@@ -1,6 +1,7 @@
+// const registerUser = require('./register-user')
+const registerUser = require('./register-user')
 const { random } = Math
 const { mongoose, models: { User } } = require('timekeeper-data')
-const { registerUser } = require('.')
 const bcrypt = require('bcryptjs')
 
 const { env: { REACT_APP_TEST_MONGODB_URL: TEST_MONGODB_URL } } = process

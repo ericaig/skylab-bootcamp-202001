@@ -1,8 +1,9 @@
-import { serverResponse } from '../utils'
-import { validate } from 'timekeeper-utils'
+const { serverResponse } = require('../utils')
+const { validate } = require('timekeeper-utils')
 const API_URL = process.env.REACT_APP_API_URL
+const fetch = require("node-fetch")
 
-export default function (token, name, surname, email, password) {
+module.exports = function (token, name, surname, email, password) {
     validate.string(token, 'token')
     validate.string(name, 'name')
     validate.string(surname, 'surname')

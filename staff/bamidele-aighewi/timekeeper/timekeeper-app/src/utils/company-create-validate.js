@@ -1,6 +1,6 @@
-import { validate } from 'timekeeper-utils'
+const { validate } = require('timekeeper-utils')
 
-export default function (name, cif, email, web, address, city, postalCode){
+module.exports = function (name, cif, email, web, address, city, postalCode){
     validate.string(name, 'name')
     validate.cif(cif, 'cif')
     validate.email(email)

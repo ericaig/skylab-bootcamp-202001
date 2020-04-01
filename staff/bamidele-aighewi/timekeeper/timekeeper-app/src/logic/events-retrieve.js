@@ -1,7 +1,7 @@
-import context from './context'
-import { serverResponse } from '../utils'
-import { validate } from 'timekeeper-utils'
-
+const context = require('./context')
+const { serverResponse } = require('../utils')
+const { validate } = require('timekeeper-utils')
+const fetch = require("node-fetch")
 const API_URL = process.env.REACT_APP_API_URL
 
 /**
@@ -12,7 +12,7 @@ const API_URL = process.env.REACT_APP_API_URL
  * @param {number} state `Optional`. The state of the event. Pending/Accepted
  * @param {number} type `Optional`. Event type
  */
-export default (function (props = {}) {
+module.exports = (function (props = {}) {
     let queryParams = []
 
     const { start, end, type, state } = props

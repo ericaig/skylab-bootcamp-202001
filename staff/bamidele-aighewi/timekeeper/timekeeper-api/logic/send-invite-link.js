@@ -42,7 +42,7 @@ module.exports = function (user, emails) {
 
         if (!_company) throw new NotFoundError(`Company with id ${company} not found`)
 
-        await mailer(emails, _company.name, `${sendInviteLinkTemplate({
+        return mailer(emails, _company.name, `${sendInviteLinkTemplate({
             company_name: _company.name,
             app_url: APP_URL,
             app_name: APP_NAME,

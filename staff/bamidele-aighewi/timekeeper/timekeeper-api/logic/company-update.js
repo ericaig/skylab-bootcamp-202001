@@ -2,7 +2,13 @@ const { validate } = require('timekeeper-utils')
 const { NotFoundError } = require('timekeeper-errors')
 const { models: { Company, User }, utils: { roles: { CLIENT } } } = require('timekeeper-data')
 const { validateAndReturnUpdateDatas } = require('../utils')
-
+/**
+ * @function
+ * Function to update company informations
+ * @param  {string} owner User id to get the company from
+ * @param  {object} props properties of the company to update
+ * @throws error
+ */
 module.exports = (owner, props) => {
     validate.string(owner, 'id')
     validate.object(props, 'props')

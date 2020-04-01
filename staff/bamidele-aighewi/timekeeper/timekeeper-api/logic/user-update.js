@@ -4,6 +4,14 @@ const { models: { User }, utils: { roles: { CLIENT, ADMINISTRATOR } } } = requir
 const { validateAndReturnUpdateDatas } = require('../utils')
 const bcrypt = require('bcryptjs')
 
+/**
+ * @function
+ * Function to update user
+ * @param  {string} user id of user to update
+ * @param  {object} props properties to update
+ * @param  {string} subUserId id of user `user` is trying to update
+ * @throws error in case something goes wrong
+ */
 module.exports = (user, props, subUserId) => {
     validate.string(user, 'id')
     validate.object(props, 'props')

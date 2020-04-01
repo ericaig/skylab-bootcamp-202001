@@ -40,7 +40,7 @@ class Events extends React.Component {
     state = {
         events: [],
         filters: {
-            start: moment().startOf('month').format('MM/DD/YYYY'),
+            start: moment().subtract(2,'months').startOf('month').format('MM/DD/YYYY'),
             end: null, //moment().endOf('week').format('DD/MM/YYYY')
         },
         currentlyEditingEvent: undefined,

@@ -1,5 +1,5 @@
-import context from './context'
+const context = require('./context')
 
-export default (function () {
+module.exports = (function () {
     this.clear()
 }).bind(context)

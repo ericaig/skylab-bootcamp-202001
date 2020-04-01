@@ -1,7 +1,7 @@
 let _user = {}
 let _company = {}
 
-export default {
+module.exports = {
     set token(token) {
         // sessionStorage.token = token
         localStorage.token = token

@@ -13,7 +13,7 @@ module.exports = function(error){
             status = 403 // forbidden
             break
         case error instanceof ContentError:
-            status = 400 // ???
+            status = 400 // well something is on 🔥
     }
 
     return status
